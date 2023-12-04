@@ -1,5 +1,5 @@
 # On-The-Pulse-Website
-A repository for the customizable Agency website
+A repository for the On The Pulse website
 
 ## To run project locally:
 
