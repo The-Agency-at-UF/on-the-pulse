@@ -11,6 +11,17 @@
     src: local('Perandory'), url('../fonts/PERANDORY/Perandory-Regular.otf');
 }
 
+.part1{
+    height: 100vh;
+}
+
+.part2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:100vh;
+}
+
 /* navbar and navbar items */
 .navbar{
     display: flex;
@@ -24,11 +35,27 @@
 
 }
 
-.navbar-entry {
+@media (min-width: 768px) {
+    .navbar-entry {
     font-family: 'Gentona';
     font-weight: 400;
     font-size: 1.25rem;
     padding: 0 1rem 0 1rem;
+    cursor: pointer;
+}
+}
+
+@media (max-width: 640px) {
+    .navbar-entry {
+    font-family: 'Gentona';
+    font-weight: 400;
+    font-size: 0.75rem;
+    padding: 0 1rem 0 1rem;
+    cursor: pointer;
+    }
+    .logo{
+        font-size: 1.5rem;
+    }
 }
 
 .right-navbar {
@@ -37,3 +64,4 @@
     align-items: center;
     justify-content: space-between;
 }
+
