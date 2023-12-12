@@ -52,14 +52,16 @@ function LandingPage() {
   return (
     <div className="relative h-screen flex justify-center items-center">
       {/* Logo in the center */}
-      <div className="absolute z-10">
-      <motion.img 
-          src={logo}
-          alt="Landing Page Logo"
-          initial={{ y: -100, opacity: 0 }}
-          animate={logoAnimation}
-      />
+      <div className="absolute z-10 w-2/3 sm:w-1/2 md:w-2/5 lg:w-1/3">
+        <motion.img 
+            src={logo}
+            alt="Landing Page Logo"
+            initial={{ y: -50, opacity: 0 }}
+            animate={logoAnimation}
+            className="max-w-full h-auto" // maintain aspect ratio and full width
+        />
       </div>
+
 
       {/* Blobs in corners */}
       <motion.img 
