@@ -36,10 +36,10 @@ function LandingPage() {
     .then(() => {
       // after float in, start the pulse
       logoAnimation.start({
-        scale: [1, 1.05, 1],
+        scale: [1, 1.03, 1],
         transition: {
           scale: {
-            duration: 2,
+            duration: 5,
             repeat: Infinity,
             repeatType: "reverse",
             ease: "easeInOut"
