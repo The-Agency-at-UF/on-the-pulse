@@ -52,7 +52,7 @@ function LandingPage() {
   return (
     <div className="relative h-screen flex justify-center items-center">
       {/* Logo in the center */}
-      <div className="absolute z-10 w-2/3 sm:w-1/2 md:w-2/5 lg:w-1/3">
+      <div className="absolute z-10 w-2/3 sm:w-1/2 md:w-3/5 lg:w-1/2">
         <motion.img 
             src={logo}
             alt="Landing Page Logo"
@@ -67,25 +67,25 @@ function LandingPage() {
       <motion.img 
           src={blob1}
           alt="Blob 1"
-          className="absolute top-12 left-20"
+          className="absolute top-12 left-20 w-1/4 sm:w-1/3 md:w-1/3 lg:w-[24rem]"
           animate={blobAnimation}
       />
       <motion.img 
           src={blob2}
           alt="Blob 2"
-          className="absolute bottom-0 left-0"
+          className="absolute bottom-0 left-0 -ml-4 sm:w-1/2 md:-ml-8 lg:-ml-24 w-1/4 md:w-1/2 lg:w-1/3"
           animate={blobAnimation}
       />
       <motion.img 
           src={blob3}
           alt="Blob 3"
-          className="absolute bottom-0 right-0"
+          className="absolute bottom-[12rem] right-[6rem] w-1/4 sm:w-2/5 md:w-1/3 lg:w-[24rem]"
           animate={blobAnimation}
       />
       <motion.img 
           src={blob4}
           alt="Blob 4"
-          className="absolute top-0 right-0"
+          className="absolute top-0 right-0 -mr-32 w-1/4 sm:w-1/3 md:w-1/3 lg:w-1/5"
           animate={blobAnimation}
       />
     </div>
