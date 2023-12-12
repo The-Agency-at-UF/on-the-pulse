@@ -7,7 +7,6 @@ function Header() {
 
     <div>
     {/* headroom component makes navbar disappear and reappear on scroll */}
-    <div className="part1">
     <Headroom>
     <div className="navbar">
         <h1 className="logo"> The Agency </h1>
@@ -18,11 +17,7 @@ function Header() {
     </div>
     </Headroom>
     </div>
-    <div className="part2">
-        <h1> Part 2 </h1>
-    </div>
-    
-    </div>
+
 
   )
 }

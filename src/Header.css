@@ -11,16 +11,6 @@
     src: local('Perandory'), url('../fonts/PERANDORY/Perandory-Regular.otf');
 }
 
-.part1{
-    height: 100vh;
-}
-
-.part2{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height:100vh;
-}
 
 /* navbar and navbar items */
 .navbar{
