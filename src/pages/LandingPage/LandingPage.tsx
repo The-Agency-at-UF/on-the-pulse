@@ -5,7 +5,6 @@ import blob2 from '../../../public/images/blob2.png';
 import blob3 from '../../../public/images/blob3.png';
 import blob4 from '../../../public/images/blob4.png';
 import logo from '../../../public/images/landing-page-logo.png';
-import './LandingPage.css';
 
 function LandingPage() {
   const logoAnimation = useAnimation();
