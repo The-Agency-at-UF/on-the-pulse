@@ -9,20 +9,37 @@ import logo from '../../../public/images/landing-page-logo.png';
 function LandingPage() {
   const logoAnimation = useAnimation();
 
+  function getRandomAnimation() {
+    // random values for x, y, scale, and rotate
+    const randomX = [0, Math.random() * 20 - 10, Math.random() * 20 - 10, 0];
+    const randomY = [0, Math.random() * 20 - 10, Math.random() * 20 - 10, 0];
+    const randomScale = [1, 1 + Math.random() * 0.1, 1 - Math.random() * 0.1, 1];
+    const randomRotate = [0, Math.random() * 20 - 10, Math.random() * 20 - 10, 0];
+  
+    // random duration and delay
+    const duration = 10 + Math.random() * 10;
+    const delay = Math.random() * 5;
+  
+    return {
+      x: randomX,
+      y: randomY,
+      scale: randomScale,
+      rotate: randomRotate,
+      transition: {
+        x: { repeat: Infinity, repeatType: "reverse", duration, delay },
+        y: { repeat: Infinity, repeatType: "reverse", duration, delay },
+        scale: { repeat: Infinity, repeatType: "reverse", duration, delay },
+        rotate: { repeat: Infinity, repeatType: "reverse", duration, delay },
+        ease: "linear"
+      }
+    };
+  }
+  
   // define animation for the blobs
-  const blobAnimation = {
-    x: [0, 10, -10, 10, 0],
-    y: [0, 10, -10, 10, 0],
-    scale: [1, 1.05, 0.95, 1.05, 1],
-    rotate: [0, 10, -10, 10, 0],
-    transition: {
-      x: { repeat: Infinity, repeatType: "reverse", duration: 12 },
-      y: { repeat: Infinity, repeatType: "reverse", duration: 14 },
-      scale: { repeat: Infinity, repeatType: "reverse", duration: 16 },
-      rotate: { repeat: Infinity, repeatType: "reverse", duration: 18 },
-      ease: "linear"
-    }
-  }; // todo: make this animation more interesting
+  const blob1Animation = getRandomAnimation();
+  const blob2Animation = getRandomAnimation();
+  const blob3Animation = getRandomAnimation();
+  const blob4Animation = getRandomAnimation();
 
   // logo animation
   useEffect(() => {
@@ -67,25 +84,25 @@ function LandingPage() {
           src={blob1}
           alt="Blob 1"
           className="absolute top-12 left-20 w-1/4 sm:w-1/3 md:w-1/3 lg:w-[24rem]"
-          animate={blobAnimation}
+          animate={blob1Animation}
       />
       <motion.img 
           src={blob2}
           alt="Blob 2"
           className="absolute bottom-0 left-0 -ml-4 sm:w-1/2 md:-ml-8 lg:-ml-24 w-1/4 md:w-1/2 lg:w-1/3"
-          animate={blobAnimation}
+          animate={blob2Animation}
       />
       <motion.img 
           src={blob3}
           alt="Blob 3"
           className="absolute bottom-[12rem] right-[6rem] w-1/4 sm:w-2/5 md:w-1/3 lg:w-[24rem]"
-          animate={blobAnimation}
+          animate={blob3Animation}
       />
       <motion.img 
           src={blob4}
           alt="Blob 4"
           className="absolute top-0 right-0 -mr-32 w-1/4 sm:w-1/3 md:w-1/3 lg:w-1/5"
-          animate={blobAnimation}
+          animate={blob4Animation}
       />
     </div>
   )
