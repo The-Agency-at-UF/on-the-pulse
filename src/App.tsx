@@ -1,11 +1,17 @@
-import './App.css'
-import Header from './Header.tsx'
+import React from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import Header from './Header';
+import LandingPage from './pages/LandingPage/LandingPage';
 
-function App() {
-
+const App = () => {
   return (
-    <Header/>
-  )
-}
+      <Router>
+        <Header />
+          <Routes>
+              <Route path="/" element={<LandingPage />} />
+          </Routes>
+      </Router>
+  );
+};
 
-export default App
+export default App;
