@@ -1,10 +1,10 @@
 import { motion, useAnimation } from 'framer-motion';
 import React, { useEffect } from 'react';
-import blob1 from '../../../public/images/blob1.png';
-import blob2 from '../../../public/images/blob2.png';
-import blob3 from '../../../public/images/blob3.png';
-import blob4 from '../../../public/images/blob4.png';
-import logo from '../../../public/images/landing-page-logo.png';
+import blob1 from '../../assets/images/blob1.png';
+import blob2 from '../../assets/images/blob2.png';
+import blob3 from '../../assets/images/blob3.png';
+import blob4 from '../../assets/images/blob4.png';
+import logo from '../../assets/images/landing-page-logo.png';
 
 function LandingPage() {
 
