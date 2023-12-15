@@ -154,7 +154,7 @@ function LandingPage() {
           src={blob3}
           alt="Blob 3"
           className="absolute bottom-[14rem] right-[1rem] w-2/5 
-                    sm:right-[-11rem] sm:w-[16rem] bottom-[12rem] 
+                    sm:right-[0rem] sm:w-[16rem] bottom-[12rem] 
                     md:right-0 md:w-[20rem] 
                     lg:right-[9rem] lg:w-[24rem]"
           animate={blob3Controls}
