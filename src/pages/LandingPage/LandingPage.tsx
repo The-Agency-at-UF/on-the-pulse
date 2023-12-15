@@ -98,19 +98,19 @@ function LandingPage() {
       <motion.img 
           src={blob1}
           alt="Blob 1"
-          className="absolute top-12 left-20 w-1/4 sm:w-1/3 md:w-1/3 lg:w-[24rem]"
+          className="absolute top-12 left-[10rem] w-1/4 sm:w-1/2 md:w-1/4 lg:w-[14rem]"
           animate={blob1Animation}
       />
       <motion.img 
           src={blob2}
           alt="Blob 2"
-          className="absolute bottom-0 left-0 -ml-4 sm:w-1/2 md:-ml-8 lg:-ml-24 w-1/4 md:w-1/2 lg:w-1/3"
+          className="absolute bottom-0 left-0 -ml-4 sm:w-1/2 md:-ml-8 lg:-ml-24 w-1/4 md:w-1/2 lg:w-[26rem]"
           animate={blob2Animation}
       />
       <motion.img 
           src={blob3}
           alt="Blob 3"
-          className="absolute bottom-[12rem] right-[6rem] w-1/4 sm:w-2/5 md:w-1/3 lg:w-[24rem]"
+          className="absolute bottom-[4rem] right-[6rem] w-1/4 sm:w-2/5 md:w-1/3 lg:w-[20rem]"
           animate={blob3Animation}
       />
       <motion.img 
