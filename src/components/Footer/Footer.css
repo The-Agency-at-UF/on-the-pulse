@@ -1,0 +1,61 @@
+.footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #FFFFFF;
+    width: 100%;
+    position: fixed;
+    bottom: 0; /* Stick to bottom */
+    left: 0; /* Align to the left */
+}
+
+.section {
+    flex: 1;
+    padding: 20px;
+    border-left: 1px solid #FFFFFF; /* Border between sections */
+}
+
+.section:first-child {
+    border-left: none;
+}
+
+.section h3 {
+    font-weight: bold;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    text-align: center; /* Center text for each item */
+}
+
+.section-icon {
+    width: 35px; 
+    height: 35px; 
+    fill: white; /* Sets the color of the SVG */
+}
+
+.section h3 {
+    font-weight: bold;
+    margin: 5px 0; 
+}
+
+.section p {
+    margin: 0; 
+}
+  
+
+/* responsive styles */
+@media (max-width: 600px) {
+    .footer {
+        flex-direction: column;
+    }
+    .section {
+        border-left: none;
+        border-top: 1px solid #FFFFFF;
+    }
+    .section:first-child {
+        border-top: none;
+    }
+}
+  

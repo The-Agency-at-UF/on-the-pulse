@@ -1,10 +1,16 @@
 import './App.css'
-import Header from './Header.tsx'
+
+/* Components */
+import Header from './Header.tsx';
+import Footer from './components/Footer/Footer';
 
 function App() {
 
   return (
-    <Header/>
+    <div className="App">
+      <Header/>
+      <Footer/>
+    </div>
   )
 }
 
