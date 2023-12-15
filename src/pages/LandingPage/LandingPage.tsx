@@ -115,7 +115,7 @@ function LandingPage() {
   return (
     <div className="relative h-screen flex justify-center items-center">
       {/* Logo in the center */}
-      <div className="absolute z-10 w-2/3 sm:w-3/4 md:w-3/5 lg:w-1/2">
+      <div className="absolute z-10 scale-75 sm:w-3/4 md:w-3/5 lg:w-1/2">
       <motion.img 
         src={logo}
         alt="Landing Page Logo"
@@ -127,13 +127,14 @@ function LandingPage() {
       />
       </div>
 
-
       {/* Blobs in corners */}
       <motion.img 
           src={blob1}
           alt="Blob 1"
-          className="absolute top-12 left-[10rem] w-1/4 sm:left-20 sm:w-[12rem] 
-                    md:left-[6rem] md:w-[12rem] lg:w-[14rem]"
+          className="absolute top-[8rem] left-[1rem] w-1/3 
+                    sm:left-[2rem] sm:w-[12rem] 
+                    md:left-[5rem] md:w-[14rem] 
+                    lg:left-[8rem] lg:w-[18rem]"
           animate={blob1Controls}
           onHoverStart={() => onHoverStart(blob1Controls)}
           onHoverEnd={() => onHoverEnd(blob1Controls)}
@@ -141,8 +142,10 @@ function LandingPage() {
       <motion.img 
           src={blob2}
           alt="Blob 2"
-          className="absolute bottom-0 left-0 lg:-ml-26 w-1/3 sm:w-[24rem] sm:-ml-24
-                     md:-ml-28 md:w-[28rem] lg:w-[30rem]"
+          className="absolute bottom-10 left-[-5rem] w-[24rem] 
+                    sm:left-[-6rem] sm:w-[30rem]
+                    md:left-[-7rem] md:w-[34rem] 
+                    lg:left-[-8rem] lg:w-[38rem]"
           animate={blob2Controls}
           onHoverStart={() => onHoverStart(blob2Controls)}
           onHoverEnd={() => onHoverEnd(blob2Controls)}
@@ -150,8 +153,10 @@ function LandingPage() {
       <motion.img 
           src={blob3}
           alt="Blob 3"
-          className="absolute bottom-[4rem] right-[6rem] w-1/5 sm:right-0 sm:w-1/3 
-                      md:right-0 md:w-[16rem] lg:right-[5rem] lg:w-[18rem]"
+          className="absolute bottom-[14rem] right-[1rem] w-2/5 
+                    sm:right-[-11rem] sm:w-[16rem] bottom-[12rem] 
+                    md:right-0 md:w-[20rem] 
+                    lg:right-[9rem] lg:w-[24rem]"
           animate={blob3Controls}
           onHoverStart={() => onHoverStart(blob3Controls)}
           onHoverEnd={() => onHoverEnd(blob3Controls)}
@@ -159,8 +164,10 @@ function LandingPage() {
       <motion.img 
           src={blob4}
           alt="Blob 4"
-          className="absolute top-0 right-0 -mr-32 w-1/4 sm:right-0 sm:bottom-0 sm:w-1/3 
-                      md:right-10 md:w-[16rem] lg:right-5 lg:w-1/5"
+          className="absolute top-4 right-0 -mr-20 w-[17rem] 
+                      sm:right-0 sm:bottom-0 sm:w-[16rem] 
+                      md:right-[0] md:w-[18rem] 
+                      lg:right-[-1rem] lg:w-[22rem]"
           animate={blob4Controls}
           onHoverStart={() => onHoverStart(blob4Controls)}
           onHoverEnd={() => onHoverEnd(blob4Controls)}
