@@ -5,15 +5,13 @@ import { blob1, blob2, blob3, blob4, logo } from '../../assets/images';
 function LandingPage() {
 
   function getRandomAnimation() {
-    // random values for x, y, scale, and rotate
-    const randomX = [0, Math.random() * 20 - 10, Math.random() * 20 - 10, 0];
-    const randomY = [0, Math.random() * 20 - 10, Math.random() * 20 - 10, 0];
-    const randomScale = [1, 1 + Math.random() * 0.1, 1 - Math.random() * 0.1, 1];
-    const randomRotate = [0, Math.random() * 20 - 10, Math.random() * 20 - 10, 0];
+    const randomX = [0, Math.random() * 30 - 15, Math.random() * 30 - 15, 0];
+    const randomY = [0, Math.random() * 30 - 15, Math.random() * 30 - 15, 0];
+    const randomScale = [1, 1 + Math.random() * 0.15, 1 - Math.random() * 0.15, 1];
+    const randomRotate = [0, Math.random() * 30 - 15, Math.random() * 30 - 15, 0];
   
-    // random duration and delay
-    const duration = 10 + Math.random() * 10;
-    const delay = Math.random() * 5;
+    const duration = 12 + Math.random() * 8;
+    const delay = Math.random() * 3;
   
     return {
       x: randomX,
@@ -25,10 +23,10 @@ function LandingPage() {
         y: { repeat: Infinity, repeatType: "reverse", duration, delay },
         scale: { repeat: Infinity, repeatType: "reverse", duration, delay },
         rotate: { repeat: Infinity, repeatType: "reverse", duration, delay },
-        ease: "linear"
+        ease: "easeInOut"
       }
     };
-  }
+  }  
   
   // define animation for the blobs
   const blob1Animation = getRandomAnimation();
