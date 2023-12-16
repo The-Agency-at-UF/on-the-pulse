@@ -3,21 +3,221 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    /* Color Variables */
+    --primary-color: #000000;
+    --secondary-color: #ffffff;
+    --purple: #AB9BFF;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #000000;
+    /* Font Variables */
+    --primary-font: 'Magistral', sans-serif;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+  
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: var(--primary-color);
+  
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 html, body {
   overflow-x: hidden;
 }
 
+h2 {
+  font-family: var(--primary-font);
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+h3 {
+  font-family: var(--primary-font);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* ========== Perandory Font Faces ========== */
+@font-face {
+  font-family: 'Perandory';
+  src: url('./assets/fonts/PERANDORY/Perandory-Condensed.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Perandory';
+  src: url('./assets/fonts/PERANDORY/Perandory-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Perandory';
+  src: url('./assets/fonts/PERANDORY/Perandory-Semi-Condensed.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* ========== Magistral Font Faces ========== */
+@font-face {
+  font-family: 'Magistral';
+  src: url('./assets/fonts/magistral/MagistralBlack.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Magistral';
+  src: url('./assets/fonts/magistral/Magistral Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Magistral';
+  src: url('./assets/fonts/magistral/Magistral Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+/* ========== Gentona Font Faces ========== */
+/* Gentona Book */
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Book Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Gentona ExtraLight */
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona ExtraLight.otf') format('opentype');
+  font-weight: 250;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona ExtraLight Italic.otf') format('opentype');
+  font-weight: 250;
+  font-style: italic;
+}
+
+/* Gentona Bold */
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Bold Italic.otf') format('opentype');
+  font-weight: 400; /* Adjust if necessary */
+  font-style: italic;
+}
+
+/* Gentona ExtraBold */
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona ExtraBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona ExtraBold Italic.otf') format('opentype');
+  font-weight: 800;
+  font-style: italic;
+}
+
+/* Gentona Heavy */
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Heavy.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Heavy Italic.otf') format('opentype');
+  font-weight: 900;
+  font-style: italic;
+}
+
+/* Gentona Light */
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Light Italic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* Gentona Medium */
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Medium Italic.otf') format('opentype');
+  font-weight: 400; /* Adjust if necessary */
+  font-style: italic;
+}
+
+/* Gentona SemiBold */
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona SemiBold Italic.otf') format('opentype');
+  font-weight: 400; /* Adjust if necessary */
+  font-style: italic;
+}
+
+/* Gentona Thin */
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Thin.otf') format('opentype');
+  font-weight: 250;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gentona';
+  src: url('./assets/fonts/gentona/Gentona Thin Italic.otf') format('opentype');
+  font-weight: 250;
+  font-style: italic;
+}
