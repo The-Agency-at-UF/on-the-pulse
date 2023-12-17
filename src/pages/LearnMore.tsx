@@ -1,10 +1,59 @@
-import React from 'react'
+import { motion, useAnimation } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { blobBottomLeft, blobBottomRight, blobTopLeft, blobTopRight } from '../assets/images/learn-more';
+import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
 
 function LearnMore() {
+    const topLeftControls = useAnimation();
+    const topRightControls = useAnimation();
+    const bottomLeftControls = useAnimation();
+    const bottomRightControls = useAnimation();
+  
+    useEffect(() => {
+      topLeftControls.start(getRandomAnimation());
+      topRightControls.start(getRandomAnimation());
+      bottomLeftControls.start(getRandomAnimation());
+      bottomRightControls.start(getRandomAnimation());
+    }, [topLeftControls, topRightControls, bottomLeftControls, bottomRightControls]);
+  
   return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-screen px-4">
-        
+    <div className="z-0">
+        {/* Blob Elements */}
+        <motion.img 
+          src={blobTopLeft}
+          alt="Blob Top Left"
+          className="absolute top-0 left-0"
+          animate={topLeftControls}
+          onHoverStart={() => onHoverStart(topLeftControls)}
+          onHoverEnd={() => onHoverEnd(topLeftControls)}
+        />
+        <motion.img 
+          src={blobTopRight}
+          alt="Blob Top Right"
+          className="absolute top-0 right-0"
+          animate={topRightControls}
+          onHoverStart={() => onHoverStart(topRightControls)}
+          onHoverEnd={() => onHoverEnd(topRightControls)}
+        />
+        <motion.img 
+          src={blobBottomLeft}
+          alt="Blob Bottom Left"
+          className="absolute bottom-0 left-0"
+          animate={bottomLeftControls}
+          onHoverStart={() => onHoverStart(bottomLeftControls)}
+          onHoverEnd={() => onHoverEnd(bottomLeftControls)}
+        />
+        <motion.img 
+          src={blobBottomRight}
+          alt="Blob Bottom Right"
+          className="absolute bottom-0 right-0"
+          animate={bottomRightControls}
+          onHoverStart={() => onHoverStart(bottomRightControls)}
+          onHoverEnd={() => onHoverEnd(bottomRightControls)}
+        />
+    </div>
+      <div className="z-10 flex flex-col items-center justify-center min-h-screen px-4">
         <h2 className="text-5xl md:text-6xl font-bold text-center mb-6">
             Learn More
         </h2>
