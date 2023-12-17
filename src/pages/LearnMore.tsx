@@ -1,20 +1,31 @@
 import { motion, useAnimation } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { blobBottomLeft, blobBottomRight, blobTopLeft, blobTopRight } from '../assets/images/learn-more';
+import submitBlob from '../assets/images/submit-blob.png';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
 
 function LearnMore() {
+
+    // blob animations
     const topLeftControls = useAnimation();
     const topRightControls = useAnimation();
     const bottomLeftControls = useAnimation();
     const bottomRightControls = useAnimation();
+
+    // submitBlob animation
+    const submitBlobControls = useAnimation();
   
     useEffect(() => {
       topLeftControls.start(getRandomAnimation());
       topRightControls.start(getRandomAnimation());
       bottomLeftControls.start(getRandomAnimation());
       bottomRightControls.start(getRandomAnimation());
-    }, [topLeftControls, topRightControls, bottomLeftControls, bottomRightControls]);
+
+      //submitBlob
+      submitBlobControls.start(getRandomAnimation());
+    }, [topLeftControls, topRightControls, 
+      bottomLeftControls, bottomRightControls,
+      submitBlobControls]);
   
   return (
     <>
@@ -96,6 +107,19 @@ function LearnMore() {
 
             <h4 className="text-sm md:text-lg mt-4">Email Address</h4>
             <input type="text" name="email" className="w-full p-2" />
+
+            <button type="submit" 
+            className='flex justify-center items-center w-full'>
+              <motion.img 
+                src={submitBlob}
+                alt="Submit Blob"
+                className="w-1/2 mt-6"
+                animate={submitBlobControls}
+                onHoverStart={() => onHoverStart(submitBlobControls)}
+                onHoverEnd={() => onHoverEnd(submitBlobControls)}
+                draggable="false"
+              />
+            </button>
 
           </form>
         </div>
