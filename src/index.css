@@ -41,6 +41,45 @@ h3 {
   font-weight: bold;
 }
 
+.checkbox {
+  @apply appearance-none bg-transparent align-middle w-6 h-6 border-2 border-current rounded;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+  color: var(--purple);
+  transition: background-color 120ms ease-in-out, border-color 120ms ease-in-out;
+}
+
+.checkbox::before {
+  content: '';
+  width: 0.8em;
+  height: 0.8em;
+  transition: transform 120ms ease-in-out, opacity 120ms ease-in-out;
+  opacity: 0; /* initially hidden */
+  transform: scale(0);
+  transform-origin: bottom left;
+  clip-path: polygon(10% 50%, 0% 60%, 40% 100%, 100% 20%, 90% 10%, 35% 75%);
+  box-shadow: inset 1em 1em currentColor;
+}
+
+.checkbox:checked {
+  background-color: var(--purple); /* fill the box with purple */
+  border-color: var(--purple); /* same for border */
+}
+
+.checkbox:checked::before {
+  opacity: 1; /* make the checkmark visible */
+  transform: scale(1); /* return to normal size */
+  box-shadow: inset 1rem 1rem var(--secondary-color); /* make the checkmark white */
+}
+
+.checkbox:focus {
+  @apply outline-none;
+  outline: max(1px, 0.15rem) solid currentColor;
+  outline-offset: max(2px, 0.15rem);
+}
+
+
 /* ========== Perandory Font Faces ========== */
 @font-face {
   font-family: 'Perandory';
@@ -84,7 +123,6 @@ h3 {
   font-weight: 700;
   font-style: normal;
 }
-
 
 /* ========== Gentona Font Faces ========== */
 /* Gentona Book */
