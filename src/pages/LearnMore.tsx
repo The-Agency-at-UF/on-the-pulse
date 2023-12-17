@@ -9,7 +9,7 @@ function LearnMore() {
         
         <div class="w-full max-w-2xl">
 
-          <h3>Describe Your Inquiry</h3>
+          <h3 class='pb-4'>Describe Your Inquiry</h3>
           
           <form action="" class="space-y-4">
             <label class="form-control flex items-center gap-2 text-xl">
@@ -41,8 +41,6 @@ function LearnMore() {
 
             <h4 class="text-lg">Email Address</h4>
             <input type="text" name="email" class="w-full p-2" />
-
-
 
           </form>
         </div>
