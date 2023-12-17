@@ -7,9 +7,11 @@
     --primary-color: #000000;
     --secondary-color: #ffffff;
     --purple: #AB9BFF;
+    --purple-60: rgba(171, 155, 255, 0.6); /* Adjust the RGBA values as needed */
 
     /* Font Variables */
     --primary-font: 'Magistral', sans-serif;
+    --secondary-font: 'Gentona', sans-serif;
 
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
@@ -29,16 +31,30 @@ html, body {
   overflow-x: hidden;
 }
 
-h2 {
+h2,h3,h4,h5,h6 {
   font-family: var(--primary-font);
-  font-size: 4rem;
   font-weight: bold;
 }
-
+h2 {
+  font-size: 4rem;
+}
 h3 {
-  font-family: var(--primary-font);
   font-size: 2rem;
-  font-weight: bold;
+}
+h4 {
+  font-size: 1.2rem;
+  font-weight:medium;
+}
+
+form {
+  font-family: var(--secondary-font);
+  font-weight: 400;
+}
+textarea, input {
+  background-color: var(--purple-60);
+  border-color: var(--purple);
+  border-width: 0.2rem;
+  border-radius: 0.2rem;
 }
 
 .checkbox {
@@ -166,7 +182,7 @@ h3 {
 @font-face {
   font-family: 'Gentona';
   src: url('./assets/fonts/gentona/Gentona Bold Italic.otf') format('opentype');
-  font-weight: 400; /* Adjust if necessary */
+  font-weight: 400;
   font-style: italic;
 }
 
