@@ -1,6 +1,6 @@
 import { motion, useAnimation } from 'framer-motion';
 import React, { useEffect } from 'react';
-import { blob1, blob2, blob3, blob4, logo } from '../assets/images';
+import { blob1, blob2, blob3, blob4, logo } from '../assets/images/landing-page';
 
 function LandingPage() {
 
