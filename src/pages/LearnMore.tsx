@@ -18,42 +18,46 @@ function LearnMore() {
   
   return (
     <>
-    <div className="z-0">
+    <div className="">
         {/* Blob Elements */}
         <motion.img 
           src={blobTopLeft}
           alt="Blob Top Left"
-          className="blob-image absolute top-0 left-0"
+          className="absolute top-0 left-0"
           animate={topLeftControls}
           onHoverStart={() => onHoverStart(topLeftControls)}
           onHoverEnd={() => onHoverEnd(topLeftControls)}
+          draggable="false"
         />
         <motion.img 
           src={blobTopRight}
           alt="Blob Top Right"
-          className="blob-image absolute top-0 right-0"
+          className="absolute top-0 right-0"
           animate={topRightControls}
           onHoverStart={() => onHoverStart(topRightControls)}
           onHoverEnd={() => onHoverEnd(topRightControls)}
+          draggable="false"
         />
         <motion.img 
           src={blobBottomLeft}
           alt="Blob Bottom Left"
-          className="blob-image absolute bottom-0 left-0"
+          className="absolute bottom-0 left-0"
           animate={bottomLeftControls}
           onHoverStart={() => onHoverStart(bottomLeftControls)}
           onHoverEnd={() => onHoverEnd(bottomLeftControls)}
+          draggable="false"
         />
         <motion.img 
           src={blobBottomRight}
           alt="Blob Bottom Right"
-          className="blob-image absolute bottom-0 right-0"
+          className="absolute bottom-0 right-0"
           animate={bottomRightControls}
           onHoverStart={() => onHoverStart(bottomRightControls)}
           onHoverEnd={() => onHoverEnd(bottomRightControls)}
+          draggable="false"
         />
     </div>
-      <div className="z-10 flex flex-col items-center justify-center min-h-screen px-4">
+      <div className="flex flex-col items-center justify-center min-h-screen px-4">
         <h2 className="text-5xl md:text-6xl font-bold text-center mb-6">
             Learn More
         </h2>

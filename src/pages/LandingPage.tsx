@@ -81,7 +81,8 @@ function LandingPage() {
         animate={logoAnimation}
         whileHover={logoHoverAnimation}
         onHoverEnd={handleLogoHoverEnd}
-        className="blob-image max-w-full h-auto"
+        className="max-w-full h-auto"
+        draggable="false"
       />
       </div>
 
@@ -89,30 +90,32 @@ function LandingPage() {
       <motion.img 
           src={blob1}
           alt="Blob 1"
-          className="blob-image absolute top-[8rem] left-[1rem] w-1/3 
+          className="absolute top-[8rem] left-[1rem] w-1/3 
                     sm:left-[2rem] sm:w-[12rem] 
                     md:left-[5rem] md:w-[14rem] 
                     lg:left-[8rem] lg:w-[18rem]"
           animate={blob1Controls}
           onHoverStart={() => onHoverStart(blob1Controls)}
           onHoverEnd={() => onHoverEnd(blob1Controls)}
+          draggable="false"
       />
       <motion.img 
           src={blob2}
           alt="Blob 2"
-          className="blob-image absolute bottom-10 left-[-5rem] w-[24rem] 
+          className="absolute bottom-10 left-[-5rem] w-[24rem] 
                     sm:left-[-6rem] sm:w-[30rem]
                     md:left-[-7rem] md:w-[34rem] 
                     lg:left-[-8rem] lg:w-[38rem]"
           animate={blob2Controls}
           onHoverStart={() => onHoverStart(blob2Controls)}
           onHoverEnd={() => onHoverEnd(blob2Controls)}
+          draggable="false"
       />
       <motion.img 
           src={blob3}
           alt="Blob 3"
-          className="blob-image absolute bottom-[14rem] right-[1rem] w-2/5 
-                    sm:right-[0rem] sm:w-[16rem] bottom-[12rem] 
+          className="absolute bottom-[14rem] right-[1rem] w-2/5 
+                    sm:right-[0rem] sm:w-[16rem] sm:bottom-[12rem] 
                     md:right-0 md:w-[20rem] 
                     lg:right-[9rem] lg:w-[24rem]"
           animate={blob3Controls}
@@ -122,13 +125,14 @@ function LandingPage() {
       <motion.img 
           src={blob4}
           alt="Blob 4"
-          className="blob-image absolute top-4 right-0 -mr-20 w-[17rem] 
+          className="absolute top-4 right-0 -mr-20 w-[17rem] 
                       sm:right-0 sm:bottom-0 sm:w-[16rem] 
                       md:right-[0] md:w-[18rem] 
                       lg:right-[-1rem] lg:w-[22rem]"
           animate={blob4Controls}
           onHoverStart={() => onHoverStart(blob4Controls)}
           onHoverEnd={() => onHoverEnd(blob4Controls)}
+          draggable="false"
       />
     </div>
   )

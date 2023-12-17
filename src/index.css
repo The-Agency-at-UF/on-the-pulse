@@ -95,11 +95,6 @@ textarea, input {
   outline-offset: max(2px, 0.15rem);
 }
 
-.blob-image {
-  pointer-events: none;
-}
-
-
 /* ========== Perandory Font Faces ========== */
 @font-face {
   font-family: 'Perandory';
