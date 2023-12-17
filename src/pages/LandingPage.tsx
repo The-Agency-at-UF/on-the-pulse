@@ -5,8 +5,6 @@ import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animation
 
 function LandingPage() {
 
-
-  
   // define animation for the blobs
   const blob1Controls = useAnimation();
   const blob2Controls = useAnimation();
@@ -21,8 +19,7 @@ function LandingPage() {
     blob4Controls.start(getRandomAnimation());
   }, [blob1Controls, blob2Controls, blob3Controls, blob4Controls]);
 
-
-
+  
   // logo animation
   const logoAnimation = useAnimation();
 
