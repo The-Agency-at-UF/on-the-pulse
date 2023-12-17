@@ -23,7 +23,7 @@ function LearnMore() {
         <motion.img 
           src={blobTopLeft}
           alt="Blob Top Left"
-          className="absolute top-0 left-0"
+          className="blob-image absolute top-0 left-0"
           animate={topLeftControls}
           onHoverStart={() => onHoverStart(topLeftControls)}
           onHoverEnd={() => onHoverEnd(topLeftControls)}
@@ -31,7 +31,7 @@ function LearnMore() {
         <motion.img 
           src={blobTopRight}
           alt="Blob Top Right"
-          className="absolute top-0 right-0"
+          className="blob-image absolute top-0 right-0"
           animate={topRightControls}
           onHoverStart={() => onHoverStart(topRightControls)}
           onHoverEnd={() => onHoverEnd(topRightControls)}
@@ -39,7 +39,7 @@ function LearnMore() {
         <motion.img 
           src={blobBottomLeft}
           alt="Blob Bottom Left"
-          className="absolute bottom-0 left-0"
+          className="blob-image absolute bottom-0 left-0"
           animate={bottomLeftControls}
           onHoverStart={() => onHoverStart(bottomLeftControls)}
           onHoverEnd={() => onHoverEnd(bottomLeftControls)}
@@ -47,7 +47,7 @@ function LearnMore() {
         <motion.img 
           src={blobBottomRight}
           alt="Blob Bottom Right"
-          className="absolute bottom-0 right-0"
+          className="blob-image absolute bottom-0 right-0"
           animate={bottomRightControls}
           onHoverStart={() => onHoverStart(bottomRightControls)}
           onHoverEnd={() => onHoverEnd(bottomRightControls)}
