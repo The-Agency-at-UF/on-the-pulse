@@ -74,15 +74,12 @@ function LearnMore() {
           alt="Blob Bottom Right"
           className="absolute bottom-0 right-0 w-1/4
           sm:bottom-[-2rem] sm:right-0 sm:w-[12rem]"
-          animate={bottomRightControls}
-          onHoverStart={() => onHoverStart(bottomRightControls)}
-          onHoverEnd={() => onHoverEnd(bottomRightControls)}
           draggable="false"
         />
       </div>
 
       {/* Content */}
-      <div className="mt-6 z-10 w-full px-4">
+      <div className="mt-6 mb-12 z-10 w-full px-4">
         <h2 className="text-5xl md:text-6xl font-bold text-center mb-6">
             Learn More
         </h2>
