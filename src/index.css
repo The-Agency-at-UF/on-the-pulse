@@ -57,8 +57,18 @@ textarea, input {
   border-radius: 0.2rem;
 }
 
+.blob-container {
+  overflow-x: hidden;
+}
+
+
+.checkbox-container {
+  @apply flex items-start gap-2; /* Align items vertically start and add gap */
+}
+
 .checkbox {
   @apply appearance-none bg-transparent align-middle w-6 h-6 border-2 border-current rounded;
+  min-width: 1.5rem;
   transform: translateY(-0.075em);
   display: grid;
   place-content: center;
