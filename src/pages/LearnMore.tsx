@@ -74,6 +74,9 @@ function LearnMore() {
           alt="Blob Bottom Right"
           className="absolute bottom-0 right-0 w-1/4
           sm:bottom-[-2rem] sm:right-0 sm:w-[12rem]"
+          animate={bottomRightControls}
+          onHoverStart={() => onHoverStart(bottomRightControls)}
+          onHoverEnd={() => onHoverEnd(bottomRightControls)}
           draggable="false"
         />
       </div>
