@@ -29,6 +29,7 @@ function LearnMore() {
 
   function handleSubmit(event) {
     event.preventDefault();
+    //TODO: @Tam: Handle form submission
     console.log('submitted');
   }
 
