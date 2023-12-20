@@ -11,40 +11,68 @@
     src: local('Perandory'), url('../fonts/PERANDORY/Perandory-Regular.otf');
 }
 
-
+a:link, a:visited, a:hover, a:focus {
+    text-decoration: none;
+    color: white;
+}
 /* navbar and navbar items */
 .navbar{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 0 1rem 0 1rem;
 }
 
 .logo {
     font-family: 'Perandory';
+    z-index: 1;
 
 }
 
-@media (min-width: 768px) {
+@media (min-width: 640px) {
     .navbar-entry {
     font-family: 'Gentona';
     font-weight: 400;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     padding: 0 1rem 0 1rem;
     cursor: pointer;
-}
+    }
+    .logo {
+        font-size: 2.2rem;
+    }
+    
+    .standard-right{
+        display: flex;
+    }
+    .hamburger {
+        display: none;
+    }
+    .navbar{
+        padding: 1rem 2.2rem 1rem 2.2rem;
+    }
+
+
+
 }
 
 @media (max-width: 640px) {
     .navbar-entry {
     font-family: 'Gentona';
     font-weight: 400;
-    font-size: 0.75rem;
+    font-size: 1.25rem;
     padding: 0 1rem 0 1rem;
     cursor: pointer;
     }
     .logo{
-        font-size: 1.5rem;
+        font-size: 2rem;
+    }
+    .standard-right{
+        display: none;
+    }
+    .hamburger {
+        display: inline;
+    }
+    .navbar{
+        padding: 1rem 1.90rem 1rem 1.90rem;
     }
 }
 
@@ -54,4 +82,3 @@
     align-items: center;
     justify-content: space-between;
 }
-
