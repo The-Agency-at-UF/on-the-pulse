@@ -1,0 +1,55 @@
+
+/*font for navbar items*/
+@font-face {
+    font-family: 'Gentona';
+    src: local('Gentona'), url(../fonts/Gentona\ Complete/Gentona\ Medium.otf);
+}
+
+/*font for Agency logo */
+@font-face {
+    font-family: 'Perandory';
+    src: local('Perandory'), url('../fonts/PERANDORY/Perandory-Regular.otf');
+}
+
+
+/* navbar and navbar items */
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    border-bottom: 1px solid gray; /* White border at the bottom */
+    background-color: #000000;
+}
+
+.logo {
+    font-family: 'Perandory';
+    font-size: 2.8rem;
+    flex-shrink: 0;
+    margin: 0;
+    line-break: 1;
+    align-self: center;
+}
+
+.right-navbar {
+    display:flex;
+    align-items: center;
+}
+
+.navbar-entry {
+    font-size: 2.5rem; 
+    padding: 0 15px; /* Horizontal padding */
+    cursor: pointer; 
+    white-space: nowrap; 
+}
+
+@media (max-width: 768px) {
+    .navbar-entry {
+        font-size: 1rem; /* Slightly smaller font for smaller screens */
+    }
+
+    .logo {
+        font-size: 1.75rem; /* Slightly smaller logo for smaller screens */
+    }
+}
+
