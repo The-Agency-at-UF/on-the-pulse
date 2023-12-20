@@ -14,7 +14,9 @@ const Header: React.FC = () => {
     <Headroom>
 
     <div className="navbar">
+        <div className="flex items-center justify-center"> 
         <h1 className="logo"> <a href="https://theagency.jou.ufl.edu/"> The Agency </a> </h1>
+        </div>
         <div className="right-navbar">
         <div className="standard-right">
         <h3 className="navbar-entry"> About Us </h3>
