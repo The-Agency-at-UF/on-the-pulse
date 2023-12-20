@@ -1,34 +1,33 @@
 import React from 'react';
+import { FaLocationArrow, FaPhone, FaEnvelope } from 'react-icons/fa'; // Importing FontAwesome icons
+import { SlLocationPin } from "react-icons/sl";
+import { PiPhone } from "react-icons/pi";
+import { TfiEmail } from "react-icons/tfi";
 
-/* Font Awesome Icons */
-import LocationIcon from '../../assets/fontawesome-icons/location-dot-solid.svg';
-import PhoneIcon from '../../assets/fontawesome-icons/phone-solid.svg';
-import EmailIcon from '../../assets/fontawesome-icons/envelope-regular.svg';
-
-const Section: React.FC<{ icon: string, title: string, children: React.ReactNode }> = ({ icon, title, children }) => (
+const Section: React.FC<{ icon: JSX.Element, title: string, children: React.ReactNode }> = ({ icon, title, children }) => (
     <div className="section">
-        <img src={icon} alt={title} className="section-icon" />
+        {icon}
         <h3>{title}</h3>
         {children}
     </div>
 );
 
 export const AddressSection: React.FC = () => (
-    <Section icon={LocationIcon} title="Address">
+    <Section icon={<SlLocationPin className="section-icon"/>} title="Address">
         <p>University of Florida</p>
         <p>1000 Weimer Hall</p>
         <p>Gainesville, FL 32611</p>
     </Section>
 );
-  
+
 export const PhoneSection: React.FC = () => (
-    <Section icon={PhoneIcon} title="Phone">
+    <Section icon={<PiPhone className="section-icon"/>} title="Phone">
         <p>(352) 294-3848</p>
     </Section>
 );
 
 export const EmailSection: React.FC = () => (
-    <Section icon={EmailIcon} title="Email">
+    <Section icon={<TfiEmail className="section-icon"/>} title="Email">
         <p>theagency@jou.ufl.edu</p>
     </Section>
 );
