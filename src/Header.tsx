@@ -1,6 +1,7 @@
 import './Header.css'
 import Headroom from 'react-headroom'
 import Hamburger from './Hamburger'
+import {Link} from 'react-router-dom';
 
 
 const Header: React.FC = () => {
@@ -20,7 +21,7 @@ const Header: React.FC = () => {
         <div className="right-navbar">
         <div className="standard-right">
         <h3 className="navbar-entry"> About Us </h3>
-        <h3 className="navbar-entry"> Learn More </h3>
+        <h3 className="navbar-entry"> <Link to="/learn-more"> Learn More </Link> </h3>
         </div>
         <div className="hamburger"> 
         <Hamburger/>

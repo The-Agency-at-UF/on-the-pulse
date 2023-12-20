@@ -21,7 +21,7 @@ const Hamburger: FC = () => {
     <div className="hamburger-overlay">
       <div className="hamburger-links"> 
         <h3 className="navbar-entry hamburger-entry"> About Us </h3>
-        <h3 className="navbar-entry hamburger-entry"> Learn More </h3>
+        <h3 className="navbar-entry hamburger-entry"> <Link to="/learn-more" onClick={()=>setHamburger(false)}> Learn More </Link> </h3>
       </div>
     </div> 
 
