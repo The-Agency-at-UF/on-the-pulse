@@ -1,34 +1,10 @@
 import { motion, useAnimation } from 'framer-motion';
 import React, { useEffect } from 'react';
-import { blob1, blob2, blob3, blob4, logo } from '../../assets/images';
+import { blob1, blob2, blob3, blob4, logo } from '../assets/images/landing-page';
+import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
 
 function LandingPage() {
 
-  // randomize blob animations
-  function getRandomAnimation() {
-    const randomX = [0, Math.random() * 30 - 15, Math.random() * 30 - 15, 0];
-    const randomY = [0, Math.random() * 30 - 15, Math.random() * 30 - 15, 0];
-    const randomScale = [1, 1 + Math.random() * 0.15, 1 - Math.random() * 0.15, 1];
-    const randomRotate = [0, Math.random() * 30 - 15, Math.random() * 30 - 15, 0];
-  
-    const duration = 12 + Math.random() * 8;
-    const delay = Math.random() * 3;
-  
-    return {
-      x: randomX,
-      y: randomY,
-      scale: randomScale,
-      rotate: randomRotate,
-      transition: {
-        x: { repeat: Infinity, repeatType: "reverse", duration, delay },
-        y: { repeat: Infinity, repeatType: "reverse", duration, delay },
-        scale: { repeat: Infinity, repeatType: "reverse", duration, delay },
-        rotate: { repeat: Infinity, repeatType: "reverse", duration, delay },
-        ease: "easeInOut"
-      }
-    };
-  }  
-  
   // define animation for the blobs
   const blob1Controls = useAnimation();
   const blob2Controls = useAnimation();
@@ -43,25 +19,7 @@ function LandingPage() {
     blob4Controls.start(getRandomAnimation());
   }, [blob1Controls, blob2Controls, blob3Controls, blob4Controls]);
 
-  const onHoverStart = (controls) => {
-    controls.start({
-      scale: [1.05, 1.1, 1.05, 1.15, 1.05, 1.1, 1.05], // keyframes for pulsing effect
-      transition: {
-        duration: 0.7,
-        ease: "easeInOut",
-        loop: Infinity, // loop the animation indefinitely
-      }
-    });
-  };
   
-  const onHoverEnd = (controls) => {
-    controls.start({ 
-      scale: 1,
-      transition: { duration: 0.3, ease: "easeInOut" } 
-    });
-  };
-  
-
   // logo animation
   const logoAnimation = useAnimation();
 
@@ -124,6 +82,7 @@ function LandingPage() {
         whileHover={logoHoverAnimation}
         onHoverEnd={handleLogoHoverEnd}
         className="max-w-full h-auto"
+        draggable="false"
       />
       </div>
 
@@ -138,6 +97,7 @@ function LandingPage() {
           animate={blob1Controls}
           onHoverStart={() => onHoverStart(blob1Controls)}
           onHoverEnd={() => onHoverEnd(blob1Controls)}
+          draggable="false"
       />
       <motion.img 
           src={blob2}
@@ -149,12 +109,13 @@ function LandingPage() {
           animate={blob2Controls}
           onHoverStart={() => onHoverStart(blob2Controls)}
           onHoverEnd={() => onHoverEnd(blob2Controls)}
+          draggable="false"
       />
       <motion.img 
           src={blob3}
           alt="Blob 3"
           className="absolute bottom-[14rem] right-[1rem] w-2/5 
-                    sm:right-[0rem] sm:w-[16rem] bottom-[12rem] 
+                    sm:right-[0rem] sm:w-[16rem] sm:bottom-[12rem] 
                     md:right-0 md:w-[20rem] 
                     lg:right-[9rem] lg:w-[24rem]"
           animate={blob3Controls}
@@ -171,6 +132,7 @@ function LandingPage() {
           animate={blob4Controls}
           onHoverStart={() => onHoverStart(blob4Controls)}
           onHoverEnd={() => onHoverEnd(blob4Controls)}
+          draggable="false"
       />
     </div>
   )
