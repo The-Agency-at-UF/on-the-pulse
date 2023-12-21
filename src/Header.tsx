@@ -12,14 +12,17 @@ const Header: React.FC = () => {
     <div>
     {/* headroom component makes navbar disappear and reappear on scroll */}
 
-    <Headroom>
+    <Headroom style={{
+      zIndex: '20'
+    }}>
 
     <div className="navbar">
         <div className="flex items-center justify-center"> 
-        <h1 className="logo"> <a href="https://theagency.jou.ufl.edu/"> The Agency </a> </h1>
+        <h1 className="logo z-30"> <a className="z-30" href="https://theagency.jou.ufl.edu/"> The Agency </a> </h1>
         </div>
         <div className="right-navbar">
         <div className="standard-right">
+        <h3 className="navbar-entry"> <Link to="/"> Home </Link> </h3>
         <h3 className="navbar-entry"> About Us </h3>
         <h3 className="navbar-entry"> <Link to="/learn-more"> Learn More </Link> </h3>
         </div>

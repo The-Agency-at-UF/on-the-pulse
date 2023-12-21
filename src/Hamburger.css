@@ -10,7 +10,6 @@
    display: flex; 
     justify-content: center;
     text-align: center;
-    z-index: 1;
 }
 
 .hamburger-links {
@@ -23,9 +22,8 @@
 
 .hamburger-overlay{
     top: 0;
-    right: 0;
     left: 0;
-    margin-bottom: auto;
-    position: absolute;
-    height: 100vh;
+    position: fixed;
+    height: 100%;
+    width: 100%;
 }

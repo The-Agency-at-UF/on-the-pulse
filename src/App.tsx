@@ -7,7 +7,7 @@ import LearnMore from './pages/LearnMore';
 const App = () => {
   return (
       <Router>
-        <Header />
+        <Header/>
           <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/learn-more" element={<LearnMore />} />

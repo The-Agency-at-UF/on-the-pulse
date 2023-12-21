@@ -12,14 +12,16 @@ const Hamburger: FC = () => {
     setHamburger(!hamburgerOpen)
   }
 
+
   return (
     <>
       <div className="hamburger-menu" onClick={toggleHamburger}>
-      <img className="hamburger-icon" src={icon}/> 
+      <img className="hamburger-icon z-30" src={icon}/> 
       </div>
 
-    <div className="hamburger-overlay">
+    <div className="hamburger-overlay z-20">
       <div className="hamburger-links"> 
+      <h3 className="navbar-entry hamburger-entry"> <Link to="/"> Home </Link> </h3>
         <h3 className="navbar-entry hamburger-entry"> About Us </h3>
         <h3 className="navbar-entry hamburger-entry"> <Link to="/learn-more" onClick={()=>setHamburger(false)}> Learn More </Link> </h3>
       </div>
