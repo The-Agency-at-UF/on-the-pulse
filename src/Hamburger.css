@@ -23,7 +23,8 @@
 .hamburger-overlay{
     top: 0;
     left: 0;
-    position: fixed;
-    height: 100%;
+    position: absolute;
+    height: 100vh;
     width: 100%;
+
 }
