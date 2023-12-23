@@ -2,9 +2,15 @@ import './Header.css'
 import Headroom from 'react-headroom'
 import Hamburger from './Hamburger'
 import {Link} from 'react-router-dom';
-
+import {useState} from 'react'
 
 const Header: React.FC = () => {
+
+  const [hamburgerState, setHamburgerState] = useState<boolean>(false);
+
+  const receiveHamburgerState = (data: boolean):void => {
+    setHamburgerState(data);;
+  };
 
   
   return (
@@ -13,8 +19,10 @@ const Header: React.FC = () => {
     {/* headroom component makes navbar disappear and reappear on scroll */}
 
     <Headroom style={{
-      zIndex: '20'
-    }}>
+      zIndex: '20',
+    
+
+    }} pin={!hamburgerState ? true : false}>
 
     <div className="navbar">
         <div className="flex items-center justify-center"> 
@@ -27,7 +35,7 @@ const Header: React.FC = () => {
         <h3 className="navbar-entry"> <Link to="/learn-more"> Learn More </Link> </h3>
         </div>
         <div className="hamburger"> 
-        <Hamburger/>
+        <Hamburger sendHamburgerState={receiveHamburgerState}/>
         </div>
         </div>
     </div>

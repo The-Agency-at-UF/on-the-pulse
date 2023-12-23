@@ -4,12 +4,20 @@ import icon from "./assets/images/hamburger-menu.svg"
 import {useState} from "react"
 import {Link} from "react-router-dom"
 
-
-const Hamburger: FC = () => {
+interface HamburgerProps {
+    sendHamburgerState: (data: boolean) => void;
+}
+const Hamburger: FC<HamburgerProps> = ({sendHamburgerState}) => {
   const [hamburgerOpen, setHamburger] = useState<boolean>(false);
 
-  const toggleHamburger = () => {
-    setHamburger(!hamburgerOpen)
+  const toggleHamburger = ():void => {
+    setHamburger(!hamburgerOpen);
+    sendData();
+  }
+
+  const sendData = ():void => {
+    const data: boolean = hamburgerOpen;
+    sendHamburgerState(data);
   }
 
 
@@ -33,11 +41,8 @@ const Hamburger: FC = () => {
         }
 
         .hamburger-overlay{
+          height: ${hamburgerOpen ? '100vh' : '100%'};
           background-color: ${hamburgerOpen ? 'rgba(0,0,0,.80)' : 'inherit'};
-        }
-
-        html, body {
-            overflow-y: ${hamburgerOpen ? 'hidden' : 'inherit'};
         }
         
         
