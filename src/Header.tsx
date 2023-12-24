@@ -20,7 +20,6 @@ const Header: React.FC = () => {
 
     <Headroom style={{
       zIndex: '20',
-    
 
     }} pin={hamburgerState}>
 

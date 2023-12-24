@@ -41,10 +41,11 @@ const Hamburger: FC<HamburgerProps> = ({sendHamburgerState}) => {
         }
 
         .hamburger-overlay{
-          height: ${hamburgerOpen ? '100vh' : '0'};
+          height: ${hamburgerOpen ? '112vh' : '0'};
           background-color: ${hamburgerOpen ? 'rgba(0,0,0,.80)' : 'inherit'};
         }
         
+
         
       `}</style>
     </>
