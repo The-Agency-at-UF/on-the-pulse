@@ -9,7 +9,7 @@ const Header: React.FC = () => {
   const [hamburgerState, setHamburgerState] = useState<boolean>(false);
 
   const receiveHamburgerState = (data: boolean):void => {
-    setHamburgerState(data);;
+    setHamburgerState(!data);
   };
 
   
@@ -22,7 +22,7 @@ const Header: React.FC = () => {
       zIndex: '20',
     
 
-    }} pin={!hamburgerState ? true : false}>
+    }} pin={hamburgerState}>
 
     <div className="navbar">
         <div className="flex items-center justify-center"> 

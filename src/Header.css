@@ -72,6 +72,7 @@ a:link, a:visited, a:hover, a:focus {
     }
     .navbar{
         padding: 1rem 1.90rem 1rem 1.90rem;
+        max-width: 100vw;
     }
 }
 
