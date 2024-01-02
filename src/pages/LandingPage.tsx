@@ -72,20 +72,6 @@ function LandingPage() {
 
   return (
     <div className="relative h-screen flex justify-center items-center">
-      {/* Logo in the center */}
-      <div className="absolute z-10 scale-75 sm:w-3/4 md:w-3/5 lg:w-1/2">
-      <motion.img 
-        src={logo}
-        alt="Landing Page Logo"
-        initial={{ y: -50, opacity: 0 }}
-        animate={logoAnimation}
-        whileHover={logoHoverAnimation}
-        onHoverEnd={handleLogoHoverEnd}
-        className="max-w-full h-auto"
-        draggable="false"
-      />
-      </div>
-
       {/* Blobs in corners */}
       <motion.img 
           src={blob1}
@@ -134,6 +120,19 @@ function LandingPage() {
           onHoverEnd={() => onHoverEnd(blob4Controls)}
           draggable="false"
       />
+      {/* Logo in the center */}
+      <div className="absolute scale-75 sm:w-3/4 md:w-3/5 lg:w-1/2">
+      <motion.img 
+        src={logo}
+        alt="Landing Page Logo"
+        initial={{ y: -50, opacity: 0 }}
+        animate={logoAnimation}
+        whileHover={logoHoverAnimation}
+        onHoverEnd={handleLogoHoverEnd}
+        className="max-w-full h-auto"
+        draggable="false"
+      />
+      </div>
     </div>
   )
 }

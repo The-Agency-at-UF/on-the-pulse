@@ -11,45 +11,74 @@
     src: local('Perandory'), url('../fonts/PERANDORY/Perandory-Regular.otf');
 }
 
-
+a:link, a:visited, a:hover, a:focus {
+    text-decoration: none;
+    color: white;
+}
 /* navbar and navbar items */
 .navbar{
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    align-items: center;
-    padding: 20px 50px;
-    border-bottom: 1px solid gray; /* White border at the bottom */
-    background-color: #000000;
 }
 
 .logo {
     font-family: 'Perandory';
-    font-size: 2.8rem;
-    flex-shrink: 0;
-    margin: 0;
-    line-break: 1;
-    align-self: center;
+
+}
+
+@media (min-width: 640px) {
+    .navbar-entry {
+    font-family: 'Gentona';
+    font-weight: 400;
+    font-size: 1.5rem;
+    padding: 0 1rem 0 1rem;
+    cursor: pointer;
+    }
+    .logo {
+        font-size: 2.2rem;
+    }
+    
+    .standard-right{
+        display: flex;
+    }
+    .hamburger {
+        display: none;
+    }
+    .navbar{
+        padding: 1rem 2.2rem 1rem 2.2rem;
+    }
+
+
+
+}
+
+@media (max-width: 640px) {
+    .navbar-entry {
+    font-family: 'Gentona';
+    font-weight: 400;
+    font-size: 1.25rem;
+    padding: 0 1rem 0 1rem;
+    cursor: pointer;
+    }
+    .logo{
+        font-size: 2rem;
+    }
+    .standard-right{
+        display: none;
+    }
+    .hamburger {
+        display: inline;
+    }
+    .navbar{
+        padding: 1rem 1.90rem 1rem 1.90rem;
+        max-width: 100vw;
+    }
 }
 
 .right-navbar {
     display:flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: space-between;
 }
-
-.navbar-entry {
-    font-size: 2.5rem; 
-    padding: 0 15px; /* Horizontal padding */
-    cursor: pointer; 
-    white-space: nowrap; 
-}
-
-@media (max-width: 768px) {
-    .navbar-entry {
-        font-size: 1rem; /* Slightly smaller font for smaller screens */
-    }
-
-    .logo {
-        font-size: 1.75rem; /* Slightly smaller logo for smaller screens */
-    }
-}
-

@@ -38,7 +38,6 @@ const App = () => {
     <UserProvider>
       <Router>
         <Header />
-
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/learn-more" element={<LearnMore />} />
