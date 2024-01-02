@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import SignIn from '../components/SignIn/SignIn';
 import { getAuth, signOut } from 'firebase/auth';
-import { getFirestore, doc, getDoc, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, collection, addDoc, setDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 interface SectionContent {
@@ -83,16 +83,26 @@ const AdminPage: React.FC = () => {
 
     // Blog Submission Functions
     const handleAddSection = (type: string) => {
-        const newSection: Section = { type, content: type === 'paragraph' ? '' : { text: '', imageUrl: '' } };
+        const newSection: Section = {
+            type,
+            content: type === 'paragraph' ? '' : { text: '', imageUrl: '', layout: 'left' } // default layout for 'paragraphWithImage'
+        };
         setSections([...sections, newSection]);
     };
     
+    
     const handleSectionContentChange = (content: any, index: number) => {
-        const updatedSections = sections.map((section, idx) => 
-            idx === index ? { ...section, content } : section
-        );
+        const updatedSections = sections.map((section, idx) => {
+            if (idx === index && section.type === 'paragraphWithImage') {
+                return { ...section, content: { ...section.content, ...content } };
+            } else if (idx === index) {
+                return { ...section, content };
+            }
+            return section;
+        });
         setSections(updatedSections);
     };
+    
     
     const handleFileUpload = async (file: File, index: number) => {
         const storage = getStorage();
@@ -100,6 +110,7 @@ const AdminPage: React.FC = () => {
 
         try {
             const snapshot = await uploadBytes(storageRef, file);
+            // Retrieving the image url from firebase after uploading the image
             const downloadURL = await getDownloadURL(snapshot.ref);
 
             const updatedSections = sections.map((section, idx) => {
@@ -119,17 +130,34 @@ const AdminPage: React.FC = () => {
     
     const handleSubmit = async () => {
         const db = getFirestore();
+
+        // Ensure blogId is defined
+        if (!blogId) {
+            alert("Blog ID is required.");
+            return;
+        }
+
         try {
-            await addDoc(collection(db, 'posts'), {
-                blogId,
+            const docRef = doc(db, `posts/${blogId}`);
+            await setDoc(docRef, {
                 title,
                 shortDescription,
                 templateType,
                 sections,
             });
-            // Reset form or show success message
+            
+            // Alert the user
+            alert("Post uploaded successfully!");
+
+            // Reset form state
+            setTitle('');
+            setShortDescription('');
+            setTemplateType('A'); // or your default value
+            setSections([]);
+            setBlogId('');
         } catch (error) {
             console.error("Error adding document: ", error);
+            alert("Failed to upload post. Please try again.");
         }
     };
 
@@ -139,11 +167,15 @@ const AdminPage: React.FC = () => {
     };
     
     const handleLayoutChange = (layout: 'left' | 'right', index: number) => {
-        const updatedSections = sections.map((section, idx) =>
-            idx === index ? { ...section, content: { ...section.content as SectionContent, layout } } : section
-        );
+        const updatedSections = sections.map((section, idx) => {
+            if (idx === index && section.type === 'paragraphWithImage') {
+                return { ...section, content: { ...(section.content as SectionContent), layout } };
+            }
+            return section;
+        });
         setSections(updatedSections);
     };
+    
 
     // Admin page content goes here...
     // Tailwind CSS classes
@@ -199,7 +231,10 @@ const AdminPage: React.FC = () => {
                 <button onClick={() => handleAddSection('image')} className={buttonClass}>Add Image</button>
                 <button onClick={() => handleAddSection('paragraphWithImage')} className={buttonClass}>Add Paragraph with Image</button>
             </div>
-            <button onClick={handleSubmit} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Submit Post</button>
+            <button onClick={handleSubmit} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-20">Submit Post</button>
+            <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">
+                Logout
+            </button>
         </div>
     );
 };

@@ -14,6 +14,7 @@ import Footer from './components/Footer/Footer';
 import LandingPage from './pages/LandingPage';
 import LearnMore from './pages/LearnMore';
 import AdminPage from './pages/AdminPage';
+import BlogPost from './pages/BlogPost';
 
 const App = () => {
   const userContext = useContext(UserContext);
@@ -42,6 +43,7 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/learn-more" element={<LearnMore />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/blog/:blogId" element={<BlogPost />} />
         </Routes>
 
         <Footer />
