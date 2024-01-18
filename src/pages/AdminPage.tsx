@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import SignIn from '../components/SignIn/SignIn';
 import { getAuth, signOut } from 'firebase/auth';
-import { getFirestore, doc, getDoc, collection, addDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 interface SectionContent {
@@ -29,19 +29,18 @@ const AdminPage: React.FC = () => {
     const [sections, setSections] = useState<Section[]>([]);
     const [blogId, setBlogId] = useState('');
 
-    // TO DO: Implement Admin Functionality
     useEffect(() => {
         if (userContext?.currentUser) {
-            const db = getFirestore();
-            const userRef = doc(db, "users", userContext.currentUser.uid);
-            getDoc(userRef).then((docSnap) => {
-                if (docSnap.exists() && docSnap.data().role === 'admin') {
-                    setIsAdmin(true);
-                }
-                setLoading(false);
-            });
-        } else {
+          const db = getFirestore();
+          const userRef = doc(db, "users", userContext.currentUser.uid);
+          getDoc(userRef).then((docSnap) => {
+            if (docSnap.exists() && docSnap.data().isAdmin) {
+              setIsAdmin(true); // Used only to control UI elements
+            }
             setLoading(false);
+          });
+        } else {
+          setLoading(false);
         }
     }, [userContext?.currentUser]);
 
@@ -67,7 +66,6 @@ const AdminPage: React.FC = () => {
     }
 
     // TO DO: Implement Admin Functionality
-    /*
     if (!isAdmin) {
         return (
             <div className="h-screen flex flex-col items-center justify-center mt-10">
@@ -78,8 +76,6 @@ const AdminPage: React.FC = () => {
             </div>
         );
     }
-    */
-
 
     // Blog Submission Functions
     const handleAddSection = (type: string) => {
@@ -91,43 +87,52 @@ const AdminPage: React.FC = () => {
     };
     
     
-    const handleSectionContentChange = (content: any, index: number) => {
+    const handleSectionContentChange = (content: string | Partial<SectionContent>, index: number) => {
         const updatedSections = sections.map((section, idx) => {
-            if (idx === index && section.type === 'paragraphWithImage') {
-                return { ...section, content: { ...section.content, ...content } };
-            } else if (idx === index) {
-                return { ...section, content };
+            if (idx === index) {
+                if (typeof content === 'string') {
+                    return { ...section, content };
+                } else if (typeof section.content === 'object') {
+                    return { ...section, content: { ...section.content, ...content } };
+                }
             }
             return section;
         });
         setSections(updatedSections);
     };
+      
     
     
     const handleFileUpload = async (file: File, index: number) => {
         const storage = getStorage();
         const storageRef = ref(storage, 'images/' + file.name);
-
+    
         try {
             const snapshot = await uploadBytes(storageRef, file);
-            // Retrieving the image url from firebase after uploading the image
+            // Retrieving the image URL from Firebase after uploading the image
             const downloadURL = await getDownloadURL(snapshot.ref);
-
+    
             const updatedSections = sections.map((section, idx) => {
-                if (idx === index && section.type === 'image') {
-                    return { ...section, content: downloadURL };
-                } else if (idx === index && section.type === 'paragraphWithImage') {
-                    return { ...section, content: { ...section.content, imageUrl: downloadURL } };
+                if (idx === index) {
+                    if (section.type === 'image') {
+                        return { ...section, content: downloadURL };
+                    } else if (section.type === 'paragraphWithImage' && typeof section.content === 'object') {
+                        // Ensuring that content is an object before spreading
+                        return { ...section, content: { ...section.content, imageUrl: downloadURL } };
+                    }
                 }
                 return section;
             });
-
+    
             setSections(updatedSections);
         } catch (error) {
             console.error("Error uploading file: ", error);
         }
     };
     
+    
+
+    // Debug version of handleSubmit. Everything is Client side right now.
     const handleSubmit = async () => {
         const db = getFirestore();
 
@@ -160,6 +165,29 @@ const AdminPage: React.FC = () => {
             alert("Failed to upload post. Please try again.");
         }
     };
+    /*
+    // Firebase Function code TBA whether to use.
+    const handleSubmit = async () => {
+        const functions = getFunctions();
+        const submitBlogPost = httpsCallable(functions, 'submitBlogPost');
+
+        submitBlogPost({
+            blogId,
+            title,
+            shortDescription,
+            templateType,
+            sections
+        }).then((result) => {
+            // Handle success
+            console.log(result.data.message);
+            // Optionally reset form state here
+        }).catch((error) => {
+            // Handle errors
+            console.error('Error submitting blog post:', error);
+        });
+    };
+    */
+
 
     // Code for deleting sections
     const handleDeleteSection = (index: number) => {
@@ -205,7 +233,11 @@ const AdminPage: React.FC = () => {
                     </button>
                 </div>
                 {section.type === 'paragraph' && (
-                    <textarea value={section.content as string} onChange={e => handleSectionContentChange(e.target.value, index)} className={textareaClass} />
+                    <textarea 
+                        value={section.content as string} 
+                        onChange={e => handleSectionContentChange(e.target.value, index)} 
+                        className={textareaClass} 
+                    />
                 )}
                 {section.type === 'image' && (
                     <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], index)} className={fileInputClass} />
@@ -213,7 +245,11 @@ const AdminPage: React.FC = () => {
                 {section.type === 'paragraphWithImage' && (
                     <>
                         {/* Textarea for text */}
-                        <textarea value={(section.content as SectionContent).text || ''} onChange={e => handleSectionContentChange({ ...section.content, text: e.target.value }, index)} className={textareaClass} />
+                        <textarea 
+                            value={(section.content as SectionContent).text || ''} 
+                            onChange={e => handleSectionContentChange({ text: e.target.value }, index)} 
+                            className={textareaClass} 
+                        />
                         {/* File input for image */}
                         <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], index)} className={fileInputClass} />
                         {/* Layout selector */}

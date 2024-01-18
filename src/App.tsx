@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { UserProvider, UserContext } from './contexts/UserContext';
 import { getAuth, getRedirectResult } from 'firebase/auth';

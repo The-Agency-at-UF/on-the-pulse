@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import './Hamburger.css';
 import icon from "../../assets/images/hamburger-menu.svg";
 import {useState} from "react";

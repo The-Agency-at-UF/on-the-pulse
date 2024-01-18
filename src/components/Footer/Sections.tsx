@@ -1,5 +1,4 @@
 import React from 'react';
-import { FaLocationArrow, FaPhone, FaEnvelope } from 'react-icons/fa'; // Importing FontAwesome icons
 import { SlLocationPin } from "react-icons/sl";
 import { PiPhone } from "react-icons/pi";
 import { TfiEmail } from "react-icons/tfi";
