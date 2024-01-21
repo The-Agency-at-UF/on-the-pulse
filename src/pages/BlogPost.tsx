@@ -87,9 +87,6 @@ const BlogPost = () => {
     };
     
 
-    
-
-
     return (
         <div className="blog-post p-6">
             <h1 className="text-3xl font-bold my-4">{post.title}</h1>
