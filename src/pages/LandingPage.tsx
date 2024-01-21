@@ -1,9 +1,16 @@
 import { motion, useAnimation } from 'framer-motion';
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { blob1, blob2, blob3, blob4, logo } from '../assets/images/landing-page';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
 
+//Firebase imports
+import { getDatabase, ref as databaseRef, onValue } from 'firebase/database';
+
+
 function LandingPage() {
+  // states for blog rendering
+  const [starredPosts, setStarredPosts] = useState([]);
 
   // define animation for the blobs
   const blob1Controls = useAnimation();
@@ -19,6 +26,20 @@ function LandingPage() {
     blob4Controls.start(getRandomAnimation());
   }, [blob1Controls, blob2Controls, blob3Controls, blob4Controls]);
 
+  // useEffect for fetching starred posts
+  useEffect(() => {
+    const db = getDatabase();
+    const starredRef = databaseRef(db, 'starredPosts');
+
+    onValue(starredRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setStarredPosts(Object.values(data));
+      } else {
+        setStarredPosts([]);
+      }
+    })
+  }, []);
   
   // logo animation
   const logoAnimation = useAnimation();
@@ -71,67 +92,78 @@ function LandingPage() {
   
 
   return (
-    <div className="relative h-screen flex justify-center items-center">
-      {/* Blobs in corners */}
-      <motion.img 
-          src={blob1}
-          alt="Blob 1"
-          className="absolute top-[8rem] left-[1rem] w-1/3 
-                    sm:left-[2rem] sm:w-[12rem] 
-                    md:left-[5rem] md:w-[14rem] 
-                    lg:left-[8rem] lg:w-[18rem]"
-          animate={blob1Controls}
-          onHoverStart={() => onHoverStart(blob1Controls)}
-          onHoverEnd={() => onHoverEnd(blob1Controls)}
+    <div>
+      <div className="relative h-screen flex justify-center items-center">
+        {/* Blobs in corners */}
+        <motion.img 
+            src={blob1}
+            alt="Blob 1"
+            className="absolute top-[8rem] left-[1rem] w-1/3 
+                      sm:left-[2rem] sm:w-[12rem] 
+                      md:left-[5rem] md:w-[14rem] 
+                      lg:left-[8rem] lg:w-[18rem]"
+            animate={blob1Controls}
+            onHoverStart={() => onHoverStart(blob1Controls)}
+            onHoverEnd={() => onHoverEnd(blob1Controls)}
+            draggable="false"
+        />
+        <motion.img 
+            src={blob2}
+            alt="Blob 2"
+            className="absolute bottom-10 left-[-5rem] w-[24rem] 
+                      sm:left-[-6rem] sm:w-[30rem]
+                      md:left-[-7rem] md:w-[34rem] 
+                      lg:left-[-8rem] lg:w-[38rem]"
+            animate={blob2Controls}
+            onHoverStart={() => onHoverStart(blob2Controls)}
+            onHoverEnd={() => onHoverEnd(blob2Controls)}
+            draggable="false"
+        />
+        <motion.img 
+            src={blob3}
+            alt="Blob 3"
+            className="absolute bottom-[14rem] right-[1rem] w-2/5 
+                      sm:right-[0rem] sm:w-[16rem] sm:bottom-[12rem] 
+                      md:right-0 md:w-[20rem] 
+                      lg:right-[9rem] lg:w-[24rem]"
+            animate={blob3Controls}
+            onHoverStart={() => onHoverStart(blob3Controls)}
+            onHoverEnd={() => onHoverEnd(blob3Controls)}
+        />
+        <motion.img 
+            src={blob4}
+            alt="Blob 4"
+            className="absolute top-4 right-0 -mr-20 w-[17rem] 
+                        sm:right-0 sm:bottom-0 sm:w-[16rem] 
+                        md:right-[0] md:w-[18rem] 
+                        lg:right-[-1rem] lg:w-[22rem]"
+            animate={blob4Controls}
+            onHoverStart={() => onHoverStart(blob4Controls)}
+            onHoverEnd={() => onHoverEnd(blob4Controls)}
+            draggable="false"
+        />
+        {/* Logo in the center */}
+        <div className="absolute scale-75 sm:w-3/4 md:w-3/5 lg:w-1/2">
+        <motion.img 
+          src={logo}
+          alt="Landing Page Logo"
+          initial={{ y: -50, opacity: 0 }}
+          animate={logoAnimation}
+          whileHover={logoHoverAnimation}
+          onHoverEnd={handleLogoHoverEnd}
+          className="max-w-full h-auto"
           draggable="false"
-      />
-      <motion.img 
-          src={blob2}
-          alt="Blob 2"
-          className="absolute bottom-10 left-[-5rem] w-[24rem] 
-                    sm:left-[-6rem] sm:w-[30rem]
-                    md:left-[-7rem] md:w-[34rem] 
-                    lg:left-[-8rem] lg:w-[38rem]"
-          animate={blob2Controls}
-          onHoverStart={() => onHoverStart(blob2Controls)}
-          onHoverEnd={() => onHoverEnd(blob2Controls)}
-          draggable="false"
-      />
-      <motion.img 
-          src={blob3}
-          alt="Blob 3"
-          className="absolute bottom-[14rem] right-[1rem] w-2/5 
-                    sm:right-[0rem] sm:w-[16rem] sm:bottom-[12rem] 
-                    md:right-0 md:w-[20rem] 
-                    lg:right-[9rem] lg:w-[24rem]"
-          animate={blob3Controls}
-          onHoverStart={() => onHoverStart(blob3Controls)}
-          onHoverEnd={() => onHoverEnd(blob3Controls)}
-/>
-      <motion.img 
-          src={blob4}
-          alt="Blob 4"
-          className="absolute top-4 right-0 -mr-20 w-[17rem] 
-                      sm:right-0 sm:bottom-0 sm:w-[16rem] 
-                      md:right-[0] md:w-[18rem] 
-                      lg:right-[-1rem] lg:w-[22rem]"
-          animate={blob4Controls}
-          onHoverStart={() => onHoverStart(blob4Controls)}
-          onHoverEnd={() => onHoverEnd(blob4Controls)}
-          draggable="false"
-      />
-      {/* Logo in the center */}
-      <div className="absolute scale-75 sm:w-3/4 md:w-3/5 lg:w-1/2">
-      <motion.img 
-        src={logo}
-        alt="Landing Page Logo"
-        initial={{ y: -50, opacity: 0 }}
-        animate={logoAnimation}
-        whileHover={logoHoverAnimation}
-        onHoverEnd={handleLogoHoverEnd}
-        className="max-w-full h-auto"
-        draggable="false"
-      />
+        />
+        </div>
+      </div>
+      
+      {/* Render starred posts */}
+      <div className="starred-posts mt-50 flex flex-col">
+        {starredPosts.map(blogId => (
+          <Link key={blogId} to={`/blog/${blogId}`} className="starred-post-link">
+            Go to Post: {blogId}
+          </Link>
+        ))}
       </div>
     </div>
   )
