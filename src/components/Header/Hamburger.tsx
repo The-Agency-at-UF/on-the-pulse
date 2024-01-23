@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
-import './Hamburger.css'
-import icon from "./assets/images/hamburger-menu.svg"
-import {useState} from "react"
-import {Link} from "react-router-dom"
+import { FC } from 'react';
+import './Hamburger.css';
+import icon from "../../assets/images/hamburger-menu.svg";
+import {useState} from "react";
+import {Link} from "react-router-dom";
 
 interface HamburgerProps {
     sendHamburgerState: (data: boolean) => void;
