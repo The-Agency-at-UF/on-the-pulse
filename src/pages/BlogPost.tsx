@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import { motion, useAnimation } from 'framer-motion';
+import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
 import { useParams } from 'react-router-dom';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { marked } from 'marked';
+import { blob1, blob2, blob3 } from '../assets/images/blog-posts/a';
 
 // Template component to render the blog posts as needed.
 // TO DO: Add CSS styling to full page to match figma
@@ -9,6 +12,18 @@ const BlogPost = () => {
     const { blogId } = useParams();
     const [post, setPost] = useState(null);
     const [postExists, setPostExists] = useState(true);
+
+    // define animation for the blobs
+    const blob1Controls = useAnimation();
+    const blob2Controls = useAnimation();
+    const blob3Controls = useAnimation();
+
+    // initialize random animations on component mount
+    useEffect(() => {
+        blob1Controls.start(getRandomAnimation());
+        blob2Controls.start(getRandomAnimation());
+        blob3Controls.start(getRandomAnimation());
+    }, [blob1Controls, blob2Controls, blob3Controls]);
 
     // Configure the marked renderer if you have custom markdown syntax
     const renderer = new marked.Renderer();
@@ -49,6 +64,8 @@ const BlogPost = () => {
         return <div className="h-screen">Loading...</div>;
     }
 
+    
+
     const renderSection = (section, index) => {
         const processText = (text) => {
             // Replace custom markers with Markdown or HTML syntax
@@ -88,13 +105,48 @@ const BlogPost = () => {
     
 
     return (
-        <div className="blog-post p-6">
-            <div className="flex flex-col justify-center text-center"> 
+        <div className="blog-post flex justify-center p-6">
+            <div className='blob-container'>
+            {/* Blob Elements */}
+            <motion.img 
+            src={blob1}
+            alt="Blob Top Left"
+            className="blob absolute top-8 left-[-3rem] w-1/3
+            sm:top-[8rem] sm:left-[-6rem] sm:w-[18rem]"
+            animate={blob1Controls}
+            onHoverStart={() => onHoverStart(blob1Controls)}
+            onHoverEnd={() => onHoverEnd(blob1Controls)}
+            draggable="false"
+            />
+            <motion.img 
+            src={blob2}
+            alt="Blob Top Right"
+            className="absolute top-[6rem] right-0 w-[8rem]
+            sm:top-[4rem] sm:right-[-6rem] sm:w-[16rem]"
+            animate={blob3Controls}
+            onHoverStart={() => onHoverStart(blob2Controls)}
+            onHoverEnd={() => onHoverEnd(blob2Controls)}
+            draggable="false"
+            />
+            <motion.img 
+            src={blob3}
+            alt="Blob Lower Right"
+            className="absolute top-[24em] r-0 w-1/2
+            sm:right-[-10rem] sm:w-[19rem]"
+            animate={blob2Controls}
+            onHoverStart={() => onHoverStart(blob2Controls)}
+            onHoverEnd={() => onHoverEnd(blob2Controls)}
+            draggable="false"
+            />
+            </div>
+            <div className="w-3/4">
+            <div className="flex flex-col justify-center text-center p-10"> 
             <h1 className="text-7xl font-bold font-magistral my-4 uppercase">{post.title}</h1>
             <p className="font-normal font-magistral text-5xl my-2">{post.shortDescription}</p>
             </div>
             <div className="post-content">
                 {post.sections.map((section, index) => renderSection(section, index))}
+            </div>
             </div>
         </div>
     );
