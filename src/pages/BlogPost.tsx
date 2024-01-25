@@ -15,7 +15,7 @@ const BlogPost = () => {
     renderer.paragraph = (text) => {
         // Example: Customize how paragraphs are rendered
         // You can also handle custom syntax here if needed
-        return `<p class="my-4 text-lg">${text}</p>`;
+        return `<p class="my-4 font-gentona text-2xl">${text}</p>`;
     };
 
     // Set options
@@ -89,8 +89,10 @@ const BlogPost = () => {
 
     return (
         <div className="blog-post p-6">
-            <h1 className="text-3xl font-bold my-4">{post.title}</h1>
-            <p className="text-md my-2">{post.shortDescription}</p>
+            <div className="flex flex-col justify-center text-center"> 
+            <h1 className="text-7xl font-bold font-magistral my-4 uppercase">{post.title}</h1>
+            <p className="font-normal font-magistral text-5xl my-2">{post.shortDescription}</p>
+            </div>
             <div className="post-content">
                 {post.sections.map((section, index) => renderSection(section, index))}
             </div>
