@@ -93,9 +93,13 @@ const BlogPost = () => {
                 const processedParagraphContent = processText(section.content.text);
                 const paragraphWithImageContentHTML = marked(processedParagraphContent);
                 return (
-                    <div key={index} className={`flex ${section.content.layout === 'left' ? 'flex-row' : 'flex-row-reverse'} items-center gap-4 my-4`}>
-                        <div className="flex-1 text-lg" dangerouslySetInnerHTML={{ __html: paragraphWithImageContentHTML }} />
-                        <img className="flex-1 w-1/2 h-auto" src={section.content.imageUrl} alt={`Section ${index}`} />
+                    <div key={index} className={`flex ${section.content.layout === 'left' ? 'flex-row' : 'flex-row-reverse'} items-center gap-2 my-4`}>
+                        <div className="flex-1 text-lg w-2/4" dangerouslySetInnerHTML={{ __html: paragraphWithImageContentHTML }} />
+                        <div className="max-h-fit flex justify-center w-2/4">
+                        <div className="w-10/12">
+                        <img src={section.content.imageUrl} alt={`Section ${index}`} />
+                        </div>
+                        </div>
                     </div>
                 );
             default:
@@ -140,7 +144,7 @@ const BlogPost = () => {
             />
             </div>
             <div className="w-3/4">
-            <div className="flex flex-col justify-center text-center p-10"> 
+            <div className="flex flex-col justify-center text-center p-10 mb-[3rem]"> 
             <h1 className="text-7xl font-bold font-magistral my-4 uppercase">{post.title}</h1>
             <p className="font-normal font-magistral text-5xl my-2">{post.shortDescription}</p>
             </div>
