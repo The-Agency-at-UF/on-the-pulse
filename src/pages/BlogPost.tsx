@@ -4,7 +4,8 @@ import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animation
 import { useParams } from 'react-router-dom';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { marked } from 'marked';
-import { blob1, blob2, blob3 } from '../assets/images/blog-posts/a';
+import { blob1a, blob2a, blob3a } from '../assets/images/blog-posts/a';
+import { blob1b, blob2b, blob3b } from '../assets/images/blog-posts/b';
 
 // Template component to render the blog posts as needed.
 // TO DO: Add blobs for each page type. Make it responsive.
@@ -12,6 +13,11 @@ const BlogPost = () => {
     const { blogId } = useParams();
     const [post, setPost] = useState(null);
     const [postExists, setPostExists] = useState(true);
+
+    const [blob1, setBlob1] = useState(blob1a);
+    const [blob2, setBlob2] = useState(blob2a);
+    const [blob3, setBlob3] = useState(blob3a);
+
 
     // define animation for the blobs
     const blob1Controls = useAnimation();
@@ -30,7 +36,7 @@ const BlogPost = () => {
     renderer.paragraph = (text) => {
         // Example: Customize how paragraphs are rendered
         // You can also handle custom syntax here if needed
-        return `<p class="my-4 font-gentona text-2xl">${text}</p>`;
+        return `<p class="my-4 font-gentona md:text-2xl text-xl">${text}</p>`;
     };
 
     // Set options
@@ -48,6 +54,18 @@ const BlogPost = () => {
 
             if (docSnap.exists()) {
                 setPost(docSnap.data());
+                    switch(post.templateType){
+                        case 'A':
+                            setBlob1(blob1a);
+                            setBlob2(blob2a);
+                            setBlob3(blob3a);
+                            break;
+                        case 'B':
+                            setBlob1(blob1b);
+                            setBlob2(blob2b);
+                            setBlob3(blob3b);
+                            break;
+                    }
             } else {
                 setPostExists(false);
             }
@@ -64,6 +82,7 @@ const BlogPost = () => {
         return <div className="h-screen">Loading...</div>;
     }
 
+
     
 
     const renderSection = (section, index) => {
@@ -73,7 +92,8 @@ const BlogPost = () => {
             processedText = processedText.replace(/##(.*?)##/g, '<span style="color: red;">$1</span>'); // Red text with HTML
             return processedText;
         };
-    
+        
+
         switch (section.type) {
             case 'paragraph':
             case 'title':
@@ -96,8 +116,8 @@ const BlogPost = () => {
                     <div key={index} className={`flex ${section.content.layout === 'left' ? 'flex-row' : 'flex-row-reverse'} items-center gap-2 my-4`}>
                         <div className="flex-1 text-lg w-2/4" dangerouslySetInnerHTML={{ __html: paragraphWithImageContentHTML }} />
                         <div className="flex justify-center items-center w-2/4">
-                        <div className="flex justify-center">
-                        <img className="w-10/12" src={section.content.imageUrl} alt={`Section ${index}`} />
+                        <div className="flex justify-center w-2/4">
+                        <img className="" src={section.content.imageUrl} alt={`Section ${index}`} />
                         </div>
                         </div>
                     </div>
@@ -143,10 +163,10 @@ const BlogPost = () => {
             draggable="false"
             />
             </div>
-            <div className="w-3/4">
+            <div className="md:w-3/4 w-4/5">
             <div className="flex flex-col justify-center text-center p-10 mb-[3rem]"> 
-            <h1 className="text-7xl font-bold font-magistral my-4 uppercase">{post.title}</h1>
-            <p className="font-normal font-magistral text-5xl my-2">{post.shortDescription}</p>
+            <h1 className="md:text-7xl text-6xl font-bold font-magistral my-4 uppercase">{post.title}</h1>
+            <p className="font-normal font-magistral md:text-5xl text-3xl my-2">{post.shortDescription}</p>
             </div>
             <div className="post-content">
                 {post.sections.map((section, index) => renderSection(section, index))}
