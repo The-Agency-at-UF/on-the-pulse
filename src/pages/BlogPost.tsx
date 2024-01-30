@@ -7,7 +7,7 @@ import { marked } from 'marked';
 import { blob1, blob2, blob3 } from '../assets/images/blog-posts/a';
 
 // Template component to render the blog posts as needed.
-// TO DO: Add CSS styling to full page to match figma
+// TO DO: Add blobs for each page type. Make it responsive.
 const BlogPost = () => {
     const { blogId } = useParams();
     const [post, setPost] = useState(null);
@@ -95,9 +95,9 @@ const BlogPost = () => {
                 return (
                     <div key={index} className={`flex ${section.content.layout === 'left' ? 'flex-row' : 'flex-row-reverse'} items-center gap-2 my-4`}>
                         <div className="flex-1 text-lg w-2/4" dangerouslySetInnerHTML={{ __html: paragraphWithImageContentHTML }} />
-                        <div className="max-h-fit flex justify-center w-2/4">
-                        <div className="w-10/12">
-                        <img src={section.content.imageUrl} alt={`Section ${index}`} />
+                        <div className="flex justify-center items-center w-2/4">
+                        <div className="flex justify-center">
+                        <img className="w-10/12" src={section.content.imageUrl} alt={`Section ${index}`} />
                         </div>
                         </div>
                     </div>
@@ -115,8 +115,8 @@ const BlogPost = () => {
             <motion.img 
             src={blob1}
             alt="Blob Top Left"
-            className="blob absolute top-8 left-[-3rem] w-1/3
-            sm:top-[8rem] sm:left-[-6rem] sm:w-[18rem]"
+            className="blob absolute top-[6rem] left-[-9rem] w-1/2
+            md:top-[8rem] md:left-[-6rem] md:w-[20rem] z-[-10]"
             animate={blob1Controls}
             onHoverStart={() => onHoverStart(blob1Controls)}
             onHoverEnd={() => onHoverEnd(blob1Controls)}
@@ -125,9 +125,9 @@ const BlogPost = () => {
             <motion.img 
             src={blob2}
             alt="Blob Top Right"
-            className="absolute top-[6rem] right-0 w-[8rem]
-            sm:top-[4rem] sm:right-[-6rem] sm:w-[16rem]"
-            animate={blob3Controls}
+            className="absolute top-[6rem] right-[-10em] w-1/2 z-[-10]
+            md:top-[4rem] md:right-[-7rem] md:w-[21rem]"
+            animate={blob2Controls}
             onHoverStart={() => onHoverStart(blob2Controls)}
             onHoverEnd={() => onHoverEnd(blob2Controls)}
             draggable="false"
@@ -135,11 +135,11 @@ const BlogPost = () => {
             <motion.img 
             src={blob3}
             alt="Blob Lower Right"
-            className="absolute top-[24em] r-0 w-1/2
-            sm:right-[-10rem] sm:w-[19rem]"
-            animate={blob2Controls}
-            onHoverStart={() => onHoverStart(blob2Controls)}
-            onHoverEnd={() => onHoverEnd(blob2Controls)}
+            className="absolute top-[24em] right-[-9rem] w-1/2
+            md:right-[-13rem] md:w-[26rem] sm:left-[rem]"
+            animate={blob3Controls}
+            onHoverStart={() => onHoverStart(blob3Controls)}
+            onHoverEnd={() => onHoverEnd(blob3Controls)}
             draggable="false"
             />
             </div>
