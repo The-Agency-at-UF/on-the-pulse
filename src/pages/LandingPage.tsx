@@ -143,7 +143,7 @@ function LandingPage() {
             draggable="false"
         />
         {/* Logo in the center */}
-        <div className="absolute scale-75 sm:w-3/4 md:w-3/5 lg:w-1/2">
+        <div className="absolute scale-75">
         <motion.img 
           src={logo}
           alt="Landing Page Logo"

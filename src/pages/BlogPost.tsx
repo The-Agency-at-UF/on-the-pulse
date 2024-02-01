@@ -4,8 +4,9 @@ import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animation
 import { useParams } from 'react-router-dom';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { marked } from 'marked';
-import { blob1a, blob2a, blob3a } from '../assets/images/blog-posts/a';
-import { blob1b, blob2b, blob3b } from '../assets/images/blog-posts/b';
+import * as ablobs from '../assets/images/blog-posts/a';
+import * as bblobs from '../assets/images/blog-posts/b';
+import * as cblobs from '../assets/images/blog-posts/c';
 
 // Template component to render the blog posts as needed.
 // TO DO: Add blobs for each page type. Make it responsive.
@@ -14,9 +15,13 @@ const BlogPost = () => {
     const [post, setPost] = useState(null);
     const [postExists, setPostExists] = useState(true);
 
-    const [blob1, setBlob1] = useState(blob1a);
-    const [blob2, setBlob2] = useState(blob2a);
-    const [blob3, setBlob3] = useState(blob3a);
+    const [blob1, setBlob1] = useState(ablobs.blob1a);
+    const [blob2, setBlob2] = useState(ablobs.blob2a);
+    const [blob3, setBlob3] = useState(ablobs.blob3a);
+    const [blob1Style, setBlob1Style] = useState(ablobs.blob1aStyle);
+    const [blob2Style, setBlob2Style] = useState(ablobs.blob2aStyle);
+    const [blob3Style, setBlob3Style] = useState(ablobs.blob3aStyle);
+    
 
 
     // define animation for the blobs
@@ -54,25 +59,43 @@ const BlogPost = () => {
 
             if (docSnap.exists()) {
                 setPost(docSnap.data());
-                    switch(post.templateType){
-                        case 'A':
-                            setBlob1(blob1a);
-                            setBlob2(blob2a);
-                            setBlob3(blob3a);
-                            break;
-                        case 'B':
-                            setBlob1(blob1b);
-                            setBlob2(blob2b);
-                            setBlob3(blob3b);
-                            break;
-                    }
+                switch(post.templateType){
+                    case 'A':
+                        setBlob1(ablobs.blob1a);
+                        setBlob2(ablobs.blob2a);
+                        setBlob3(ablobs.blob3a);
+                        setBlob1Style(ablobs.blob1aStyle);
+                        setBlob2Style(ablobs.blob2aStyle);
+                        setBlob3Style(ablobs.blob3aStyle);
+                        break;
+                    case 'B':
+                        setBlob1(bblobs.blob1b);
+                        setBlob2(bblobs.blob2b);
+                        setBlob3(bblobs.blob3b);
+                        setBlob1Style(bblobs.blob1bStyle);
+                        setBlob2Style(bblobs.blob2bStyle);
+                        setBlob3Style(bblobs.blob3bStyle);
+                        break;
+                    case 'C':
+                        setBlob1(cblobs.blob1c);
+                        setBlob2(cblobs.blob2c);
+                        setBlob3(cblobs.blob3c);
+                        setBlob1Style(cblobs.blob1cStyle);
+                        setBlob2Style(cblobs.blob2cStyle);
+                        setBlob3Style(cblobs.blob3cStyle);
+                        break;
+                    default:
+                        break;
+        
+                }
             } else {
                 setPostExists(false);
             }
+            
         };
 
         fetchPost();
-    }, [blogId]);
+    }, [blogId, post]);
 
     if (!postExists) {
         return <div className="h-screen">Sorry, this blog does not exist.</div>;
@@ -82,6 +105,12 @@ const BlogPost = () => {
         return <div className="h-screen">Loading...</div>;
     }
 
+
+
+    
+    
+
+    
 
     
 
@@ -130,13 +159,12 @@ const BlogPost = () => {
 
     return (
         <div className="blog-post flex justify-center p-6">
-            <div className='blob-container'>
+            <div className='blob-container overflow-hidden'>
             {/* Blob Elements */}
             <motion.img 
             src={blob1}
             alt="Blob Top Left"
-            className="blob absolute top-[6rem] left-[-9rem] w-1/2
-            md:top-[8rem] md:left-[-6rem] md:w-[20rem] z-[-10]"
+            className={blob1Style}
             animate={blob1Controls}
             onHoverStart={() => onHoverStart(blob1Controls)}
             onHoverEnd={() => onHoverEnd(blob1Controls)}
@@ -145,8 +173,7 @@ const BlogPost = () => {
             <motion.img 
             src={blob2}
             alt="Blob Top Right"
-            className="absolute top-[6rem] right-[-10em] w-1/2 z-[-10]
-            md:top-[4rem] md:right-[-7rem] md:w-[21rem]"
+            className={blob2Style}
             animate={blob2Controls}
             onHoverStart={() => onHoverStart(blob2Controls)}
             onHoverEnd={() => onHoverEnd(blob2Controls)}
@@ -155,15 +182,14 @@ const BlogPost = () => {
             <motion.img 
             src={blob3}
             alt="Blob Lower Right"
-            className="absolute top-[24em] right-[-9rem] w-1/2
-            md:right-[-13rem] md:w-[26rem] sm:left-[rem]"
+            className={blob3Style}
             animate={blob3Controls}
             onHoverStart={() => onHoverStart(blob3Controls)}
             onHoverEnd={() => onHoverEnd(blob3Controls)}
             draggable="false"
             />
             </div>
-            <div className="md:w-3/4 w-4/5">
+            <div className="md:w-3/4">
             <div className="flex flex-col justify-center text-center p-10 mb-[3rem]"> 
             <h1 className="md:text-7xl text-6xl font-bold font-magistral my-4 uppercase">{post.title}</h1>
             <p className="font-normal font-magistral md:text-5xl text-3xl my-2">{post.shortDescription}</p>
