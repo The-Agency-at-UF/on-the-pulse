@@ -8,6 +8,7 @@ import * as ablobs from '../assets/images/blog-posts/a';
 import * as bblobs from '../assets/images/blog-posts/b';
 import * as cblobs from '../assets/images/blog-posts/c';
 
+
 // Template component to render the blog posts as needed.
 // TO DO: Add blobs for each page type. Make it responsive.
 const BlogPost = () => {
@@ -158,8 +159,8 @@ const BlogPost = () => {
     
 
     return (
-        <div className="blog-post flex justify-center p-6">
-            <div className='blob-container overflow-hidden'>
+        <div className="blog-post flex justify-center p-6 relative">
+            <div className='absolute overflow-hidden inset-0 blob-container top-[-1rem]'>
             {/* Blob Elements */}
             <motion.img 
             src={blob1}
