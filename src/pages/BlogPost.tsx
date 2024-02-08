@@ -143,10 +143,10 @@ const BlogPost = () => {
                 const processedParagraphContent = processText(section.content.text);
                 const paragraphWithImageContentHTML = marked(processedParagraphContent);
                 return (
-                    <div key={index} className={`flex ${section.content.layout === 'left' ? 'flex-row' : 'flex-row-reverse'} items-center gap-2 my-4`}>
-                        <div className="flex-1 text-lg w-2/4" dangerouslySetInnerHTML={{ __html: paragraphWithImageContentHTML }} />
-                        <div className="flex justify-center items-center w-2/4">
-                        <div className="flex justify-center w-2/4">
+                    <div key={index} className={`flex ${section.content.layout === 'left' ? 'lg:flex-row flex-col' : 'lg:flex-row-reverse flex-col-reverse'} justify-around items-center md:gap-8 my-4`}>
+                        <div className="flex-1 text-lg" dangerouslySetInnerHTML={{ __html: paragraphWithImageContentHTML }} />
+                        <div className="flex-1 justify-center items-center md:max-w-lg">
+                        <div className="flex-1 justify-center">
                         <img className="" src={section.content.imageUrl} alt={`Section ${index}`} />
                         </div>
                         </div>
@@ -190,10 +190,10 @@ const BlogPost = () => {
             draggable="false"
             />
             </div>
-            <div className="md:w-3/4">
-            <div className="flex flex-col justify-center text-center p-10 mb-[3rem]"> 
-            <h1 className="md:text-7xl text-6xl font-bold font-magistral my-4 uppercase">{post.title}</h1>
-            <p className="font-normal font-magistral md:text-5xl text-3xl my-2">{post.shortDescription}</p>
+            <div className="w-full md:w-3/4">
+            <div className="flex flex-col justify-center text-center p-10 md:mb-[3rem]"> 
+            <h1 className="md:text-7xl w-full text-4xl font-bold font-magistral my-4 uppercase">{post.title}</h1>
+            <p className="font-normal font-magistral md:text-5xl text-xl my-2">{post.shortDescription}</p>
             </div>
             <div className="post-content">
                 {post.sections.map((section, index) => renderSection(section, index))}
