@@ -1,5 +1,6 @@
 // AdminPage.tsx
 import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 import SignIn from '../components/SignIn/SignIn';
 import { getAuth, signOut } from 'firebase/auth';
@@ -21,6 +22,8 @@ interface Section {
 }
 
 const AdminPage: React.FC = () => {
+    const navigate = useNavigate();
+
     // Tab State
     const [activeTab, setActiveTab] = useState('manageBlogs');
 
@@ -215,6 +218,11 @@ const AdminPage: React.FC = () => {
             alert("Failed to upload post. Please try again.");
         }
     };
+
+    const handlePreview = () => {
+        localStorage.setItem('previewPost', JSON.stringify({ title, shortDescription, templateType, sections, blogId }));
+        window.open('/blog/dev', '_blank');
+    }
     /*
     // Firebase Function code TBA whether to use.
     const handleSubmit = async () => {
@@ -324,7 +332,12 @@ const AdminPage: React.FC = () => {
                     <button onClick={() => handleAddSection('paragraphWithImage')} className={buttonClass}>Add Paragraph with Image</button>
                     <button onClick={() => handleAddSection('title')} className={buttonClass}>Add Title</button>
                 </div>
-                <button onClick={handleSubmit} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-20">Submit Post</button>
+                <button onClick={handleSubmit} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-20">
+                    Submit Post
+                </button>
+                <button onClick={handlePreview} className="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-20">
+                    Preview
+                </button>
                 <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">
                     Logout
                 </button>
@@ -411,6 +424,7 @@ const AdminPage: React.FC = () => {
                 >
                     Delete
                 </button>
+
             </div>
         </div>
         ));
