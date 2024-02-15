@@ -94,16 +94,14 @@ function LandingPage() {
 
   useEffect(() => {
     // Check if the URL contains a fragment identifier
-    const fragment = location.hash.substring(1);
-    console.log(fragment);
-    if (fragment === 'about-us') {
+    if (location.pathname === '/about-us') {
       // Scroll to the About Us section
       const aboutUsSection = document.getElementById('about-us');
       if (aboutUsSection) {
         aboutUsSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  }, [location.hash]);
+  }, [location.pathname]);
   
 
   return (
@@ -180,8 +178,10 @@ function LandingPage() {
           </Link>
         ))}
       </div>
-      <div id="about-us" className="flex justify-center">
-        <p>  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Risus commodo viverra maecenas accumsan lacus vel. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. </p>
+      <div id="about-us" className="flex text-center justify-center">
+        <div className="w-3/4 font-magistral font-bold">
+        <p className="text-lg md:text-4xl">  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Risus commodo viverra maecenas accumsan lacus vel. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. </p>
+        </div>
       </div>
     </div>
   )
