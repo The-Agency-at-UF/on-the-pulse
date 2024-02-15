@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { blob1, blob2, blob3, blob4, logo } from '../assets/images/landing-page';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
+import {useLocation} from 'react-router-dom'
 
 //Firebase imports
 import { getDatabase, ref as databaseRef, onValue } from 'firebase/database';
@@ -10,6 +11,7 @@ import { getDatabase, ref as databaseRef, onValue } from 'firebase/database';
 
 function LandingPage() {
   // states for blog rendering
+  const location = useLocation();
   const [starredPosts, setStarredPosts] = useState([]);
 
   // define animation for the blobs
@@ -89,6 +91,19 @@ function LandingPage() {
       transition: { duration: 0.3, ease: "easeInOut" }
     }).then(startPulseAnimation); // Then restart the pulse animation
   };
+
+  useEffect(() => {
+    // Check if the URL contains a fragment identifier
+    const fragment = location.hash.substring(1);
+    console.log(fragment);
+    if (fragment === 'about-us') {
+      // Scroll to the About Us section
+      const aboutUsSection = document.getElementById('about-us');
+      if (aboutUsSection) {
+        aboutUsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location.hash]);
   
 
   return (
@@ -164,6 +179,9 @@ function LandingPage() {
             Go to Post: {blogId}
           </Link>
         ))}
+      </div>
+      <div id="about-us" className="flex justify-center">
+        <p>  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Risus commodo viverra maecenas accumsan lacus vel. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. </p>
       </div>
     </div>
   )
