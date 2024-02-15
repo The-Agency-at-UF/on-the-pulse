@@ -1,7 +1,7 @@
 import { motion, useAnimation } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { blob1, blob2, blob3, blob4, logo } from '../assets/images/landing-page';
+import { blob1, blob2, blob3, blob4, logo, LandingTextSVG, favblog1, favblog2, favblog3 } from '../assets/images/landing-page';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
 import {useLocation} from 'react-router-dom'
 
@@ -170,12 +170,31 @@ function LandingPage() {
         </div>
       </div>
       
+      {/* Render landing page text */}
+      <img className="max-w-1800 mx-auto mt-35" src={LandingTextSVG} alt="Welcome Text"/>
+
       {/* Render starred posts */}
-      <div className="starred-posts mt-50 flex flex-col">
-        {starredPosts.map(blogId => (
-          <Link key={blogId} to={`/blog/${blogId}`} className="starred-post-link">
-            Go to Post: {blogId}
-          </Link>
+      <div className="starred-posts-container mt-100vh md:grid md:grid-cols-3 md:gap-4 lg:gap-6 p-4 md:p-0">
+        {starredPosts.map((blogId, index) => (
+          <div key={blogId} className="starred-post mb-4 md:mb-0">
+            {/*
+            <Link 
+              to={`/blog/${blogId}`} 
+              className="starred-post-link block w-full text-center px-4 py-2  text-white rounded hover:bg-gray-700 transition duration-300"
+            >
+              Go to Post: {blogId}
+            </Link>
+            */}
+
+            <Link to={`/blog/${blogId}`} className="block relative rounded overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <img src={favblog1} alt="Post background" className="absolute inset-0 w-full h-full object-contain opacity-60" />
+              <div className="relative p-4 bg-opacity-80 bg-black hover:bg-opacity-90 transition-opacity duration-300">
+                <h3 className="text-white text-lg font-bold">title</h3>
+                <p className="text-white text-sm">description</p>
+              </div>
+            </Link>
+
+          </div>
         ))}
       </div>
       <div id="about-us" className="flex text-center justify-center">

@@ -8,7 +8,11 @@ export default {
       'gentona': ['Gentona','sans-serif'],
       'magistral': ['Magistral', 'sans-serif']
     },
-    extend: {},
+    extend: {
+      maxWidth: {
+        '1800' : '1800px',
+      }
+    },
   },
   plugins: [],
 }
