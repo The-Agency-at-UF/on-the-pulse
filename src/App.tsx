@@ -41,6 +41,7 @@ const App = () => {
         <Header />
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/about-us" element={<LandingPage />} />
           <Route path="/learn-more" element={<LearnMore />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/blog/:blogId" element={<BlogPost />} />
