@@ -36,6 +36,7 @@ function LandingPage() {
     onValue(starredRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
+        console.log(data);
         setStarredPosts(Object.values(data));
       } else {
         setStarredPosts([]);
@@ -169,12 +170,14 @@ function LandingPage() {
         />
         </div>
       </div>
-      
-      {/* Render landing page text */}
-      <img className="max-w-1800 mx-auto mt-35" src={LandingTextSVG} alt="Welcome Text"/>
+      <div id="about-us" className="flex text-center justify-center p-8">
+        <div className="w-3/4 font-magistral font-bold">
+        <p className="text-2xl md:text-5xl lg:text-7xl"> As thought leaders of modern-day media, Generation Z at The Agency sparks innovation and cutting-edge insights across the industry. </p>
+        </div>
+      </div>
 
       {/* Render starred posts */}
-      <div className="starred-posts-container mt-100vh md:grid md:grid-cols-3 md:gap-4 lg:gap-6 p-4 md:p-0">
+      <div className="starred-posts-container mt-100vh md:grid md:grid-cols-3 md:gap-4 lg:gap-6 p-4">
         {starredPosts.map((blogId, index) => (
           <div key={blogId} className="starred-post mb-4 md:mb-0">
             {/*
@@ -186,21 +189,17 @@ function LandingPage() {
             </Link>
             */}
 
+            
             <Link to={`/blog/${blogId}`} className="block relative rounded overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <img src={favblog1} alt="Post background" className="absolute inset-0 w-full h-full object-contain opacity-60" />
-              <div className="relative p-4 bg-opacity-80 bg-black hover:bg-opacity-90 transition-opacity duration-300">
-                <h3 className="text-white text-lg font-bold">title</h3>
-                <p className="text-white text-sm">description</p>
+              <img src={favblog1} alt="Post background" className="absolute inset-0 w-full h-full object-contain" />
+              <div className="flex flex-col justify-center items-center relative p-4 bg-opacity-80 bg-black hover:bg-opacity-90 transition-opacity duration-300">
+                <h3 className="text-white text-lg font-bold">{starredPosts[index]}</h3>
+                <p className="text-white text-sm">{starredPosts}</p>
               </div>
             </Link>
 
           </div>
         ))}
-      </div>
-      <div id="about-us" className="flex text-center justify-center">
-        <div className="w-3/4 font-magistral font-bold">
-        <p className="text-lg md:text-4xl">  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Risus commodo viverra maecenas accumsan lacus vel. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. </p>
-        </div>
       </div>
     </div>
   )
