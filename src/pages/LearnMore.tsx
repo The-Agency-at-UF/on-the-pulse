@@ -1,10 +1,31 @@
 import { motion, useAnimation } from 'framer-motion';
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { blobBottomLeft, blobBottomRight, blobTopLeft, blobTopRight } from '../assets/images/learn-more';
 import submitBlob from '../assets/images/submit-blob.png';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
 
 function LearnMore() {
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    company: '',
+    email: ''
+  });
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value
+    }));
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    console.log('Form submitted:', formData);
+  }
+
 
   // blob animations
   const topLeftControls = useAnimation();
@@ -26,12 +47,6 @@ function LearnMore() {
   }, [topLeftControls, topRightControls, 
     bottomLeftControls, bottomRightControls,
     submitBlobControls]);
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    //TODO: @Tam: Handle form submission
-    console.log('submitted');
-  }
 
 
   return (
@@ -111,16 +126,16 @@ function LearnMore() {
             <h3 className="text-xl md:text-2xl font-semibold mt-6">Contact Information</h3>
             
             <h4 className="text-sm md:text-lg mt-4">First Name</h4>
-            <input type="text" name="firstName" className="w-full p-2" />
+            <input type="text" name="firstName" className="w-full p-2" value={formData.firstName} onChange={handleChange}/>
 
             <h4 className="text-sm md:text-lg mt-4">Last Name</h4>
-            <input type="text" name="lastName" className="w-full p-2" />
+            <input type="text" name="lastName" className="w-full p-2" value={formData.lastName} onChange={handleChange} />
 
             <h4 className="text-sm md:text-lg mt-4">Company</h4>
-            <input type="text" name="company" className="w-full p-2" />
+            <input type="text" name="company" className="w-full p-2" value={formData.company} onChange={handleChange}/>
 
             <h4 className="text-sm md:text-lg mt-4">Email Address</h4>
-            <input type="text" name="email" className="w-full p-2" />
+            <input type="text" name="email" className="w-full p-2" value={formData.email} onChange={handleChange} />
             
             <button type="submit"
             className='flex justify-center items-center w-full'>
