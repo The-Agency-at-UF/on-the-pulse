@@ -3,27 +3,85 @@ import React, { useState, useEffect } from 'react';
 import { blobBottomLeft, blobBottomRight, blobTopLeft, blobTopRight } from '../assets/images/learn-more';
 import submitBlob from '../assets/images/submit-blob.png';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
+import EmailTest from '../components/Email/emailTest';
 
 function LearnMore() {
+  //will be used to restart checkmarks upon submission
+  const [firstCheck, setFirstCheck] = useState(false);
+  const [secondCheck, setSecondCheck] = useState(false);
+  const [otherCheck, setOtherCheck] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     company: '',
-    email: ''
+    email: '',
+    other: '',
+    inquiry: [],
   });
 
   function handleChange(event) {
-    const { name, value } = event.target;
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: value
-    }));
+    const { name, value, type, checked } = event.target;
+    if(type === "checkbox"){
+      if(checked && name !== "checkbox-other"){
+        setFormData(prevFormData=> ({
+          ...prevFormData, 
+          inquiry: [...prevFormData.inquiry, value]
+        }));
+      }
+      else{
+        setFormData(prevFormData=> ({
+          ...prevFormData, 
+          inquiry: prevFormData.inquiry.filter(item => item !== value)
+        }));
+      }
+      if(name === "checkbox-one"){
+        setFirstCheck(!firstCheck);
+      }
+      else if(name === "checkbox-two"){
+        setSecondCheck(!secondCheck);
+      }
+      else if(name === "checkbox-other"){
+        setOtherCheck(!otherCheck);
+      }
+    }
+    else{
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        [name]: value
+      }));
+    }
   }
 
   function handleSubmit(event) {
     event.preventDefault();
     console.log('Form submitted:', formData);
+    
+    const url = 'http://localhost:5172/api/email'; 
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+    .then(response => response.json())
+    .then(formData => console.log('Form data sent:', formData))
+    .catch(error => console.error('Error sending form data:', error));
+    setFormData({
+      firstName: '',
+      lastName: '',
+      company: '',
+      email: '',
+      other: '',
+      inquiry: [],
+    })
+    setFirstCheck(false);
+    setSecondCheck(false);
+    setOtherCheck(false);
+
+    // <EmailTest submissionData={formData}/>
   }
 
 
@@ -108,20 +166,19 @@ function LearnMore() {
           
           <form action="" className="space-y-4" onSubmit={handleSubmit}>
             <label className="form-control flex items-center gap-2 text-lg md:text-xl">
-              <input type="checkbox" name="checkbox" className="checkbox" />
+              <input type="checkbox" checked={firstCheck} name="checkbox-one" className="checkbox" value={"I'm interested in a custom workshop on an On The Pulse topic."} onChange={handleChange} />
               I'm interested in a custom workshop on an On The Pulse topic.
             </label>
             <label className="form-control flex items-center gap-2 text-lg md:text-xl">
-              <input type="checkbox" name="checkbox-checked" className="checkbox" />
+              <input type="checkbox" checked={secondCheck} name="checkbox-two" className="checkbox" value={"I'm interested in working with The Agency."} onChange={handleChange}/>
               I'm interested in working with The Agency.
             </label>
 
             <label className="form-control flex items-center gap-2 text-lg md:text-xl">
-              <input type="checkbox" name="checkbox-checked" className="checkbox" />
+              <input type="checkbox" checked={otherCheck} name="checkbox-other" className="checkbox" value={"Other"} onChange={handleChange} />
               Other
             </label>
-            <textarea name="other" className="w-full p-2 h-36" 
-            placeholder="Specify your request."/>
+            <textarea name="other" className="w-full p-2 h-36" value={formData.other} onChange={handleChange} placeholder="Specify your request."/>
 
             <h3 className="text-xl md:text-2xl font-semibold mt-6">Contact Information</h3>
             
