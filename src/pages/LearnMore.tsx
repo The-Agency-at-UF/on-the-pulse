@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { blobBottomLeft, blobBottomRight, blobTopLeft, blobTopRight } from '../assets/images/learn-more';
 import submitBlob from '../assets/images/submit-blob.png';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
-import EmailTest from '../components/Email/emailTest';
+import InfoEmail from '../components/Email/InfoEmail';
+
 
 function LearnMore() {
   //will be used to restart checkmarks upon submission
@@ -81,7 +82,6 @@ function LearnMore() {
     setSecondCheck(false);
     setOtherCheck(false);
 
-    // <EmailTest submissionData={formData}/>
   }
 
 
@@ -171,7 +171,7 @@ function LearnMore() {
             </label>
             <label className="form-control flex items-center gap-2 text-lg md:text-xl">
               <input type="checkbox" checked={secondCheck} name="checkbox-two" className="checkbox" value={"I'm interested in working with The Agency."} onChange={handleChange}/>
-              I'm interested in working with The Agency.
+              I'm interested in learning more about The Agency's services.
             </label>
 
             <label className="form-control flex items-center gap-2 text-lg md:text-xl">

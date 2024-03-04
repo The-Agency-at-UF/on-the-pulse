@@ -9,40 +9,48 @@ import {
     Preview,
     Section,
     Text,
+    Font,
   } from "@react-email/components";
   import * as React from "react";
+
   
   interface InfoEmailProps {
-    formData: any;
+    firstName: string,
+    lastName: string,
+    company: string,
+    other: string,
+    email: string,
+    inquiry: string[],
+    
   }
   
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "";
-  
-  export const InfoEmail = ({
-    
-  }: InfoEmailProps) => (
+  export const InfoEmail = ({firstName, lastName, company, inquiry, other, email}: InfoEmailProps) => (
     <Html>
       <Head />
       <Preview>
-        The sales intelligence platform that helps you uncover qualified leads.
+        New message from On the Pulse "Learn More" page!
       </Preview>
       <Body style={main}>
         <Container style={container}>
-          <Text style={paragraph}>Hi {formData.firstName},</Text>
+          <Text style={paragraph}>Hi, I'm {firstName} {lastName} from {company}</Text>
           <Text style={paragraph}>
-            This is just a test. 
+            {inquiry.map((item,index)=>(
+              <div key={index}>{index+1}). {item}</div>
+            ))
+            }
+            <br/>
+            Other: {other}
+          </Text>
+          <Text style={paragraph}>
+            You can reach me at {email}
+            <br/>
           </Text>
           <Text style={paragraph}>
             Best,
             <br />
-            The Koala team
+            {firstName} {lastName}
           </Text>
           <Hr style={hr} />
-          <Text style={footer}>
-            470 Noor Ave STE B #1148, South San Francisco, CA 94080
-          </Text>
         </Container>
       </Body>
     </Html>
@@ -52,9 +60,8 @@ import {
   export default InfoEmail;
   
   const main = {
-    backgroundColor: "#ffffff",
-    fontFamily:
-      '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+    backgroundColor: "#000000",
+    fontFamily:"Magistral",
   };
   
   const container = {
@@ -67,6 +74,7 @@ import {
   };
   
   const paragraph = {
+    color: "white",
     fontSize: "16px",
     lineHeight: "26px",
   };

@@ -43,6 +43,8 @@ function LandingPage() {
       }
     })
   }, []);
+
+  //TODO: loop through the IDs 
   
   // logo animation
   const logoAnimation = useAnimation();
