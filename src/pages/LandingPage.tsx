@@ -6,8 +6,7 @@ import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animation
 import {useLocation} from 'react-router-dom'
 
 //Firebase imports
-import { getDatabase, ref as databaseRef, onValue } from 'firebase/database';
-
+import { getFirestore, collection, getDocs, limit, query, orderBy } from 'firebase/firestore';
 
 function LandingPage() {
   // states for blog rendering
@@ -30,22 +29,23 @@ function LandingPage() {
 
   // useEffect for fetching starred posts
   useEffect(() => {
-    const db = getDatabase();
-    const starredRef = databaseRef(db, 'starredPosts');
+    const db = getFirestore();
+    const test = query(collection(db, 'posts'), orderBy('creation'), limit(3));
+    var starredTemp = [];
 
-    onValue(starredRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log(data);
-        setStarredPosts(Object.values(data));
-      } else {
-        setStarredPosts([]);
-      }
-    })
-  }, []);
+    getDocs(test)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // doc.data() is the document data
+          starredTemp.push({id:doc.id, title: doc.data().title, shortDescription: doc.data().shortDescription})
+        });
+        setStarredPosts(starredTemp)
+      })
+      .catch((error) => {
+        console.error('Error getting documents: ', error);
+      });
+  }, [starredPosts]);
 
-  //TODO: loop through the IDs 
-  
   // logo animation
   const logoAnimation = useAnimation();
 
@@ -179,24 +179,14 @@ function LandingPage() {
       </div>
 
       {/* Render starred posts */}
-      <div className="starred-posts-container mt-100vh md:grid md:grid-cols-3 md:gap-4 lg:gap-6 p-4">
-        {starredPosts.map((blogId, index) => (
-          <div key={blogId} className="starred-post mb-4 md:mb-0">
-            {/*
-            <Link 
-              to={`/blog/${blogId}`} 
-              className="starred-post-link block w-full text-center px-4 py-2  text-white rounded hover:bg-gray-700 transition duration-300"
-            >
-              Go to Post: {blogId}
-            </Link>
-            */}
-
-            
-            <Link to={`/blog/${blogId}`} className="block relative rounded overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <img src={favblog1} alt="Post background" className="absolute inset-0 w-full h-full object-contain" />
-              <div className="flex flex-col justify-center items-center relative p-4 bg-opacity-80 bg-black hover:bg-opacity-90 transition-opacity duration-300">
-                <h3 className="text-white text-lg font-bold">{starredPosts[index]}</h3>
-                <p className="text-white text-sm">{starredPosts}</p>
+      <div className="starred-posts-container md:grid md:grid-cols-3 md:gap-4 lg:gap-6 p-4">
+        {starredPosts.map((blog, index) => (
+          <div key={blog.id} className="starred-post mb-4 md:mb-0" >
+            <Link to={`/blog/${blog.id}`} className="block relative rounded overflow-hidden shadow-lg h-96 w-full m-auto">
+              <img src={index == 0? favblog1 : index == 1 ? favblog2 : favblog3} alt="Post background" className="absolute inset-0 w-full h-full object-contain" />
+              <div className="flex h-full  flex-col justify-center gap-4 items-center relative p-4 bg-opacity-20 bg-black hover:bg-opacity-100 transition-all duration-300">
+                <h3 className="text-white text-4xl font-black text-center">{blog.title}</h3>
+                <p className="text-white text-2xl text-center max-w-72">{blog.shortDescription}</p>
               </div>
             </Link>
 
