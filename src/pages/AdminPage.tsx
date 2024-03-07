@@ -5,7 +5,7 @@ import { UserContext } from '../contexts/UserContext';
 import SignIn from '../components/SignIn/SignIn';
 import { getAuth, signOut } from 'firebase/auth';
 import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 // Importing from Realtime Database with aliasing
 import { ref as databaseRef, onValue, getDatabase, set } from 'firebase/database';
 
@@ -160,7 +160,14 @@ const AdminPage: React.FC = () => {
     
     const handleFileUpload = async (file: File, index: number) => {
         const storage = getStorage();
-        const storageRef = ref(storage, 'images/' + file.name);
+
+        // Generate a unique filename: OriginalName_YYYYMMDDHHMMSS.ext
+        const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").substring(0,14); // YYYYMMDDHHMMSS format
+        const fileExtension = file.name.split('.').pop(); // Extract file extension
+        const fileNameWithoutExtension = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension
+        const uniqueFileName = `${fileNameWithoutExtension}_${timestamp}.${fileExtension}`;
+        
+        const storageRef = ref(storage, `images/${uniqueFileName}`);
     
         try {
             const snapshot = await uploadBytes(storageRef, file);
@@ -380,17 +387,49 @@ const AdminPage: React.FC = () => {
     };
 
     const handleDeletePost = async (blogId) => {
-        if (window.confirm('Are you sure you want to delete this post?')) {
-            try {
-                const db = getFirestore();
-                const docRef = doc(db, `posts/${blogId}`);
-                await deleteDoc(docRef);
-                console.log('Post deleted successfully');
-                // Optionally, refresh the posts list or remove the post from the local state
+        if (!window.confirm('Are you sure you want to delete this post?')) return;
+
+        try {
+            // Fetch the post
+            const db = getFirestore();
+            const postRef = doc(db, `posts/${blogId}`);
+            const postDoc = await getDoc(postRef);
+
+            if (postDoc.exists()) {
+                const postData = postDoc.data();
+                const sections = postData.sections || [];
+                const storage = getStorage();
+
+                // Filter sections to find the ones with images
+                const imageSections = sections.filter(section => section.type === 'image' || section.type === 'paragraphWithImage');
+
+                // Take all the imageURLS and delete them from storage
+                for (const section of imageSections) {
+                    if ((section.type === 'image' || section.type === 'paragraphWithImage') && section.content.imageUrl) {
+                        const imageUrl = section.content.imageUrl;
+                        try {
+                            // Decode the URL and extract the path
+                            const decodedUrl = decodeURIComponent(imageUrl);
+                            const imagePath = decodedUrl.split('/o/')[1].split('?')[0].replace('images%2F', 'images/');
+            
+                            const imageRef = ref(storage, imagePath);
+                            await deleteObject(imageRef);
+                            console.log("Image deleted successfully");
+                        } catch (error) {
+                            console.error("Error deleting the image: ", error.message);
+                        }
+                    }
+                }
+
+                await deleteDoc(postRef);
+                console.log("Post and associated images have been deleted");
+
                 setPosts(prevPosts => prevPosts.filter(post => post.blogId !== blogId));
-            } catch (error) {
-                console.error('Error deleting post:', error);
+            } else {
+                console.error("Post document does not exists.")
             }
+        } catch (error) {
+            console.error("Error deleting post and images: ", error);
         }
     };
 
