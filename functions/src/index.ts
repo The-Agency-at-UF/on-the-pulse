@@ -44,7 +44,7 @@ app.post("/api/email", async (req, res) => {
   " from " + formData.company + "</p>");
   // list off the checked boxes
   for (let i = 1; i <= formData.inquiry.length; i++) {
-    post.message.html+="<p>" + i + "). " + formData.inquiry[0] + "</p>";
+    post.message.html+="<p>" + i + "). " + formData.inquiry[i-1] + "</p>";
   }
 
   // insert other if present
