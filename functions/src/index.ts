@@ -15,6 +15,8 @@ import * as cors from "cors";
 import * as admin from "firebase-admin";
 
 const app = express();
+const firebaseApp= admin.initializeApp();
+console.log("Initialized the on-the-pulse web app!", firebaseApp);
 app.use(bodyParser.json());
 app.use(cors({origin: true}));
 
@@ -56,8 +58,6 @@ app.post("/api/email", async (req, res) => {
   post.message.html+="<p> Best,</p>" + "<p>" +
   formData.firstName + " " + formData.lastName + "</p>";
 
-  const firebaseApp= admin.initializeApp();
-  console.log("Initialized the on-the-pulse web app!", firebaseApp);
   const firestore = admin.firestore();
   const docRef = await firestore.collection("mail").add(post);
   console.log("Added document with ID:", docRef.id);
