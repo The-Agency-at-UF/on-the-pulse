@@ -58,7 +58,7 @@ function LearnMore() {
     event.preventDefault();
     console.log('Form submitted:', formData);
     
-    const url = 'http://127.0.0.1:5001/on-the-pulse-website/us-central1/testEmailThing/api/email'; 
+    const url = 'https://testemailthing-kbv2gpacia-uc.a.run.app/api/email'; 
 
     fetch(url, {
       method: 'POST',
