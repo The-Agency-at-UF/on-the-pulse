@@ -30,7 +30,7 @@ function LandingPage() {
   // useEffect for fetching starred posts
   useEffect(() => {
     const db = getFirestore();
-    const test = query(collection(db, 'posts'), orderBy('creation'), limit(3));
+    const test = query(collection(db, 'posts'), orderBy('creation', ), limit(3));
     var starredTemp = [];
 
     getDocs(test)
@@ -44,7 +44,7 @@ function LandingPage() {
       .catch((error) => {
         console.error('Error getting documents: ', error);
       });
-  }, [starredPosts]);
+  }, []); // empty dependency to run once at launch
 
   // logo animation
   const logoAnimation = useAnimation();
@@ -183,13 +183,12 @@ function LandingPage() {
         {starredPosts.map((blog, index) => (
           <div key={blog.id} className="starred-post mb-4 md:mb-0" >
             <Link to={`/blog/${blog.id}`} className="block relative rounded overflow-hidden shadow-lg h-96 w-full m-auto">
-              <img src={index == 0? favblog1 : index == 1 ? favblog2 : favblog3} alt="Post background" className="absolute inset-0 w-full h-full object-contain" />
-              <div className="flex h-full  flex-col justify-center gap-4 items-center relative p-4 bg-opacity-20 bg-black hover:bg-opacity-100 transition-all duration-300">
+              <img src={index == 0 ? favblog1 : index == 1 ? favblog2 : favblog3} alt="Post background" className="absolute inset-0 w-full h-full object-contain" />
+              <div className="flex h-full  flex-col justify-center gap-4 items-center relative p-4 bg-opacity-20 bg-black hover:bg-opacity-50 transition-all duration-300">
                 <h3 className="text-white text-4xl font-black text-center">{blog.title}</h3>
                 <p className="text-white text-2xl text-center max-w-72">{blog.shortDescription}</p>
               </div>
             </Link>
-
           </div>
         ))}
       </div>

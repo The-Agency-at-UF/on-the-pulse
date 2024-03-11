@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 import SignIn from '../components/SignIn/SignIn';
 import { getAuth, signOut } from 'firebase/auth';
-import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // Importing from Realtime Database with aliasing
 import { ref as databaseRef, onValue, getDatabase, set } from 'firebase/database';
@@ -184,40 +184,51 @@ const AdminPage: React.FC = () => {
             console.error("Error uploading file: ", error);
         }
     };
-    
-    // Debug version of handleSubmit. Everything is Client side right now.
+
     const handleSubmit = async () => {
         const db = getFirestore();
-
+    
         // Ensure blogId is defined
         if (!blogId) {
             alert("Blog ID is required.");
             return;
         }
-
-        try {
-            const docRef = doc(db, `posts/${blogId}`);
-            await setDoc(docRef, {
-                title,
-                shortDescription,
-                templateType,
-                sections,
-            });
-            
-            // Alert the user
-            alert("Post uploaded successfully!");
-
-            // Reset form state
-            setTitle('');
-            setShortDescription('');
-            setTemplateType('A'); // or your default value
-            setSections([]);
-            setBlogId('');
-        } catch (error) {
-            console.error("Error adding document: ", error);
-            alert("Failed to upload post. Please try again.");
+    
+        const docRef = doc(db, `posts/${blogId}`);
+        const docSnap = await getDoc(docRef);
+    
+        if (docSnap.exists()) {
+            alert("A post with this Blog ID already exists. Please use a different Blog ID.");
+        } else {
+            // Proceed with submission if the blog ID does not exist
+            try {
+                // Get the current timestamp
+                const creation = new Date(); // or serverTimestamp() if using Firestore's server timestamp
+    
+                await setDoc(docRef, {
+                    title,
+                    shortDescription,
+                    templateType,
+                    sections,
+                    creation // Add the creation timestamp to your document
+                });
+                
+                // Alert the user
+                alert("Post uploaded successfully!");
+    
+                // Reset form state
+                setTitle('');
+                setShortDescription('');
+                setTemplateType('A'); // or your default value
+                setSections([]);
+                setBlogId('');
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Failed to upload post. Please try again.");
+            }
         }
     };
+    
 
     const handlePreview = () => {
         localStorage.setItem('previewPost', JSON.stringify({ title, shortDescription, templateType, sections, blogId }));
@@ -282,8 +293,10 @@ const AdminPage: React.FC = () => {
                     <option value="C">C</option>
                 </select>
                 <input type="text" placeholder="Blog ID" value={blogId} onChange={e => setBlogId(e.target.value)} className={inputClass} />
-
-                <p>HINT: Add stars to **Make Text Bold** and hashtags to ##Make Text Red##</p>
+                
+                <p>The blog ID is the endpoint where users will access it. EX: my-new-blog is available at "/blog/my-new-blog"</p>
+                
+                <p>NOTE: Add stars to **Make Text Bold** and hashtags to ##Make Text Red##</p>
                 <p>Example: Add stars to <strong>Make Text Bold</strong> and hashtags to <span className="text-red-500">Make Text Red</span></p>
                 {sections.map((section, index) => (
                     <div key={index} className="mb-4">
@@ -406,6 +419,7 @@ const AdminPage: React.FC = () => {
                 <button className="bg-blue-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">Edit</button>
                 
                 {/* Star/Unstar Button */}
+                { /*
                 <button 
                     onClick={() => handleStarPost(post.blogId)}
                     className={`px-4 py-2 rounded transition duration-300 ease-in-out ml-2 ${
@@ -416,6 +430,7 @@ const AdminPage: React.FC = () => {
                 >
                     {starredPosts.includes(post.blogId) ? 'Unstar' : 'Star'}
                 </button>
+                */}
 
                 {/* Delete Button */}
                 <button 
