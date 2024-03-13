@@ -34,7 +34,7 @@ app.post("/api/email", async (req, res) => {
   console.log("Received form data:", req.body);
   formData = req.body;
   res.json({message: "Form data received successfully", formData});
-  post.to = "lucastembras@ufl.edu";
+  post.to = "theagency@jou.ufl.edu";
 
   post.message.subject="Learn More Inquiry from On the Pulse Website";
   // html message
@@ -60,6 +60,7 @@ app.post("/api/email", async (req, res) => {
 
   const firestore = admin.firestore();
   const docRef = await firestore.collection("mail").add(post);
+  console.log("Sent to theagency@jou.ufl.edu");
   console.log("Added document with ID:", docRef.id);
 });
 
