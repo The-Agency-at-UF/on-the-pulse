@@ -37,6 +37,7 @@ const AdminPage: React.FC = () => {
     const [title, setTitle] = useState('');
     const [shortDescription, setShortDescription] = useState('');
     const [templateType, setTemplateType] = useState('A');
+    const [category, setCategory] = useState('AI & Technology');
     const [sections, setSections] = useState<Section[]>([]);
     const [blogId, setBlogId] = useState('');
 
@@ -203,6 +204,7 @@ const AdminPage: React.FC = () => {
             await setDoc(docRef, {
                 creation: timestamp,
                 title,
+                category,
                 shortDescription,
                 templateType,
                 sections,
@@ -214,6 +216,7 @@ const AdminPage: React.FC = () => {
             // Reset form state
             setTitle('');
             setShortDescription('');
+            setCategory('AI & Technology');
             setTemplateType('A'); // or your default value
             setSections([]);
             setBlogId('');
@@ -286,7 +289,15 @@ const AdminPage: React.FC = () => {
                     <option value="C">C</option>
                 </select>
                 <input type="text" placeholder="Blog ID" value={blogId} onChange={e => setBlogId(e.target.value)} className={inputClass} />
-
+                <div className="flex flex-row items-center mb-4 gap-2"> 
+                <p> Category: </p>
+                <select value={category} onChange={e => setCategory(e.target.value)} className={`${inputClass} mb-0`}>
+                    <option value="AI & Technology">AI & Technology</option>
+                    <option value="Gen Z">Gen Z</option>
+                    <option value="Current Events">Current Events</option>
+                    <option value="Industry">Industry</option>
+                </select>
+                </div>
                 <p>HINT: Add stars to **Make Text Bold** and hashtags to ##Make Text Red##</p>
                 <p>Example: Add stars to <strong>Make Text Bold</strong> and hashtags to <span className="text-red-500">Make Text Red</span></p>
                 {sections.map((section, index) => (
