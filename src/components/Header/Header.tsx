@@ -31,6 +31,7 @@ const Header: React.FC = () => {
         <div className="standard-right">
         <h3 className="navbar-entry"> <Link to="/"> Home </Link> </h3>
         <h3 className="navbar-entry"> <Link to="/about-us"> About Us </Link></h3>
+        <h3 className="navbar-entry"> <Link to="/gallery"> Gallery </Link> </h3>
         <h3 className="navbar-entry"> <Link to="/learn-more"> Learn More </Link> </h3>
         </div>
         <div className="hamburger"> 
