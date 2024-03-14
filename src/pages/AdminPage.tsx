@@ -33,6 +33,7 @@ const AdminPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     // Blog States
+    const [creation, setCreation] = useState(null);
     const [title, setTitle] = useState('');
     const [shortDescription, setShortDescription] = useState('');
     const [templateType, setTemplateType] = useState('A');
@@ -197,7 +198,10 @@ const AdminPage: React.FC = () => {
 
         try {
             const docRef = doc(db, `posts/${blogId}`);
+            const timestamp = new Date();
+            setCreation(timestamp);
             await setDoc(docRef, {
+                creation: timestamp,
                 title,
                 shortDescription,
                 templateType,
