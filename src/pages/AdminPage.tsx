@@ -40,6 +40,7 @@ const AdminPage: React.FC = () => {
     const [category, setCategory] = useState('AI & Technology');
     const [sections, setSections] = useState<Section[]>([]);
     const [blogId, setBlogId] = useState('');
+    const [thumbnailId, setThumbnailId] = useState('');
 
     // Post states for rendering manage blog page
     const [posts, setPosts] = useState([]);
@@ -182,6 +183,9 @@ const AdminPage: React.FC = () => {
             });
     
             setSections(updatedSections);
+            if(index == -1){
+                setThumbnailId(downloadURL);
+            }
         } catch (error) {
             console.error("Error uploading file: ", error);
         }
@@ -208,6 +212,7 @@ const AdminPage: React.FC = () => {
                 shortDescription,
                 templateType,
                 sections,
+                thumbnailId,
             });
             
             // Alert the user
@@ -220,6 +225,7 @@ const AdminPage: React.FC = () => {
             setTemplateType('A'); // or your default value
             setSections([]);
             setBlogId('');
+            setThumbnailId('');
         } catch (error) {
             console.error("Error adding document: ", error);
             alert("Failed to upload post. Please try again.");
@@ -290,13 +296,17 @@ const AdminPage: React.FC = () => {
                 </select>
                 <input type="text" placeholder="Blog ID" value={blogId} onChange={e => setBlogId(e.target.value)} className={inputClass} />
                 <div className="flex flex-row items-center mb-4 gap-2"> 
-                <p> Category: </p>
+                <p className="font-semibold"> Category: </p>
                 <select value={category} onChange={e => setCategory(e.target.value)} className={`${inputClass} mb-0`}>
                     <option value="AI & Technology">AI & Technology</option>
                     <option value="Gen Z">Gen Z</option>
                     <option value="Current Events">Current Events</option>
                     <option value="Industry">Industry</option>
                 </select>
+                </div>
+                <div className="flex flex-row items-center gap-2">
+                    <p className="font-semibold"> Thumbnail: </p>
+                    <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], -1)} className={`${fileInputClass} mb-0`} />
                 </div>
                 <p>HINT: Add stars to **Make Text Bold** and hashtags to ##Make Text Red##</p>
                 <p>Example: Add stars to <strong>Make Text Bold</strong> and hashtags to <span className="text-red-500">Make Text Red</span></p>

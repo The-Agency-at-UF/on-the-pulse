@@ -12,6 +12,8 @@ const Gallery = () => {
                 const blogsCollection = collection(db, 'posts');
                 const sortByDate = query(blogsCollection, orderBy("creation", "desc"));
                 const snapshot = await getDocs(sortByDate);
+
+                
                 
 
                 const blogNames = snapshot.docs.map(doc => {
@@ -29,9 +31,9 @@ const Gallery = () => {
     }, []);
 
     return (
-        <div className="blog-gallery">
+        <div className="">
             <h3 className="flex justify-center text-5xl">Previous Articles</h3>
-            <div className="flex flex-col md:text-center md:grid md:grid-cols-3 gap-4">
+            <div className="grid text-center grid-cols-none md:text-center md:grid md:grid-cols-3 gap-4">
                 {blogs.map((blog) => (
                     <BlogPost post={blog}/>
                 ))}
