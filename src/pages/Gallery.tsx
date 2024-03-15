@@ -33,7 +33,7 @@ const Gallery = () => {
     return (
         <div className="">
             <h3 className="flex justify-center text-5xl">Previous Articles</h3>
-            <div className="grid text-center grid-cols-none md:text-center md:grid md:grid-cols-3 gap-4">
+            <div className="mt-12 grid text-center grid-cols-none lg:text-center lg:grid lg:grid-cols-3 gap-4">
                 {blogs.map((blog) => (
                     <BlogPost post={blog}/>
                 ))}
