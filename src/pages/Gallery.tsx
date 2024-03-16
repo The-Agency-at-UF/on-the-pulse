@@ -1,26 +1,31 @@
 import React, {useState, useEffect} from 'react';
-import { getFirestore, collection, getDocs, query, orderBy} from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, orderBy, limit, startAt} from 'firebase/firestore';
 import BlogPost from "../components/BlogPost.tsx";
+import { useLocation } from 'react-router-dom';
 
 const Gallery = () => {
+    
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const page = parseInt(queryParams.get('page')) || 1;
     const [blogs, setBlogs] = useState([]);
+    const postsPerPage = 3;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const db = getFirestore();
                 const blogsCollection = collection(db, 'posts');
-                const sortByDate = query(blogsCollection, orderBy("creation", "desc"));
+                const index = (page-1) * postsPerPage; 
+                const sortByDate = query(blogsCollection, orderBy("index", "asc"), limit(postsPerPage), startAt(index));
                 const snapshot = await getDocs(sortByDate);
-
-                
-                
 
                 const blogNames = snapshot.docs.map(doc => {
                     const id = doc.id;
                     const data = {id, ...doc.data()};
                     return data;
                 });
+
                 setBlogs(blogNames);
             } catch (error) {
                 console.error('Error fetching blogs:', error);
@@ -28,7 +33,7 @@ const Gallery = () => {
         };
 
         fetchData();
-    }, []);
+    }, [page]);
 
     return (
         <div className="">

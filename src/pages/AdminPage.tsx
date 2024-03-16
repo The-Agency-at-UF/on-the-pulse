@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 import SignIn from '../components/SignIn/SignIn';
 import { getAuth, signOut } from 'firebase/auth';
-import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc, query} from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // Importing from Realtime Database with aliasing
 import { ref as databaseRef, onValue, getDatabase, set } from 'firebase/database';
@@ -203,6 +203,8 @@ const AdminPage: React.FC = () => {
 
         try {
             const docRef = doc(db, `posts/${blogId}`);
+            const docs = query(collection(db, "posts"));
+            const snapshot = await getDocs(docs);
             const timestamp = new Date();
             setCreation(timestamp);
             await setDoc(docRef, {
@@ -213,6 +215,7 @@ const AdminPage: React.FC = () => {
                 templateType,
                 sections,
                 thumbnailId,
+                index: snapshot.docs.length,
             });
             
             // Alert the user
