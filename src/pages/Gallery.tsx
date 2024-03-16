@@ -9,7 +9,7 @@ const Gallery = () => {
     const queryParams = new URLSearchParams(location.search);
     const page = parseInt(queryParams.get('page')) || 1;
     const [blogs, setBlogs] = useState([]);
-    const postsPerPage = 5;
+    const postsPerPage = 9;
     const [pages, setPages] = useState(0);
 
     useEffect(() => {
@@ -46,18 +46,23 @@ const Gallery = () => {
         let endPage = Math.min(page+window, pages);
         console.log(pages);
 
-        if(startPage >= 1){
-            if(startPage > 2){
-                paginationLinks.push(<p className="font-gentona"> ... </p>);
-            }
-            for(let i = startPage; i <= endPage; i++){
-                if(i != 1){
-                paginationLinks.push(<Link className="text-xl font-gentona" to={`/gallery?page=${i}`}> {i} </Link>);
-                }
+        if(startPage >= 2){
+            paginationLinks.push(<Link className="text-xl mr-3 font-gentona" to={`/gallery?page=1`}> 1 </Link>);
+            if(startPage != 2){
+                paginationLinks.push(<p className="font-gentona text-xl mr-3"> ... </p>);
             }
         }
+        for(let i = startPage; i <= endPage; i++){
+            if(page != i){
+                paginationLinks.push(<Link className="text-xl mr-3 font-gentona" to={`/gallery?page=${i}`}> {i} </Link>);
+            }
+            else{
+                paginationLinks.push(<Link style={{color: 'black'}} className="text-xl bg-white mr-3 pl-[9px] pr-[9px] flex justify-center rounded-full font-gentona" to={`/gallery?page=${i}`}> {i} </Link>);
+            }  
+        }
+    
         if(endPage < pages){
-            paginationLinks.push(<p className="font-gentona"> ... </p>);
+            paginationLinks.push(<p className="text-xl font-gentona mr-3"> ... </p>);
         }
         console.log(paginationLinks);
         return paginationLinks;
@@ -73,11 +78,8 @@ const Gallery = () => {
                     <BlogPost post={blog}/>
                 ))}
             </div>
-            <div className="flex flex-row"> 
-                <Link className="font-gentona text-xl" to="/gallery?page=1"> 1 </Link>
+            <div className="flex flex-row justify-end mr-5 mb-5"> 
                 {generatedPaginationLinks()}
-                
-
             </div> 
         </div>
     );
