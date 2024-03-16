@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { getFirestore, collection, getDocs, query, orderBy, limit, startAt} from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, orderBy, limit, startAt, getCountFromServer} from 'firebase/firestore';
 import BlogPost from "../components/BlogPost.tsx";
 import { useLocation } from 'react-router-dom';
 
@@ -16,8 +16,10 @@ const Gallery = () => {
             try {
                 const db = getFirestore();
                 const blogsCollection = collection(db, 'posts');
+
+                const sizeCount = await getCountFromServer(blogsCollection);
                 const index = (page-1) * postsPerPage; 
-                const sortByDate = query(blogsCollection, orderBy("index", "asc"), limit(postsPerPage), startAt(index));
+                const sortByDate = query(blogsCollection, orderBy("index", "desc"), limit(postsPerPage), startAt(sizeCount.data().count-index));
                 const snapshot = await getDocs(sortByDate);
 
                 const blogNames = snapshot.docs.map(doc => {
