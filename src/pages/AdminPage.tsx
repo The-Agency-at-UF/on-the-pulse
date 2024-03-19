@@ -140,8 +140,6 @@ const AdminPage: React.FC = () => {
         setSections([...sections, newSection]);
     };
     
-    
-    
     const handleSectionContentChange = (content: string | Partial<SectionContent>, index: number) => {
         const updatedSections = sections.map((section, idx) => {
             if (idx === index) {
@@ -155,8 +153,6 @@ const AdminPage: React.FC = () => {
         });
         setSections(updatedSections);
     };
-      
-    
     
     const handleFileUpload = async (file: File, index: number) => {
         const storage = getStorage();
@@ -228,7 +224,6 @@ const AdminPage: React.FC = () => {
             }
         }
     };
-    
 
     const handlePreview = () => {
         localStorage.setItem('previewPost', JSON.stringify({ title, shortDescription, templateType, sections, blogId }));
@@ -454,9 +449,6 @@ const AdminPage: React.FC = () => {
             </div>
         );
     };
-
-
-
 
     // Code for switching between tabs 
     const renderTabContent = () => {

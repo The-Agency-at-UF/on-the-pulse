@@ -3,7 +3,12 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { blob1, blob2, blob3, blob4, logo, LandingTextSVG, favblog1, favblog2, favblog3 } from '../assets/images/landing-page';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
-import {useLocation} from 'react-router-dom'
+import {useLocation} from 'react-router-dom';
+import Slider from 'react-slick';
+
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 
 //Firebase imports
 import { getFirestore, collection, getDocs, limit, query, orderBy } from 'firebase/firestore';
@@ -30,7 +35,7 @@ function LandingPage() {
   // useEffect for fetching starred posts
   useEffect(() => {
     const db = getFirestore();
-    const test = query(collection(db, 'posts'), orderBy('creation', ), limit(3));
+    const test = query(collection(db, 'posts'), orderBy('creation', ), limit(7));
     var starredTemp = [];
 
     getDocs(test)
@@ -48,6 +53,36 @@ function LandingPage() {
 
   // logo animation
   const logoAnimation = useAnimation();
+
+  // carousel settings
+  const settings = {
+    dots: true, // Show dot indicators
+    infinite: true, // Enable infinite looping
+    speed: 500, // Transition speed
+    slidesToShow: 3, // Show three items
+    slidesToScroll: 1, // Scroll three items at a time
+    autoplay: true,
+    autoplaySpeed: 4000,
+    pauseOnHover: true,
+    responsive: [
+      {
+        breakpoint: 1024, // Adjust settings for smaller screens
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        }
+      }
+    ]
+  };
 
   const startPulseAnimation = () => {
     logoAnimation.start({
@@ -179,6 +214,7 @@ function LandingPage() {
       </div>
 
       {/* Render starred posts */}
+      {/*
       <div className="starred-posts-container md:grid md:grid-cols-3 md:gap-4 lg:gap-6 p-4">
         {starredPosts.map((blog, index) => (
           <div key={blog.id} className="starred-post mb-4 md:mb-0" >
@@ -192,6 +228,22 @@ function LandingPage() {
           </div>
         ))}
       </div>
+      */}
+
+      <Slider {...settings}>
+        {starredPosts.map((blog, index) => (
+          <div key={index} className="starred-post mb-4 md:mb-0" >
+            <Link to={`/blog/${blog.id}`} className="block relative rounded overflow-hidden shadow-lg h-96 w-full m-auto">
+              <img src={index == 0 ? favblog1 : index == 1 ? favblog2 : favblog3} alt="Post background" className="absolute inset-0 w-full h-full object-contain" />
+              
+              <div className="flex h-full  flex-col justify-center gap-4 items-center relative p-4 bg-opacity-20 bg-black hover:bg-opacity-50 transition-all duration-300">
+                <h3 className="text-white text-4xl font-black text-center">{blog.title}</h3>
+                <p className="text-white text-2xl text-center max-w-72">{blog.shortDescription}</p>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </Slider>
     </div>
   )
 }
