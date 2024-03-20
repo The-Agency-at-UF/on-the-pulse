@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 import SignIn from '../components/SignIn/SignIn';
 import { getAuth, signOut } from 'firebase/auth';
-import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc, query} from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+        
 // Importing from Realtime Database with aliasing
 import { ref as databaseRef, onValue, getDatabase, set } from 'firebase/database';
 
@@ -33,11 +34,14 @@ const AdminPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     // Blog States
+    const [creation, setCreation] = useState(null);
     const [title, setTitle] = useState('');
     const [shortDescription, setShortDescription] = useState('');
     const [templateType, setTemplateType] = useState('A');
+    const [category, setCategory] = useState('AI & Technology');
     const [sections, setSections] = useState<Section[]>([]);
     const [blogId, setBlogId] = useState('');
+    const [thumbnailId, setThumbnailId] = useState('');
 
     // Post states for rendering manage blog page
     const [posts, setPosts] = useState([]);
@@ -187,6 +191,9 @@ const AdminPage: React.FC = () => {
             });
     
             setSections(updatedSections);
+            if(index == -1){
+                setThumbnailId(downloadURL);
+            }
         } catch (error) {
             console.error("Error uploading file: ", error);
         }
@@ -204,11 +211,19 @@ const AdminPage: React.FC = () => {
 
         try {
             const docRef = doc(db, `posts/${blogId}`);
+            const docs = query(collection(db, "posts"));
+            const snapshot = await getDocs(docs);
+            const timestamp = new Date();
+            setCreation(timestamp);
             await setDoc(docRef, {
+                creation: timestamp,
                 title,
+                category,
                 shortDescription,
                 templateType,
                 sections,
+                thumbnailId,
+                index: snapshot.docs.length,
             });
             
             // Alert the user
@@ -217,9 +232,11 @@ const AdminPage: React.FC = () => {
             // Reset form state
             setTitle('');
             setShortDescription('');
+            setCategory('AI & Technology');
             setTemplateType('A'); // or your default value
             setSections([]);
             setBlogId('');
+            setThumbnailId('');
         } catch (error) {
             console.error("Error adding document: ", error);
             alert("Failed to upload post. Please try again.");
@@ -289,7 +306,19 @@ const AdminPage: React.FC = () => {
                     <option value="C">C</option>
                 </select>
                 <input type="text" placeholder="Blog ID" value={blogId} onChange={e => setBlogId(e.target.value)} className={inputClass} />
-
+                <div className="flex flex-row items-center mb-4 gap-2"> 
+                <p className="font-semibold"> Category: </p>
+                <select value={category} onChange={e => setCategory(e.target.value)} className={`${inputClass} mb-0`}>
+                    <option value="AI & Technology">AI & Technology</option>
+                    <option value="Gen Z">Gen Z</option>
+                    <option value="Current Events">Current Events</option>
+                    <option value="Industry">Industry</option>
+                </select>
+                </div>
+                <div className="flex flex-row items-center gap-2">
+                    <p className="font-semibold"> Thumbnail: </p>
+                    <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], -1)} className={`${fileInputClass} mb-0`} />
+                </div>
                 <p>HINT: Add stars to **Make Text Bold** and hashtags to ##Make Text Red##</p>
                 <p>Example: Add stars to <strong>Make Text Bold</strong> and hashtags to <span className="text-red-500">Make Text Red</span></p>
                 {sections.map((section, index) => (

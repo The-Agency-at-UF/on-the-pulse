@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { blobBottomLeft, blobBottomRight, blobTopLeft, blobTopRight } from '../assets/images/learn-more';
 import submitBlob from '../assets/images/submit-blob.png';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
-import InfoEmail from '../components/Email/InfoEmail';
 
 
 function LearnMore() {
