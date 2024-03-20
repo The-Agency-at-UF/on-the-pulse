@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 import SignIn from '../components/SignIn/SignIn';
 import { getAuth, signOut } from 'firebase/auth';
-import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc, serverTimestamp } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc, query} from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+        
 // Importing from Realtime Database with aliasing
 import { ref as databaseRef, onValue, getDatabase, set } from 'firebase/database';
 
@@ -33,11 +34,14 @@ const AdminPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     // Blog States
+    const [creation, setCreation] = useState(null);
     const [title, setTitle] = useState('');
     const [shortDescription, setShortDescription] = useState('');
     const [templateType, setTemplateType] = useState('A');
+    const [category, setCategory] = useState('AI & Technology');
     const [sections, setSections] = useState<Section[]>([]);
     const [blogId, setBlogId] = useState('');
+    const [thumbnailId, setThumbnailId] = useState('');
 
     // Post states for rendering manage blog page
     const [posts, setPosts] = useState([]);
@@ -156,7 +160,14 @@ const AdminPage: React.FC = () => {
     
     const handleFileUpload = async (file: File, index: number) => {
         const storage = getStorage();
-        const storageRef = ref(storage, 'images/' + file.name);
+
+        // Generate a unique filename: OriginalName_YYYYMMDDHHMMSS.ext
+        const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").substring(0,14); // YYYYMMDDHHMMSS format
+        const fileExtension = file.name.split('.').pop(); // Extract file extension
+        const fileNameWithoutExtension = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension
+        const uniqueFileName = `${fileNameWithoutExtension}_${timestamp}.${fileExtension}`;
+        
+        const storageRef = ref(storage, `images/${uniqueFileName}`);
     
         try {
             const snapshot = await uploadBytes(storageRef, file);
@@ -176,6 +187,9 @@ const AdminPage: React.FC = () => {
             });
     
             setSections(updatedSections);
+            if(index == -1){
+                setThumbnailId(downloadURL);
+            }
         } catch (error) {
             console.error("Error uploading file: ", error);
         }
@@ -189,35 +203,41 @@ const AdminPage: React.FC = () => {
             alert("Blog ID is required.");
             return;
         }
-    
         const docRef = doc(db, `posts/${blogId}`);
         const docSnap = await getDoc(docRef);
-    
+
         if (docSnap.exists()) {
             alert("A post with this Blog ID already exists. Please use a different Blog ID.");
         } else {
-            // Proceed with submission if the blog ID does not exist
+
             try {
-                // Get the current timestamp
-                const creation = new Date(); // or serverTimestamp() if using Firestore's server timestamp
-    
+                const docs = query(collection(db, "posts"));
+                const snapshot = await getDocs(docs);
+                const timestamp = new Date();
+                setCreation(timestamp);
+                
                 await setDoc(docRef, {
+                    creation: timestamp,
                     title,
+                    category,
                     shortDescription,
                     templateType,
                     sections,
-                    creation // Add the creation timestamp to your document
+                    thumbnailId,
+                    index: snapshot.docs.length,
                 });
                 
                 // Alert the user
                 alert("Post uploaded successfully!");
-    
+
                 // Reset form state
                 setTitle('');
                 setShortDescription('');
+                setCategory('AI & Technology');
                 setTemplateType('A'); // or your default value
                 setSections([]);
                 setBlogId('');
+                setThumbnailId('');
             } catch (error) {
                 console.error("Error adding document: ", error);
                 alert("Failed to upload post. Please try again.");
@@ -292,6 +312,20 @@ const AdminPage: React.FC = () => {
                 <p>The blog ID is the endpoint where users will access it. EX: my-new-blog is available at "/blog/my-new-blog"</p>
                 
                 <p>NOTE: Add stars to **Make Text Bold** and hashtags to ##Make Text Red##</p>
+                <div className="flex flex-row items-center mb-4 gap-2"> 
+                <p className="font-semibold"> Category: </p>
+                <select value={category} onChange={e => setCategory(e.target.value)} className={`${inputClass} mb-0`}>
+                    <option value="AI & Technology">AI & Technology</option>
+                    <option value="Gen Z">Gen Z</option>
+                    <option value="Current Events">Current Events</option>
+                    <option value="Industry">Industry</option>
+                </select>
+                </div>
+                <div className="flex flex-row items-center gap-2">
+                    <p className="font-semibold"> Thumbnail: </p>
+                    <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], -1)} className={`${fileInputClass} mb-0`} />
+                </div>
+                <p>HINT: Add stars to **Make Text Bold** and hashtags to ##Make Text Red##</p>
                 <p>Example: Add stars to <strong>Make Text Bold</strong> and hashtags to <span className="text-red-500">Make Text Red</span></p>
                 {sections.map((section, index) => (
                     <div key={index} className="mb-4">
@@ -388,17 +422,49 @@ const AdminPage: React.FC = () => {
     };
 
     const handleDeletePost = async (blogId) => {
-        if (window.confirm('Are you sure you want to delete this post?')) {
-            try {
-                const db = getFirestore();
-                const docRef = doc(db, `posts/${blogId}`);
-                await deleteDoc(docRef);
-                console.log('Post deleted successfully');
-                // Optionally, refresh the posts list or remove the post from the local state
+        if (!window.confirm('Are you sure you want to delete this post?')) return;
+
+        try {
+            // Fetch the post
+            const db = getFirestore();
+            const postRef = doc(db, `posts/${blogId}`);
+            const postDoc = await getDoc(postRef);
+
+            if (postDoc.exists()) {
+                const postData = postDoc.data();
+                const sections = postData.sections || [];
+                const storage = getStorage();
+
+                // Filter sections to find the ones with images
+                const imageSections = sections.filter(section => section.type === 'image' || section.type === 'paragraphWithImage');
+
+                // Take all the imageURLS and delete them from storage
+                for (const section of imageSections) {
+                    if ((section.type === 'image' || section.type === 'paragraphWithImage') && section.content.imageUrl) {
+                        const imageUrl = section.content.imageUrl;
+                        try {
+                            // Decode the URL and extract the path
+                            const decodedUrl = decodeURIComponent(imageUrl);
+                            const imagePath = decodedUrl.split('/o/')[1].split('?')[0].replace('images%2F', 'images/');
+            
+                            const imageRef = ref(storage, imagePath);
+                            await deleteObject(imageRef);
+                            console.log("Image deleted successfully");
+                        } catch (error) {
+                            console.error("Error deleting the image: ", error.message);
+                        }
+                    }
+                }
+
+                await deleteDoc(postRef);
+                console.log("Post and associated images have been deleted");
+
                 setPosts(prevPosts => prevPosts.filter(post => post.blogId !== blogId));
-            } catch (error) {
-                console.error('Error deleting post:', error);
+            } else {
+                console.error("Post document does not exists.")
             }
+        } catch (error) {
+            console.error("Error deleting post and images: ", error);
         }
     };
 

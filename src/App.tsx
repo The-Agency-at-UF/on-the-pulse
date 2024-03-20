@@ -14,8 +14,11 @@ import Footer from './components/Footer/Footer';
 import LandingPage from './pages/LandingPage';
 import LearnMore from './pages/LearnMore';
 import AdminPage from './pages/AdminPage';
+import Gallery from './pages/Gallery';
 import BlogPost from './pages/BlogPost';
 import BlogPreview from './pages/BlogPreview';
+import OtherBlogsPage from './pages/OtherBlogsPage';
+
 
 const App = () => {
   const userContext = useContext(UserContext);
@@ -43,9 +46,11 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/about-us" element={<LandingPage />} />
           <Route path="/learn-more" element={<LearnMore />} />
+          <Route path="/gallery" element={<Gallery />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/blog/:blogId" element={<BlogPost />} />
           <Route path="/blog/dev" element={<BlogPreview />} />
+          <Route path="/other-blogs" element={<OtherBlogsPage />} />
         </Routes>
         <Footer />
       </Router>

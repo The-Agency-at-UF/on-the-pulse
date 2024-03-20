@@ -56,7 +56,7 @@ function LearnMore() {
     event.preventDefault();
     console.log('Form submitted:', formData);
     
-    const url = 'http://localhost:5172/api/email'; 
+    const url = 'https://testemailthing-kbv2gpacia-uc.a.run.app/api/email'; 
 
     fetch(url, {
       method: 'POST',
