@@ -311,7 +311,6 @@ const AdminPage: React.FC = () => {
                 
                 <p>The blog ID is the endpoint where users will access it. EX: my-new-blog is available at "/blog/my-new-blog"</p>
                 
-                <p>NOTE: Add stars to **Make Text Bold** and hashtags to ##Make Text Red##</p>
                 <div className="flex flex-row items-center mb-4 gap-2"> 
                 <p className="font-semibold"> Category: </p>
                 <select value={category} onChange={e => setCategory(e.target.value)} className={`${inputClass} mb-0`}>
