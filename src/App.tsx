@@ -17,6 +17,7 @@ import AdminPage from './pages/AdminPage';
 import Gallery from './pages/Gallery';
 import BlogPost from './pages/BlogPost';
 import BlogPreview from './pages/BlogPreview';
+import OtherBlogsPage from './pages/OtherBlogsPage';
 
 
 const App = () => {
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/blog/:blogId" element={<BlogPost />} />
           <Route path="/blog/dev" element={<BlogPreview />} />
+          <Route path="/other-blogs" element={<OtherBlogsPage />} />
         </Routes>
         <Footer />
       </Router>
