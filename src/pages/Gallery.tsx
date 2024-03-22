@@ -9,7 +9,7 @@ const Gallery = () => {
     const queryParams = new URLSearchParams(location.search);
     const page = parseInt(queryParams.get('page')) || 1;
     const [blogs, setBlogs] = useState([]);
-    const postsPerPage = 9;
+    const postsPerPage = 3;
     const [pages, setPages] = useState(0);
 
     useEffect(() => {
@@ -19,18 +19,27 @@ const Gallery = () => {
                 const blogsCollection = collection(db, 'posts');
 
                 const sizeCount = await getCountFromServer(blogsCollection);
-                const index = (page-1) * postsPerPage; 
                 setPages(Math.ceil(sizeCount.data().count/postsPerPage));
-                const sortByDate = query(blogsCollection, orderBy("index", "desc"), limit(postsPerPage), startAt((sizeCount.data().count-1)-index));
-                const snapshot = await getDocs(sortByDate);
+                let sortByDate = null;
+                if(page == 1){
+                    sortByDate = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage));
+                }
+                else{
+                    const getCompleteCollection = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage * (page-1)));
+                    const startingSnapshot = await getDocs(getCompleteCollection);
+                    sortByDate = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage),startAfter(startingSnapshot.docs[startingSnapshot.docs.length-1]));
+                }
+                if(sortByDate){
+                    const snapshot = await getDocs(sortByDate);
 
-                const blogNames = snapshot.docs.map(doc => {
-                    const id = doc.id;
-                    const data = {id, ...doc.data()};
-                    return data;
-                });
+                    const blogNames = snapshot.docs.map(doc => {
+                        const id = doc.id;
+                        const data = {id, ...doc.data()};
+                        return data;
+                    });
 
-                setBlogs(blogNames);
+                    setBlogs(blogNames);
+                }
             } catch (error) {
                 console.error('Error fetching blogs:', error);
             }
