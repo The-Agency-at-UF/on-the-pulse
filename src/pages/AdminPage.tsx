@@ -144,8 +144,6 @@ const AdminPage: React.FC = () => {
         setSections([...sections, newSection]);
     };
     
-    
-    
     const handleSectionContentChange = (content: string | Partial<SectionContent>, index: number) => {
         const updatedSections = sections.map((section, idx) => {
             if (idx === index) {
@@ -159,8 +157,6 @@ const AdminPage: React.FC = () => {
         });
         setSections(updatedSections);
     };
-      
-    
     
     const handleFileUpload = async (file: File, index: number) => {
         const storage = getStorage();
@@ -198,48 +194,54 @@ const AdminPage: React.FC = () => {
             console.error("Error uploading file: ", error);
         }
     };
-    
-    // Debug version of handleSubmit. Everything is Client side right now.
+
     const handleSubmit = async () => {
         const db = getFirestore();
-
+    
         // Ensure blogId is defined
         if (!blogId) {
             alert("Blog ID is required.");
             return;
         }
+        const docRef = doc(db, `posts/${blogId}`);
+        const docSnap = await getDoc(docRef);
 
-        try {
-            const docRef = doc(db, `posts/${blogId}`);
-            const docs = query(collection(db, "posts"));
-            const snapshot = await getDocs(docs);
-            const timestamp = new Date();
-            setCreation(timestamp);
-            await setDoc(docRef, {
-                creation: timestamp,
-                title,
-                category,
-                shortDescription,
-                templateType,
-                sections,
-                thumbnailId,
-                index: snapshot.docs.length,
-            });
-            
-            // Alert the user
-            alert("Post uploaded successfully!");
+        if (docSnap.exists()) {
+            alert("A post with this Blog ID already exists. Please use a different Blog ID.");
+        } else {
 
-            // Reset form state
-            setTitle('');
-            setShortDescription('');
-            setCategory('AI & Technology');
-            setTemplateType('A'); // or your default value
-            setSections([]);
-            setBlogId('');
-            setThumbnailId('');
-        } catch (error) {
-            console.error("Error adding document: ", error);
-            alert("Failed to upload post. Please try again.");
+            try {
+                const docs = query(collection(db, "posts"));
+                const snapshot = await getDocs(docs);
+                const timestamp = new Date();
+                setCreation(timestamp);
+                
+                await setDoc(docRef, {
+                    creation: timestamp,
+                    title,
+                    category,
+                    shortDescription,
+                    templateType,
+                    sections,
+                    thumbnailId,
+                    index: snapshot.docs.length,
+                });
+                
+                // Alert the user
+                alert("Post uploaded successfully!");
+
+                // Reset form state
+                setTitle('');
+                setShortDescription('');
+                setCategory('AI & Technology');
+                setTemplateType('A'); // or your default value
+                setSections([]);
+                setBlogId('');
+                setThumbnailId('');
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Failed to upload post. Please try again.");
+            }
         }
     };
 
@@ -306,6 +308,9 @@ const AdminPage: React.FC = () => {
                     <option value="C">C</option>
                 </select>
                 <input type="text" placeholder="Blog ID" value={blogId} onChange={e => setBlogId(e.target.value)} className={inputClass} />
+                
+                <p>The blog ID is the endpoint where users will access it. EX: my-new-blog is available at "/blog/my-new-blog"</p>
+                
                 <div className="flex flex-row items-center mb-4 gap-2"> 
                 <p className="font-semibold"> Category: </p>
                 <select value={category} onChange={e => setCategory(e.target.value)} className={`${inputClass} mb-0`}>
@@ -474,6 +479,7 @@ const AdminPage: React.FC = () => {
                 <button className="bg-blue-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">Edit</button>
                 
                 {/* Star/Unstar Button */}
+                { /*
                 <button 
                     onClick={() => handleStarPost(post.blogId)}
                     className={`px-4 py-2 rounded transition duration-300 ease-in-out ml-2 ${
@@ -484,6 +490,7 @@ const AdminPage: React.FC = () => {
                 >
                     {starredPosts.includes(post.blogId) ? 'Unstar' : 'Star'}
                 </button>
+                */}
 
                 {/* Delete Button */}
                 <button 
@@ -507,9 +514,6 @@ const AdminPage: React.FC = () => {
             </div>
         );
     };
-
-
-
 
     // Code for switching between tabs 
     const renderTabContent = () => {

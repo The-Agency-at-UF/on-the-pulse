@@ -4,7 +4,6 @@ import { blobBottomLeft, blobBottomRight, blobTopLeft, blobTopRight } from '../a
 import submitBlob from '../assets/images/submit-blob.png';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
 
-
 function LearnMore() {
   //will be used to restart checkmarks upon submission
   const [firstCheck, setFirstCheck] = useState(false);

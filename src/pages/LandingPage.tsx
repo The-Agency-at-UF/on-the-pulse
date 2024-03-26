@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { blob1, blob2, blob3, blob4, logo, LandingTextSVG, favblog1, favblog2, favblog3 } from '../assets/images/landing-page';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
-import {useLocation} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom';
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 //Firebase imports
-import { getDatabase, ref as databaseRef, onValue } from 'firebase/database';
-
+import { getFirestore, collection, getDocs, limit, query, orderBy } from 'firebase/firestore';
 
 function LandingPage() {
   // states for blog rendering
@@ -20,6 +22,11 @@ function LandingPage() {
   const blob3Controls = useAnimation();
   const blob4Controls = useAnimation();
 
+  // images for carousel that will be randomly selected
+  const carouselImages = [favblog1, favblog2, favblog3];
+  const navigate = useNavigate();
+  const [isDragging, setIsDragging] = useState(false);
+
   // initialize random animations on component mount
   useEffect(() => {
     blob1Controls.start(getRandomAnimation());
@@ -30,24 +37,66 @@ function LandingPage() {
 
   // useEffect for fetching starred posts
   useEffect(() => {
-    const db = getDatabase();
-    const starredRef = databaseRef(db, 'starredPosts');
+    const db = getFirestore();
+    const test = query(collection(db, 'posts'), orderBy('creation', ), limit(7));
+    var starredTemp = [];
 
-    onValue(starredRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log(data);
-        setStarredPosts(Object.values(data));
-      } else {
-        setStarredPosts([]);
-      }
-    })
-  }, []);
+    getDocs(test)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // doc.data() is the document data
+          starredTemp.push({
+            id:doc.id, 
+            title: doc.data().title, 
+            shortDescription: doc.data().shortDescription,
+            imageSrc: carouselImages[Math.floor(Math.random() * carouselImages.length)]
+          })
+        });
+        setStarredPosts(starredTemp)
+      })
+      .catch((error) => {
+        console.error('Error getting documents: ', error);
+      });
+  }, []); // empty dependency to run once at launch
 
-  //TODO: loop through the IDs 
-  
   // logo animation
   const logoAnimation = useAnimation();
+  
+  // Array of carousel blobs to animate
+  const carouselBlobAnimation = Array(7).fill(null).map(() => useAnimation());
+
+
+  // carousel settings
+  const settings = {
+    dots: true, // Show dot indicators
+    infinite: true, // Enable infinite looping
+    speed: 500, // Transition speed
+    slidesToShow: 3, // Show three items
+    slidesToScroll: 1, // Scroll three items at a time
+    autoplay: true,
+    autoplaySpeed: 4000,
+    pauseOnHover: true,
+    responsive: [
+      {
+        breakpoint: 1024, // Adjust settings for smaller screens
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        }
+      }
+    ],
+    beforeChange: () => setIsDragging(true), // Set isDragging to true when dragging starts
+    afterChange: () => setIsDragging(false), // Reset isDragging back to false when dragging stops
+  };
 
   const startPulseAnimation = () => {
     logoAnimation.start({
@@ -71,7 +120,10 @@ function LandingPage() {
       transition: { duration: 1, ease: "easeOut" },
     })
     .then(startPulseAnimation);
-  }, [logoAnimation]);
+    carouselBlobAnimation.forEach(animation => {
+      animation.start(getRandomAnimation());
+    });
+  }, [logoAnimation, carouselBlobAnimation]);
 
   // hover animation
   const logoHoverAnimation = {
@@ -105,6 +157,12 @@ function LandingPage() {
       }
     }
   }, [location.pathname]);
+
+  const handleClick = (url) => {
+    if (!isDragging) {
+      navigate(url); // Navigate only if not dragging
+    }
+  };
   
 
   return (
@@ -179,30 +237,57 @@ function LandingPage() {
       </div>
 
       {/* Render starred posts */}
-      <div className="starred-posts-container mt-100vh md:grid md:grid-cols-3 md:gap-4 lg:gap-6 p-4">
-        {starredPosts.map((blogId, index) => (
-          <div key={blogId} className="starred-post mb-4 md:mb-0">
-            {/*
-            <Link 
-              to={`/blog/${blogId}`} 
-              className="starred-post-link block w-full text-center px-4 py-2  text-white rounded hover:bg-gray-700 transition duration-300"
-            >
-              Go to Post: {blogId}
-            </Link>
-            */}
-
-            
-            <Link to={`/blog/${blogId}`} className="block relative rounded overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <img src={favblog1} alt="Post background" className="absolute inset-0 w-full h-full object-contain" />
-              <div className="flex flex-col justify-center items-center relative p-4 bg-opacity-80 bg-black hover:bg-opacity-90 transition-opacity duration-300">
-                <h3 className="text-white text-lg font-bold">{starredPosts[index]}</h3>
-                <p className="text-white text-sm">{starredPosts}</p>
+      {/*
+      <div className="starred-posts-container md:grid md:grid-cols-3 md:gap-4 lg:gap-6 p-4">
+        {starredPosts.map((blog, index) => (
+          <div key={blog.id} className="starred-post mb-4 md:mb-0" >
+            <Link to={`/blog/${blog.id}`} className="block relative rounded overflow-hidden shadow-lg h-96 w-full m-auto">
+              <img src={index == 0 ? favblog1 : index == 1 ? favblog2 : favblog3} alt="Post background" className="absolute inset-0 w-full h-full object-contain" />
+              <div className="flex h-full  flex-col justify-center gap-4 items-center relative p-4 bg-opacity-20 bg-black hover:bg-opacity-50 transition-all duration-300">
+                <h3 className="text-white text-4xl font-black text-center">{blog.title}</h3>
+                <p className="text-white text-2xl text-center max-w-72">{blog.shortDescription}</p>
               </div>
             </Link>
-
           </div>
         ))}
       </div>
+      */}
+
+      <Slider {...settings}>
+        {starredPosts.map((blog, index) => (
+          <div onClick={() => handleClick(`/blog/${blog.id}`)} key={index} className="starred-post mb-4 md:mb-0">
+            <div className="block relative rounded shadow-lg h-105 w-full m-auto">
+              {/* Image */}
+              <motion.img
+                src={blog.imageSrc}
+                alt="Carousel Blob"
+                className="inset-0 w-full h-full " // Changed from object-contain to object-cover for full coverage
+                animate={carouselBlobAnimation[index]}
+                onHoverStart={() => onHoverStart(carouselBlobAnimation[index])}
+                onHoverEnd={() => onHoverEnd(carouselBlobAnimation[index])}
+                draggable="true"
+              />
+              {/* Overlay Content */}
+              <div style={{ pointerEvents: 'none' }} className="absolute inset-0 flex flex-col justify-center items-center p-4 bg-black bg-opacity-10 text-white">
+                <h3 className="text-4xl font-bold text-center">{blog.title}</h3>
+                <p className="text-2xl text-center">{blog.shortDescription}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </Slider>
+
+      <div className="text-center my-20">
+        <h2 className="text-4xl font-semibold mb-4">Want to see more blobs?</h2>
+        <div className="w-24 h-0.5 bg-purple-800 mx-auto mb-6"></div>
+        <button 
+          className="px-6 py-3 text-white rounded-lg bg-purple-800 hover:bg-purple-900 transition duration-300"
+        >
+            More Blogs
+        </button>
+    </div>
+
+
     </div>
   )
 }
