@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { blob1, blob2, blob3, blob4, logo, LandingTextSVG, favblog1, favblog2, favblog3 } from '../assets/images/landing-page';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
@@ -24,6 +24,8 @@ function LandingPage() {
 
   // images for carousel that will be randomly selected
   const carouselImages = [favblog1, favblog2, favblog3];
+  const navigate = useNavigate();
+  const [isDragging, setIsDragging] = useState(false);
 
   // initialize random animations on component mount
   useEffect(() => {
@@ -43,7 +45,12 @@ function LandingPage() {
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           // doc.data() is the document data
-          starredTemp.push({id:doc.id, title: doc.data().title, shortDescription: doc.data().shortDescription})
+          starredTemp.push({
+            id:doc.id, 
+            title: doc.data().title, 
+            shortDescription: doc.data().shortDescription,
+            imageSrc: carouselImages[Math.floor(Math.random() * carouselImages.length)]
+          })
         });
         setStarredPosts(starredTemp)
       })
@@ -86,7 +93,9 @@ function LandingPage() {
           slidesToScroll: 1,
         }
       }
-    ]
+    ],
+    beforeChange: () => setIsDragging(true), // Set isDragging to true when dragging starts
+    afterChange: () => setIsDragging(false), // Reset isDragging back to false when dragging stops
   };
 
   const startPulseAnimation = () => {
@@ -148,6 +157,12 @@ function LandingPage() {
       }
     }
   }, [location.pathname]);
+
+  const handleClick = (url) => {
+    if (!isDragging) {
+      navigate(url); // Navigate only if not dragging
+    }
+  };
   
 
   return (
@@ -240,24 +255,24 @@ function LandingPage() {
 
       <Slider {...settings}>
         {starredPosts.map((blog, index) => (
-          <div key={index} className="starred-post mb-4 md:mb-0">
-            <Link to={`/blog/${blog.id}`} className="block relative rounded shadow-lg h-105 w-full m-auto">
+          <div onClick={() => handleClick(`/blog/${blog.id}`)} key={index} className="starred-post mb-4 md:mb-0">
+            <div className="block relative rounded shadow-lg h-105 w-full m-auto">
               {/* Image */}
               <motion.img
-                src={carouselImages[Math.floor(Math.random() * carouselImages.length)]}
+                src={blog.imageSrc}
                 alt="Carousel Blob"
                 className="inset-0 w-full h-full " // Changed from object-contain to object-cover for full coverage
                 animate={carouselBlobAnimation[index]}
                 onHoverStart={() => onHoverStart(carouselBlobAnimation[index])}
                 onHoverEnd={() => onHoverEnd(carouselBlobAnimation[index])}
-                draggable="false"
+                draggable="true"
               />
               {/* Overlay Content */}
               <div style={{ pointerEvents: 'none' }} className="absolute inset-0 flex flex-col justify-center items-center p-4 bg-black bg-opacity-10 text-white">
                 <h3 className="text-4xl font-bold text-center">{blog.title}</h3>
                 <p className="text-2xl text-center">{blog.shortDescription}</p>
               </div>
-            </Link>
+            </div>
           </div>
         ))}
       </Slider>
