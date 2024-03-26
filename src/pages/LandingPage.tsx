@@ -22,6 +22,9 @@ function LandingPage() {
   const blob3Controls = useAnimation();
   const blob4Controls = useAnimation();
 
+  // images for carousel that will be randomly selected
+  const carouselImages = [favblog1, favblog2, favblog3];
+
   // initialize random animations on component mount
   useEffect(() => {
     blob1Controls.start(getRandomAnimation());
@@ -241,7 +244,7 @@ function LandingPage() {
             <Link to={`/blog/${blog.id}`} className="block relative rounded shadow-lg h-105 w-full m-auto">
               {/* Image */}
               <motion.img
-                src={index === 0 ? favblog1 : index === 1 ? favblog2 : favblog3}
+                src={carouselImages[Math.floor(Math.random() * carouselImages.length)]}
                 alt="Carousel Blob"
                 className="inset-0 w-full h-full " // Changed from object-contain to object-cover for full coverage
                 animate={carouselBlobAnimation[index]}
