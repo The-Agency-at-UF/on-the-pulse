@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { getFirestore, collection, getDocs, query, orderBy, limit, startAt, getCountFromServer, startAfter} from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, orderBy, where, limit, getCountFromServer, startAfter, doc, getDoc} from 'firebase/firestore';
 import BlogPost from "../components/BlogPost.tsx";
 import { useLocation, Link} from 'react-router-dom';
 
@@ -9,29 +9,57 @@ const Gallery = () => {
     const queryParams = new URLSearchParams(location.search);
     const page = parseInt(queryParams.get('page')) || 1;
     const [blogs, setBlogs] = useState([]);
-    const postsPerPage = 3;
+    const postsPerPage = 2;
     const [pages, setPages] = useState(0);
+    const [checked, setChecked] = useState([false, false, false, false]);
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const db = getFirestore();
                 const blogsCollection = collection(db, 'posts');
-
-                const sizeCount = await getCountFromServer(blogsCollection);
-                setPages(Math.ceil(sizeCount.data().count/postsPerPage));
+                if(categories.length == 0){
+                    const sizeCount = await getCountFromServer(blogsCollection);
+                    setPages(Math.ceil(sizeCount.data().count/postsPerPage));
+                }
+                else{
+                    const categoryCountRef = doc(db, 'article_counts', 'counts');
+                    const snapDoc = await getDoc(categoryCountRef);
+                    let count = 0;
+                    if(snapDoc.exists()){
+                        for(let i = 0; i < categories.length; i++){
+                            const articleCount = snapDoc.data()[categories[i]];
+                            count += articleCount;
+                        }
+                    }
+                    console.log(count);
+                    setPages(Math.ceil(pages/postsPerPage));
+                    
+                }
+                
                 let sortByDate = null;
                 if(page == 1){
-                    sortByDate = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage));
+                    if(categories.length == 0){
+                        sortByDate = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage));
+                    }
+                    else{
+                        sortByDate = query(blogsCollection, where("category", "in", categories), orderBy("creation", "desc"), limit(postsPerPage));
+                    }
                 }
                 else{
                     const getCompleteCollection = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage * (page-1)));
                     const startingSnapshot = await getDocs(getCompleteCollection);
-                    sortByDate = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage),startAfter(startingSnapshot.docs[startingSnapshot.docs.length-1]));
+                    if(categories.length == 0){
+                        sortByDate = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage),startAfter(startingSnapshot.docs[startingSnapshot.docs.length-1]));
+                    }
+                    else{
+                        sortByDate = query(blogsCollection, where("category", "in", categories), orderBy("creation", "desc"), limit(postsPerPage),startAfter(startingSnapshot.docs[startingSnapshot.docs.length-1]));
+                    }
+                    
                 }
                 if(sortByDate){
                     const snapshot = await getDocs(sortByDate);
-
                     const blogNames = snapshot.docs.map(doc => {
                         const id = doc.id;
                         const data = {id, ...doc.data()};
@@ -46,7 +74,24 @@ const Gallery = () => {
         };
 
         fetchData();
-    }, [page]);
+    }, [page, categories]);
+
+    const handleCheckboxChange = (index, category) => {
+        const newCheckedItems = [...checked];
+        newCheckedItems[index] = !newCheckedItems[index];
+        setChecked(newCheckedItems);
+        console.log(newCheckedItems[index]);
+        if (newCheckedItems[index] === true){
+            setCategories(prevCategories => [...prevCategories, category]);
+        }
+        else {
+            setCategories(prevCategories => prevCategories.filter(item=> item !== category));
+        }
+    }
+
+    useEffect(()=>{
+        console.log(categories);
+    }, [categories]);
 
     const generatedPaginationLinks = () => {
         const paginationLinks = [];
@@ -82,6 +127,22 @@ const Gallery = () => {
     return (
         <div className="">
             <h3 className="flex justify-center text-5xl">Previous Articles</h3>
+            <label>
+            <input type = "checkbox" checked={checked[0]} onChange={()=> handleCheckboxChange(0, "AI & Technology")}/>
+                AI & Technology
+            </label>
+            <label>
+            <input type = "checkbox" checked={checked[1]} onChange={()=> handleCheckboxChange(1, "Gen Z")}/>
+                Gen Z
+            </label>
+            <label>
+            <input type = "checkbox" checked={checked[2]} onChange={()=> handleCheckboxChange(2, "Current Events")}/>
+                Current Events
+            </label>
+            <label>
+            <input type = "checkbox" checked={checked[3]} onChange={()=> handleCheckboxChange(3, "Industry")}/>
+                Industry
+            </label>
             <div className="mt-12 grid text-center grid-cols-none lg:text-center lg:grid lg:grid-cols-3 gap-4">
                 {blogs.map((blog) => (
                     <BlogPost post={blog}/>
