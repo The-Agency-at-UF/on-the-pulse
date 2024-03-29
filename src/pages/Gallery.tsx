@@ -7,59 +7,30 @@ const Gallery = () => {
     
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const page = parseInt(queryParams.get('page')) || 1;
     const [blogs, setBlogs] = useState([]);
-    const postsPerPage = 2;
-    const [pages, setPages] = useState(0);
+    const postsPerPage = 9;
     const [checked, setChecked] = useState([false, false, false, false]);
     const [categories, setCategories] = useState([]);
+    const [lastDocument, setLastDocument] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const db = getFirestore();
                 const blogsCollection = collection(db, 'posts');
-                if(categories.length == 0){
-                    const sizeCount = await getCountFromServer(blogsCollection);
-                    setPages(Math.ceil(sizeCount.data().count/postsPerPage));
-                }
-                else{
-                    const categoryCountRef = doc(db, 'article_counts', 'counts');
-                    const snapDoc = await getDoc(categoryCountRef);
-                    let count = 0;
-                    if(snapDoc.exists()){
-                        for(let i = 0; i < categories.length; i++){
-                            const articleCount = snapDoc.data()[categories[i]];
-                            count += articleCount;
-                        }
-                    }
-                    console.log(count);
-                    setPages(Math.ceil(pages/postsPerPage));
-                    
-                }
                 
                 let sortByDate = null;
-                if(page == 1){
-                    if(categories.length == 0){
-                        sortByDate = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage));
-                    }
-                    else{
-                        sortByDate = query(blogsCollection, where("category", "in", categories), orderBy("creation", "desc"), limit(postsPerPage));
-                    }
+                if(categories.length == 0){
+                    sortByDate = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage));
                 }
                 else{
-                    const getCompleteCollection = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage * (page-1)));
-                    const startingSnapshot = await getDocs(getCompleteCollection);
-                    if(categories.length == 0){
-                        sortByDate = query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage),startAfter(startingSnapshot.docs[startingSnapshot.docs.length-1]));
-                    }
-                    else{
-                        sortByDate = query(blogsCollection, where("category", "in", categories), orderBy("creation", "desc"), limit(postsPerPage),startAfter(startingSnapshot.docs[startingSnapshot.docs.length-1]));
-                    }
-                    
+                    sortByDate = query(blogsCollection, where("category", "in", categories), orderBy("creation", "desc"), limit(postsPerPage));
                 }
+
+
                 if(sortByDate){
                     const snapshot = await getDocs(sortByDate);
+                    setLastDocument(snapshot.docs[snapshot.docs.length-1]);
                     const blogNames = snapshot.docs.map(doc => {
                         const id = doc.id;
                         const data = {id, ...doc.data()};
@@ -74,7 +45,7 @@ const Gallery = () => {
         };
 
         fetchData();
-    }, [page, categories]);
+    }, [categories]);
 
     const handleCheckboxChange = (index, category) => {
         const newCheckedItems = [...checked];
@@ -89,39 +60,28 @@ const Gallery = () => {
         }
     }
 
+    const handleClick = async () => {
+        const db = getFirestore();
+        const blogsCollection = collection(db, 'posts');
+        let additionalArticles = null;
+        if(categories.length == 0){
+            additionalArticles= query(blogsCollection, orderBy("creation", "desc"), limit(postsPerPage),startAfter(lastDocument));
+        }
+        else{
+            additionalArticles = query(blogsCollection, where("category", "in", categories), orderBy("creation", "desc"), limit(postsPerPage),startAfter(lastDocument));
+        }
+
+        const additionalArticlesSnapshot = await getDocs(additionalArticles);
+        setLastDocument(additionalArticlesSnapshot.docs[additionalArticlesSnapshot.docs.length-1]);
+        const newArticles = additionalArticlesSnapshot.docs.map(doc => doc.data());
+        setBlogs(prevBlogs=> [...prevBlogs, ...newArticles]);
+        console.log(blogs);
+    };
+
     useEffect(()=>{
         console.log(categories);
-    }, [categories]);
-
-    const generatedPaginationLinks = () => {
-        const paginationLinks = [];
-        const window = 2; 
-        let startPage = Math.max(1, page-1);
-        let endPage = Math.min(page+window, pages);
-        console.log(pages);
-
-        if(startPage >= 2){
-            paginationLinks.push(<Link className="text-xl mr-3 font-gentona" to={`/gallery?page=1`}> 1 </Link>);
-            if(startPage != 2){
-                paginationLinks.push(<p className="font-gentona text-xl mr-3"> ... </p>);
-            }
-        }
-        for(let i = startPage; i <= endPage; i++){
-            if(page != i){
-                paginationLinks.push(<Link className="text-xl mr-3 font-gentona" to={`/gallery?page=${i}`}> {i} </Link>);
-            }
-            else{
-                paginationLinks.push(<Link style={{color: 'black'}} className="text-xl bg-white mr-3 pl-[9px] pr-[9px] flex justify-center rounded-full font-gentona" to={`/gallery?page=${i}`}> {i} </Link>);
-            }  
-        }
-    
-        if(endPage < pages){
-            paginationLinks.push(<p className="text-xl font-gentona mr-3"> ... </p>);
-        }
-        console.log(paginationLinks);
-        return paginationLinks;
-
-    }
+        console.log(blogs);
+    }, [blogs, categories]);
     
 
     return (
@@ -148,9 +108,7 @@ const Gallery = () => {
                     <BlogPost post={blog}/>
                 ))}
             </div>
-            <div className="flex flex-row justify-end mr-5 mb-5"> 
-                {generatedPaginationLinks()}
-            </div> 
+            <button onClick={handleClick}> Load More Articles </button>
         </div>
     );
 };
