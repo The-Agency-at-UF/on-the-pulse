@@ -8,7 +8,7 @@ const Gallery = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const [blogs, setBlogs] = useState([]);
-    const postsPerPage = 9;
+    const postsPerPage = 4;
     const [checked, setChecked] = useState([false, false, false, false]);
     const [categories, setCategories] = useState([]);
     const [lastDocument, setLastDocument] = useState(null);
@@ -47,6 +47,8 @@ const Gallery = () => {
         fetchData();
     }, [categories]);
 
+
+
     const handleCheckboxChange = (index, category) => {
         const newCheckedItems = [...checked];
         newCheckedItems[index] = !newCheckedItems[index];
@@ -60,7 +62,7 @@ const Gallery = () => {
         }
     }
 
-    const handleClick = async () => {
+    const fetchMoreBlogs = async () => {
         const db = getFirestore();
         const blogsCollection = collection(db, 'posts');
         let additionalArticles = null;
@@ -75,7 +77,6 @@ const Gallery = () => {
         setLastDocument(additionalArticlesSnapshot.docs[additionalArticlesSnapshot.docs.length-1]);
         const newArticles = additionalArticlesSnapshot.docs.map(doc => doc.data());
         setBlogs(prevBlogs=> [...prevBlogs, ...newArticles]);
-        console.log(blogs);
     };
 
     useEffect(()=>{
@@ -83,6 +84,19 @@ const Gallery = () => {
         console.log(blogs);
     }, [blogs, categories]);
     
+    useEffect(() => {
+        const handleScroll = () => {
+           if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            console.log("called");
+            fetchMoreBlogs();
+          }
+        };
+    
+        window.addEventListener("scroll", handleScroll);
+        return () => {
+          window.removeEventListener("scroll", handleScroll);
+        };
+      }, [fetchMoreBlogs]);
 
     return (
         <div className="">
@@ -108,7 +122,7 @@ const Gallery = () => {
                     <BlogPost post={blog}/>
                 ))}
             </div>
-            <button onClick={handleClick}> Load More Articles </button>
+            <button onClick={fetchMoreBlogs}> Load More Articles </button>
         </div>
     );
 };
