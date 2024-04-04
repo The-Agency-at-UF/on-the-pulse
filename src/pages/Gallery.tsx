@@ -6,9 +6,8 @@ import { useLocation, Link} from 'react-router-dom';
 const Gallery = () => {
     
     const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
     const [blogs, setBlogs] = useState([]);
-    const postsPerPage = 4;
+    const postsPerPage = 6;
     const [checked, setChecked] = useState([false, false, false, false]);
     const [categories, setCategories] = useState([]);
     const [lastDocument, setLastDocument] = useState(null);
@@ -99,31 +98,35 @@ const Gallery = () => {
       }, [fetchMoreBlogs]);
 
     return (
-        <div className="">
+        <>
             <h3 className="flex justify-center text-5xl">Previous Articles</h3>
-            <label>
-            <input type = "checkbox" checked={checked[0]} onChange={()=> handleCheckboxChange(0, "AI & Technology")}/>
+            <div className="flex md:flex-row flex-col justify-center md:m-5 mt-3">
+            <label className="font-gentona font-medium md:text-xl md:mr-3 mb-3 md:mb-0 text-center">
+            <input className="mr-3 scale-150" type = "checkbox" checked={checked[0]} onChange={()=> handleCheckboxChange(0, "AI & Technology")}/>
                 AI & Technology
             </label>
-            <label>
-            <input type = "checkbox" checked={checked[1]} onChange={()=> handleCheckboxChange(1, "Gen Z")}/>
+            <label className="font-gentona font-medium md:text-xl md:mr-3 mb-3 md:mb-0 text-center">
+            <input className="mr-3 scale-150" type = "checkbox" checked={checked[1]} onChange={()=> handleCheckboxChange(1, "Gen Z")}/>
                 Gen Z
             </label>
-            <label>
-            <input type = "checkbox" checked={checked[2]} onChange={()=> handleCheckboxChange(2, "Current Events")}/>
+            <label className="font-gentona font-medium md:text-xl md:mr-3 mb-3 md:mb-0 text-center">
+            <input className="mr-3 scale-150" type = "checkbox" checked={checked[2]} onChange={()=> handleCheckboxChange(2, "Current Events")}/>
                 Current Events
             </label>
-            <label>
-            <input type = "checkbox" checked={checked[3]} onChange={()=> handleCheckboxChange(3, "Industry")}/>
+            <label className="font-gentona font-medium md:text-xl md:mr-3 mb-3 md:mb-0 text-center">
+            <input className="mr-3 scale-150" type = "checkbox" checked={checked[3]} onChange={()=> handleCheckboxChange(3, "Industry")}/>
                 Industry
             </label>
+            </div>
             <div className="mt-12 grid text-center grid-cols-none lg:text-center lg:grid lg:grid-cols-3 gap-4">
                 {blogs.map((blog) => (
                     <BlogPost post={blog}/>
                 ))}
             </div>
-            <button onClick={fetchMoreBlogs}> Load More Articles </button>
-        </div>
+            <div className="flex justify-center md:mt-4 md:mb-7 mb-[5rem]">
+            <button className="bg-violet-500 font-medium rounded-md p-5 lg:text-2xl text-xl font-gentona" onClick={fetchMoreBlogs}> Load More Articles </button>
+            </div>
+        </>
     );
 };
 
