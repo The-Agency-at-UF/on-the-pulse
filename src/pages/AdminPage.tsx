@@ -240,7 +240,11 @@ const AdminPage: React.FC = () => {
                 setThumbnailId('');
             } catch (error) {
                 console.error("Error adding document: ", error);
-                alert("Failed to upload post. Please try again.");
+                if (error.code === "permission-denied") {
+                    alert("You do not have permission to perform this action.");
+                } else {
+                    alert("Failed to upload post. Please try again.");
+                }
             }
         }
     };
