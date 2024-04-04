@@ -278,7 +278,7 @@ function LandingPage() {
       </Slider>
 
       <div className="text-center my-20">
-        <h2 className="text-4xl font-semibold mb-4">Want to see more blobs?</h2>
+        <h2 className="text-4xl font-semibold mb-4">Interested in more?</h2>
         <div className="w-24 h-0.5 bg-purple-800 mx-auto mb-6"></div>
         <button 
           className="px-6 py-3 text-white rounded-lg bg-purple-800 hover:bg-purple-900 transition duration-300"
