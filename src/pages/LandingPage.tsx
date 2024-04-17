@@ -38,7 +38,7 @@ function LandingPage() {
   // useEffect for fetching starred posts
   useEffect(() => {
     const db = getFirestore();
-    const test = query(collection(db, 'posts'), orderBy('creation', ), limit(7));
+    const test = query(collection(db, 'posts'), orderBy('creation', "desc"), limit(7));
     var starredTemp = [];
 
     getDocs(test)
