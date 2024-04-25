@@ -40,6 +40,7 @@ const AdminPage: React.FC = () => {
     // Blog States
     const [creation, setCreation] = useState(null);
     const [title, setTitle] = useState('');
+    const [author, setAuthor] = useState('');
     const [shortDescription, setShortDescription] = useState('');
     const [templateType, setTemplateType] = useState('A');
     const [category, setCategory] = useState('AI & Technology');
@@ -234,6 +235,7 @@ const AdminPage: React.FC = () => {
                     sections,
                     thumbnailId,
                     index: snapshot.docs.length,
+                    Author: author
                 });
                 
                 // Alert the user
@@ -300,7 +302,7 @@ const AdminPage: React.FC = () => {
 
     // Admin page content goes here...
     // Tailwind CSS classes
-    const inputClass = "mb-4 px-3 py-2 border rounded";
+    const inputClass = "mb-4 px-3 py-2 border rounded mr-2";
     const textareaClass = "mb-4 px-3 py-2 border rounded w-full";
     const buttonClass = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2 mb-4";
     const fileInputClass = "mb-4";
@@ -308,7 +310,7 @@ const AdminPage: React.FC = () => {
 
     const renderAddBlogContent = () => {
         return (
-            <div className="max-w-4xl mx-auto p-6 min-h-screen">
+            <div className="max-w-4xl mx-auto p-6 min-h-screen flex-col">
                 <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} className={inputClass} />
                 <textarea placeholder="Short Description" value={shortDescription} onChange={e => setShortDescription(e.target.value)} className={textareaClass} />
                 <select value={templateType} onChange={e => setTemplateType(e.target.value)} className={inputClass}>
@@ -317,9 +319,11 @@ const AdminPage: React.FC = () => {
                     <option value="C">C</option>
                 </select>
                 <input type="text" placeholder="Blog ID" value={blogId} onChange={e => setBlogId(e.target.value)} className={inputClass} />
-                
+                <div className="flex-row">
+                    <p className="font-semibold inline-block mr-1"> Author: </p>
+                    <input type="text" placeholder="First Last" value={author} onChange={e => setAuthor(e.target.value)} className={inputClass} />
+                </div>
                 <p>The blog ID is the endpoint where users will access it. EX: my-new-blog is available at "/blog/my-new-blog"</p>
-                
                 <div className="flex flex-row items-center mb-4 gap-2"> 
                 <p className="font-semibold"> Category: </p>
                 <select value={category} onChange={e => setCategory(e.target.value)} className={`${inputClass} mb-0`}>
@@ -601,6 +605,7 @@ const AdminPage: React.FC = () => {
                         <option value="Industry">Industry</option>
                     </select>
                     </div>
+                    {}
                     <div className="flex flex-row items-center gap-2">
                         <p className="font-semibold"> Thumbnail: </p>
                         <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], -1)} className={`${fileInputClass} mb-0`} />
@@ -637,6 +642,7 @@ const AdminPage: React.FC = () => {
                                         className={textareaClass} 
                                     />
                                     {/* File input for image */}
+                                    <img className="flex mb-5" src={(section.content as SectionContent).imageUrl} alt="" />
                                     <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], index)} className={fileInputClass} />
                                     {/* Layout selector */}
                                     <select onChange={e => handleLayoutChange(e.target.value as 'left' | 'right', index)} className={inputClass}>
@@ -657,6 +663,7 @@ const AdminPage: React.FC = () => {
                     <div className="flex gap-5">
                         <button onClick={cancel} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">Cancel</button>
                         <button onClick={save} className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"> Save </button>
+                        <button onClick={handlePreview} className="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-20"> Preview </button>
                     </div>
                 </div>
             );
