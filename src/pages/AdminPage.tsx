@@ -6,7 +6,7 @@ import SignIn from '../components/SignIn/SignIn';
 import {Alert} from '../components/Alert/alert';
 
 import { getAuth, signOut } from 'firebase/auth';
-import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc, query} from 'firebase/firestore';
+import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc, query, updateDoc, Timestamp} from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
 // Importing from Realtime Database with aliasing
@@ -38,7 +38,7 @@ const AdminPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     // Blog States
-    const [creation, setCreation] = useState(null);
+    const [creation, setCreation] = useState<Timestamp>();
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [shortDescription, setShortDescription] = useState('');
@@ -213,6 +213,9 @@ const AdminPage: React.FC = () => {
             alert("Blog ID is required.");
             return;
         }
+        if(!author){
+            alert("Author not Set")
+        }
         const docRef = doc(db, `posts/${blogId}`);
         const docSnap = await getDoc(docRef);
 
@@ -224,7 +227,6 @@ const AdminPage: React.FC = () => {
                 const docs = query(collection(db, "posts"));
                 const snapshot = await getDocs(docs);
                 const timestamp = new Date();
-                setCreation(timestamp);
                 
                 await setDoc(docRef, {
                     creation: timestamp,
@@ -235,7 +237,8 @@ const AdminPage: React.FC = () => {
                     sections,
                     thumbnailId,
                     index: snapshot.docs.length,
-                    Author: author
+                    author: author,
+                    editied:false
                 });
                 
                 // Alert the user
@@ -248,7 +251,11 @@ const AdminPage: React.FC = () => {
                 setTemplateType('A'); // or your default value
                 setSections([]);
                 setBlogId('');
+                setAuthor('');
                 setThumbnailId('');
+
+                setActiveTab('manageBlogs');
+
             } catch (error) {
                 console.error("Error adding document: ", error);
                 alert("Failed to upload post. Please try again.");
@@ -495,8 +502,9 @@ const AdminPage: React.FC = () => {
         setCategory(postDoc.data().category)
         setShortDescription(postDoc.data().shortDescription)
         setSections(postDoc.data().sections)
-
+        setAuthor(postDoc.data().author)
         setFetchingEdit(false)
+        setCreation(postDoc.data().creation)
     }
     
     
@@ -549,13 +557,13 @@ const AdminPage: React.FC = () => {
 
     // Clear Blog attributes after Creating Blog or finishing Editing
     const ClearBlogAttributes = async() =>{
-        setCreation(null);
         setTitle('');
         setShortDescription('');
         setTemplateType('A');
         setCategory('AI & Technology');
         setSections([]);
         setBlogId('');
+        setAuthor('')
         setThumbnailId('');    
     }
     
@@ -567,13 +575,39 @@ const AdminPage: React.FC = () => {
             setActiveTab('manageBlogs')
         }
         // Save blog
-        const save = () =>{
-            setEditSuccess(true)
-            setActiveTab('manageBlogs')
-            // reset alert
-            setTimeout(()=>{
-                setEditSuccess(false)
-            },ALERTLENGTH-5)
+        const save = async () =>{
+            
+            const db = getFirestore();
+            const timestamp = new Date();
+
+            if(editID){
+                setFetchingEdit(true)
+                
+                const docRef = doc(db, `posts/${editID}`);
+                updateDoc(docRef, {
+                    creation: timestamp,
+                    title,
+                    category,
+                    shortDescription,
+                    templateType,
+                    sections,
+                    author: author,
+                    editied:true
+                }).then(()=>{
+                    setEditSuccess(true)
+                    setFetchingEdit(false)
+                    setActiveTab('manageBlogs')
+                    // reset alert
+                    setTimeout(()=>{
+                        setEditSuccess(false)
+                    },ALERTLENGTH-5)
+                    setFetchingEdit(false)
+
+                })
+            }
+            else{
+                alert('Saving Failed')
+            }
         }
 
         if(fetchingEdit){
@@ -585,6 +619,10 @@ const AdminPage: React.FC = () => {
         }else{
             return (
                 <div className="max-w-4xl mx-auto p-6 min-h-screen">
+                    <div className="w-fit flex items-center gap-2 mb-2">
+                        <h4>Last Modified:</h4>
+                        <p>{creation.toDate().toLocaleString()}</p>
+                    </div>
                     <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} className={inputClass} />
                     <textarea placeholder="Short Description" value={shortDescription} onChange={e => setShortDescription(e.target.value)} className={textareaClass} />
                     <select value={templateType} onChange={e => setTemplateType(e.target.value)} className={inputClass}>
@@ -593,17 +631,21 @@ const AdminPage: React.FC = () => {
                         <option value="C">C</option>
                     </select>
                     <input type="text" placeholder="Blog ID" value={editID} className={inputClass} disabled />
+                    <div className="flex w-fit items-center mb-3">
+                        <p className="font-semibold inline-block mr-1 h-fit"> Author: </p>
+                        <h4 className="flex w-fit align-bottom"> {author} </h4>
+                    </div>
                     
                     <p>The blog ID is the endpoint where users will access it. EX: my-new-blog is available at "/blog/my-new-blog"</p>
                     
-                    <div className="flex flex-row items-center mb-4 gap-2"> 
-                    <p className="font-semibold"> Category: </p>
-                    <select value={category} onChange={e => setCategory(e.target.value)} className={`${inputClass} mb-0`}>
-                        <option value="AI & Technology">AI & Technology</option>
-                        <option value="Gen Z">Gen Z</option>
-                        <option value="Current Events">Current Events</option>
-                        <option value="Industry">Industry</option>
-                    </select>
+                    <div className="flex items-center gap-2 my-3"> 
+                        <p className="font-semibold"> Category: </p>
+                        <select value={category} onChange={e => setCategory(e.target.value)} className={`${inputClass} mb-auto`}>
+                            <option value="AI & Technology">AI & Technology</option>
+                            <option value="Gen Z">Gen Z</option>
+                            <option value="Current Events">Current Events</option>
+                            <option value="Industry">Industry</option>
+                        </select>
                     </div>
                     {}
                     <div className="flex flex-row items-center gap-2">
