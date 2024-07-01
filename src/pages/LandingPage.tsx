@@ -43,14 +43,16 @@ function LandingPage() {
 
     getDocs(test)
       .then((querySnapshot) => {
+        let imageCounter = 0;
         querySnapshot.forEach((doc) => {
           // doc.data() is the document data
           starredTemp.push({
             id:doc.id, 
             title: doc.data().title, 
             shortDescription: doc.data().shortDescription,
-            imageSrc: carouselImages[Math.floor(Math.random() * carouselImages.length)]
+            imageSrc: carouselImages[imageCounter % carouselImages.length]
           })
+          imageCounter++;
         });
         setStarredPosts(starredTemp)
       })
