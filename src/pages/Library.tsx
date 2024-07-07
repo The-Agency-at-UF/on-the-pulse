@@ -3,7 +3,7 @@ import { getFirestore, collection, getDocs, query, orderBy, where, limit, getCou
 import BlogPost from "../components/BlogPost.tsx";
 import { useLocation, Link} from 'react-router-dom';
 
-const Gallery = () => {
+const Library = () => {
     
     const location = useLocation();
     const [blogs, setBlogs] = useState([]);
@@ -130,5 +130,5 @@ const Gallery = () => {
     );
 };
 
-export default Gallery;
+export default Library;
 
