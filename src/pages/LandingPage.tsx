@@ -12,6 +12,8 @@ import "slick-carousel/slick/slick-theme.css";
 import { getFirestore, collection, getDocs, limit, query, orderBy } from 'firebase/firestore';
 
 function LandingPage() {
+
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   // states for blog rendering
   const location = useLocation();
   const [starredPosts, setStarredPosts] = useState([]);
@@ -43,14 +45,16 @@ function LandingPage() {
 
     getDocs(test)
       .then((querySnapshot) => {
+        let imageCounter = 0;
         querySnapshot.forEach((doc) => {
           // doc.data() is the document data
           starredTemp.push({
             id:doc.id, 
             title: doc.data().title, 
             shortDescription: doc.data().shortDescription,
-            imageSrc: carouselImages[Math.floor(Math.random() * carouselImages.length)]
+            imageSrc: carouselImages[imageCounter % carouselImages.length]
           })
+          imageCounter++;
         });
         setStarredPosts(starredTemp)
       })
@@ -163,7 +167,21 @@ function LandingPage() {
       navigate(url); // Navigate only if not dragging
     }
   };
-  
+
+  const onHoverStart = (index) => {
+    setHoveredIndex(index);
+    console.log("Hover");
+  };
+
+  const onHoverEnd = (index) => {
+    setHoveredIndex(null);
+    console.log("Hover end");
+  };
+
+  useEffect(()=> {
+    console.log(hoveredIndex);
+  }, [hoveredIndex])
+
 
   return (
     <div>
@@ -255,7 +273,7 @@ function LandingPage() {
 
       <Slider {...settings}>
         {starredPosts.map((blog, index) => (
-          <div onClick={() => handleClick(`/blog/${blog.id}`)} key={index} className="starred-post mb-4 md:mb-0">
+          <div onMouseEnter={()=> onHoverStart(index)} onMouseLeave={()=> onHoverEnd(index)} onClick={() => handleClick(`/blog/${blog.id}`)} key={index} className="starred-post mb-4 md:mb-0">
             <div className="block relative rounded shadow-lg h-105 w-full m-auto">
               {/* Image */}
               <motion.img
@@ -268,9 +286,10 @@ function LandingPage() {
                 draggable="true"
               />
               {/* Overlay Content */}
-              <div style={{ pointerEvents: 'none' }} className="absolute inset-0 flex flex-col justify-center items-center p-4 bg-black bg-opacity-10 text-white">
-                <h3 className="text-4xl font-bold text-center">{blog.title}</h3>
-                <p className="text-2xl text-center">{blog.shortDescription}</p>
+              <div className={`absolute inset-0 flex flex-col justify-center items-center p-4 bg-black bg-opacity-10 text-white`}>
+                <h3 className="text-4xl font-bold text-center"> {hoveredIndex === index ? "Read Full Article" : ""} </h3> 
+                <h3 className="text-4xl font-bold text-center"> {hoveredIndex === index ? "" : blog.title}</h3>
+                <p className="text-2xl text-center">{hoveredIndex === index ? "" : blog.shortDescription}</p>
               </div>
             </div>
           </div>

@@ -29,8 +29,11 @@ const Hamburger: FC<HamburgerProps> = ({sendHamburgerState}) => {
 
     <div className="hamburger-overlay z-20">
       <div className="hamburger-links"> 
-      <h3 className="navbar-entry hamburger-entry"> <Link to="/" onClick={()=>{setHamburger(false); sendData();}}> Home </Link> </h3>
-        <h3 className="navbar-entry hamburger-entry"><Link to="/about-us" onClick={()=>{setHamburger(false); sendData();}}> About Us </Link> </h3>
+        <h3 className="navbar-entry hamburger-entry"> <Link to="/" onClick={()=>{setHamburger(false); sendData();}}> On the Pulse </Link> </h3>
+        <h3 className="navbar-entry hamburger-entry"><Link to="/about-us" onClick={()=>{setHamburger(false); sendData();}}> About </Link> </h3>
+        <h3 className="navbar-entry hamburger-entry"><Link to="/services" onClick={()=>{setHamburger(false); sendData();}}> Services </Link> </h3>
+        <h3 className="navbar-entry hamburger-entry"><Link to="/work" onClick={()=>{setHamburger(false); sendData();}}> Work </Link> </h3>
+        <h3 className="navbar-entry hamburger-entry"><Link to="/apply" onClick={()=>{setHamburger(false); sendData();}}> Apply </Link> </h3>
         <h3 className="navbar-entry hamburger-entry"> <Link to="/library" onClick={()=>{setHamburger(false); sendData();}}> Library </Link> </h3>
         <h3 className="navbar-entry hamburger-entry"> <Link to="/learn-more" onClick={()=>{setHamburger(false); sendData();}}> Learn More </Link> </h3>
       </div>
