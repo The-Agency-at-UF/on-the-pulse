@@ -161,9 +161,20 @@ const AdminPage: React.FC = () => {
     const handleFileUpload = async (file: File, index: number) => {
         const storage = getStorage();
 
+        // Allowed file types
+        const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
+
+        // Extract file extension
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        // Check if the file extension is in the list of allowed extensions
+        if (!allowedExtensions.includes(fileExtension)) {
+            alert('Only PNG, JPG, and GIF files are allowed.');
+            return;
+        }
+
         // Generate a unique filename: OriginalName_YYYYMMDDHHMMSS.ext
         const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").substring(0,14); // YYYYMMDDHHMMSS format
-        const fileExtension = file.name.split('.').pop(); // Extract file extension
         const fileNameWithoutExtension = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension
         const uniqueFileName = `${fileNameWithoutExtension}_${timestamp}.${fileExtension}`;
         
@@ -203,6 +214,13 @@ const AdminPage: React.FC = () => {
             alert("Blog ID is required.");
             return;
         }
+
+        const validBlogIdRegex = /^[a-z0-9-]+$/;
+        if (!validBlogIdRegex.test(blogId)) {
+            alert("Blog ID must only contain lowercase letters, numbers, or dashes and contain no spaces.");
+            return;
+        }
+
         const docRef = doc(db, `posts/${blogId}`);
         const docSnap = await getDoc(docRef);
 

@@ -40,7 +40,7 @@ function LandingPage() {
   // useEffect for fetching starred posts
   useEffect(() => {
     const db = getFirestore();
-    const test = query(collection(db, 'posts'), orderBy('creation', ), limit(7));
+    const test = query(collection(db, 'posts'), orderBy('creation', "desc"), limit(7));
     var starredTemp = [];
 
     getDocs(test)
@@ -299,11 +299,13 @@ function LandingPage() {
       <div className="text-center my-20">
         <h2 className="text-4xl font-semibold mb-4">Interested in more?</h2>
         <div className="w-24 h-0.5 bg-purple-800 mx-auto mb-6"></div>
+        <Link to="/gallery">
         <button 
           className="px-6 py-3 text-white rounded-lg bg-purple-800 hover:bg-purple-900 transition duration-300"
         >
-            More Blogs
+            More Blogs 
         </button>
+        </Link>
     </div>
 
 
