@@ -171,9 +171,20 @@ const AdminPage: React.FC = () => {
     const handleFileUpload = async (file: File, index: number) => {
         const storage = getStorage();
 
+        // Allowed file types
+        const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
+
+        // Extract file extension
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        // Check if the file extension is in the list of allowed extensions
+        if (!allowedExtensions.includes(fileExtension)) {
+            alert('Only PNG, JPG, and GIF files are allowed.');
+            return;
+        }
+
         // Generate a unique filename: OriginalName_YYYYMMDDHHMMSS.ext
         const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").substring(0,14); // YYYYMMDDHHMMSS format
-        const fileExtension = file.name.split('.').pop(); // Extract file extension
         const fileNameWithoutExtension = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension
         const uniqueFileName = `${fileNameWithoutExtension}_${timestamp}.${fileExtension}`;
         
@@ -258,7 +269,11 @@ const AdminPage: React.FC = () => {
 
             } catch (error) {
                 console.error("Error adding document: ", error);
-                alert("Failed to upload post. Please try again.");
+                if (error.code === "permission-denied") {
+                    alert("You do not have permission to perform this action.");
+                } else {
+                    alert("Failed to upload post. Please try again.");
+                }
             }
         }
     };

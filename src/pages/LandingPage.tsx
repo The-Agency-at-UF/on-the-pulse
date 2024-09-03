@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { blob1, blob2, blob3, blob4, logo, LandingTextSVG, favblog1, favblog2, favblog3 } from '../assets/images/landing-page';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
@@ -12,6 +12,8 @@ import "slick-carousel/slick/slick-theme.css";
 import { getFirestore, collection, getDocs, limit, query, orderBy } from 'firebase/firestore';
 
 function LandingPage() {
+
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   // states for blog rendering
   const location = useLocation();
   const [starredPosts, setStarredPosts] = useState([]);
@@ -21,6 +23,11 @@ function LandingPage() {
   const blob2Controls = useAnimation();
   const blob3Controls = useAnimation();
   const blob4Controls = useAnimation();
+
+  // images for carousel that will be randomly selected
+  const carouselImages = [favblog1, favblog2, favblog3];
+  const navigate = useNavigate();
+  const [isDragging, setIsDragging] = useState(false);
 
   // initialize random animations on component mount
   useEffect(() => {
@@ -33,14 +40,21 @@ function LandingPage() {
   // useEffect for fetching starred posts
   useEffect(() => {
     const db = getFirestore();
-    const test = query(collection(db, 'posts'), orderBy('creation', ), limit(7));
+    const test = query(collection(db, 'posts'), orderBy('creation', "desc"), limit(7));
     var starredTemp = [];
 
     getDocs(test)
       .then((querySnapshot) => {
+        let imageCounter = 0;
         querySnapshot.forEach((doc) => {
           // doc.data() is the document data
-          starredTemp.push({id:doc.id, title: doc.data().title, shortDescription: doc.data().shortDescription})
+          starredTemp.push({
+            id:doc.id, 
+            title: doc.data().title, 
+            shortDescription: doc.data().shortDescription,
+            imageSrc: carouselImages[imageCounter % carouselImages.length]
+          })
+          imageCounter++;
         });
         setStarredPosts(starredTemp)
       })
@@ -83,7 +97,9 @@ function LandingPage() {
           slidesToScroll: 1,
         }
       }
-    ]
+    ],
+    beforeChange: () => setIsDragging(true), // Set isDragging to true when dragging starts
+    afterChange: () => setIsDragging(false), // Reset isDragging back to false when dragging stops
   };
 
   const startPulseAnimation = () => {
@@ -145,7 +161,27 @@ function LandingPage() {
       }
     }
   }, [location.pathname]);
-  
+
+  const handleClick = (url) => {
+    if (!isDragging) {
+      navigate(url); // Navigate only if not dragging
+    }
+  };
+
+  const onHoverStart = (index) => {
+    setHoveredIndex(index);
+    console.log("Hover");
+  };
+
+  const onHoverEnd = (index) => {
+    setHoveredIndex(null);
+    console.log("Hover end");
+  };
+
+  useEffect(()=> {
+    console.log(hoveredIndex);
+  }, [hoveredIndex])
+
 
   return (
     <div>
@@ -237,36 +273,39 @@ function LandingPage() {
 
       <Slider {...settings}>
         {starredPosts.map((blog, index) => (
-          <div key={index} className="starred-post mb-4 md:mb-0">
-            <Link to={`/blog/${blog.id}`} className="block relative rounded shadow-lg h-105 w-full m-auto">
+          <div onMouseEnter={()=> onHoverStart(index)} onMouseLeave={()=> onHoverEnd(index)} onClick={() => handleClick(`/blog/${blog.id}`)} key={index} className="starred-post mb-4 md:mb-0">
+            <div className="block relative rounded shadow-lg h-105 w-full m-auto">
               {/* Image */}
               <motion.img
-                src={index === 0 ? favblog1 : index === 1 ? favblog2 : favblog3}
+                src={blog.imageSrc}
                 alt="Carousel Blob"
                 className="inset-0 w-full h-full " // Changed from object-contain to object-cover for full coverage
                 animate={carouselBlobAnimation[index]}
                 onHoverStart={() => onHoverStart(carouselBlobAnimation[index])}
                 onHoverEnd={() => onHoverEnd(carouselBlobAnimation[index])}
-                draggable="false"
+                draggable="true"
               />
               {/* Overlay Content */}
-              <div style={{ pointerEvents: 'none' }} className="absolute inset-0 flex flex-col justify-center items-center p-4 bg-black bg-opacity-10 text-white">
-                <h3 className="text-4xl font-bold text-center">{blog.title}</h3>
-                <p className="text-2xl text-center">{blog.shortDescription}</p>
+              <div className={`absolute inset-0 flex flex-col justify-center items-center p-4 bg-black bg-opacity-10 text-white`}>
+                <h3 className="text-4xl font-bold text-center"> {hoveredIndex === index ? "Read Full Article" : ""} </h3> 
+                <h3 className="text-4xl font-bold text-center"> {hoveredIndex === index ? "" : blog.title}</h3>
+                <p className="text-2xl text-center">{hoveredIndex === index ? "" : blog.shortDescription}</p>
               </div>
-            </Link>
+            </div>
           </div>
         ))}
       </Slider>
 
       <div className="text-center my-20">
-        <h2 className="text-4xl font-semibold mb-4">Want to see more blobs?</h2>
+        <h2 className="text-4xl font-semibold mb-4">Interested in more?</h2>
         <div className="w-24 h-0.5 bg-purple-800 mx-auto mb-6"></div>
+        <Link to="/gallery">
         <button 
           className="px-6 py-3 text-white rounded-lg bg-purple-800 hover:bg-purple-900 transition duration-300"
         >
-            More Blogs
+            More Blogs 
         </button>
+        </Link>
     </div>
 
 
