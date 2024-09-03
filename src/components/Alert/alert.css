@@ -1,0 +1,45 @@
+@keyframes show{
+    0%{
+        top:-100px;
+        opacity:0;
+    }
+    100%{
+        top:10px;
+        opacity:1;
+    }
+}
+
+@keyframes hide{
+    0%{
+        top:10px;
+        opacity:1;
+    }
+    100%{
+        top:-100px;
+        opacity:0;
+    }
+}
+
+.present{
+    display: flex;
+    position: fixed;
+    left: 0px;
+    top:-100px;
+    opacity:0;
+    width:100vw;
+    justify-content: center;
+    align-items: center;
+    animation: show 300ms ease-out 0s 1 forwards;
+}
+/* className={`fixed left-0 w-full flex justify-center items-center`} */
+.un-present{
+    position: fixed;
+    left: 0;
+    width: 100vw;
+    top:-100px;
+    opacity:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: hide 300ms ease-in 0s 1 forwards;
+}

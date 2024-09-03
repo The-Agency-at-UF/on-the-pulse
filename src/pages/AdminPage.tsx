@@ -3,13 +3,17 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 import SignIn from '../components/SignIn/SignIn';
+import {Alert} from '../components/Alert/alert';
+
 import { getAuth, signOut } from 'firebase/auth';
-import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc, query} from 'firebase/firestore';
+import { getFirestore, doc, getDoc, getDocs, setDoc, collection, deleteDoc, query, updateDoc, Timestamp} from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-        
+
 // Importing from Realtime Database with aliasing
 import { ref as databaseRef, onValue, getDatabase, set } from 'firebase/database';
 
+// How long \ alert is displayed for
+const ALERTLENGTH = 3600;
 
 interface SectionContent {
     text?: string;
@@ -34,8 +38,9 @@ const AdminPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     // Blog States
-    const [creation, setCreation] = useState(null);
+    const [creation, setCreation] = useState<Timestamp>();
     const [title, setTitle] = useState('');
+    const [author, setAuthor] = useState('');
     const [shortDescription, setShortDescription] = useState('');
     const [templateType, setTemplateType] = useState('A');
     const [category, setCategory] = useState('AI & Technology');
@@ -46,6 +51,11 @@ const AdminPage: React.FC = () => {
     // Post states for rendering manage blog page
     const [posts, setPosts] = useState([]);
     const [starredPosts, setStarredPosts] = useState([]);
+
+    // Editing Blog States
+    const [editID, setEditID] = useState(null)
+    const [fetchingEdit, setFetchingEdit] = useState(false)
+    const [editSuccess, setEditSuccess] = useState(null)
 
     useEffect(() => {
         if (userContext?.currentUser) {
@@ -214,13 +224,9 @@ const AdminPage: React.FC = () => {
             alert("Blog ID is required.");
             return;
         }
-
-        const validBlogIdRegex = /^[a-z0-9-]+$/;
-        if (!validBlogIdRegex.test(blogId)) {
-            alert("Blog ID must only contain lowercase letters, numbers, or dashes and contain no spaces.");
-            return;
+        if(!author){
+            alert("Author not Set")
         }
-
         const docRef = doc(db, `posts/${blogId}`);
         const docSnap = await getDoc(docRef);
 
@@ -232,7 +238,6 @@ const AdminPage: React.FC = () => {
                 const docs = query(collection(db, "posts"));
                 const snapshot = await getDocs(docs);
                 const timestamp = new Date();
-                setCreation(timestamp);
                 
                 await setDoc(docRef, {
                     creation: timestamp,
@@ -243,6 +248,8 @@ const AdminPage: React.FC = () => {
                     sections,
                     thumbnailId,
                     index: snapshot.docs.length,
+                    author: author,
+                    editied:false
                 });
                 
                 // Alert the user
@@ -255,7 +262,11 @@ const AdminPage: React.FC = () => {
                 setTemplateType('A'); // or your default value
                 setSections([]);
                 setBlogId('');
+                setAuthor('');
                 setThumbnailId('');
+
+                setActiveTab('manageBlogs');
+
             } catch (error) {
                 console.error("Error adding document: ", error);
                 if (error.code === "permission-denied") {
@@ -313,7 +324,7 @@ const AdminPage: React.FC = () => {
 
     // Admin page content goes here...
     // Tailwind CSS classes
-    const inputClass = "mb-4 px-3 py-2 border rounded";
+    const inputClass = "mb-4 px-3 py-2 border rounded mr-2";
     const textareaClass = "mb-4 px-3 py-2 border rounded w-full";
     const buttonClass = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2 mb-4";
     const fileInputClass = "mb-4";
@@ -321,7 +332,7 @@ const AdminPage: React.FC = () => {
 
     const renderAddBlogContent = () => {
         return (
-            <div className="max-w-4xl mx-auto p-6 min-h-screen">
+            <div className="max-w-4xl mx-auto p-6 min-h-screen flex-col">
                 <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} className={inputClass} />
                 <textarea placeholder="Short Description" value={shortDescription} onChange={e => setShortDescription(e.target.value)} className={textareaClass} />
                 <select value={templateType} onChange={e => setTemplateType(e.target.value)} className={inputClass}>
@@ -330,9 +341,11 @@ const AdminPage: React.FC = () => {
                     <option value="C">C</option>
                 </select>
                 <input type="text" placeholder="Blog ID" value={blogId} onChange={e => setBlogId(e.target.value)} className={inputClass} />
-                
+                <div className="flex-row">
+                    <p className="font-semibold inline-block mr-1"> Author: </p>
+                    <input type="text" placeholder="First Last" value={author} onChange={e => setAuthor(e.target.value)} className={inputClass} />
+                </div>
                 <p>The blog ID is the endpoint where users will access it. EX: my-new-blog is available at "/blog/my-new-blog"</p>
-                
                 <div className="flex flex-row items-center mb-4 gap-2"> 
                 <p className="font-semibold"> Category: </p>
                 <select value={category} onChange={e => setCategory(e.target.value)} className={`${inputClass} mb-0`}>
@@ -489,16 +502,36 @@ const AdminPage: React.FC = () => {
         }
     };
 
-  
+    // Fetch selected blog for editing
+    const getBlog = async (blogId:any) =>{
+        setFetchingEdit(true)
+        setActiveTab('editBlog')
+        setEditID(blogId); 
+        
+        const db = getFirestore();
+        const postRef = doc(db, `posts/${blogId}`);
+        const postDoc = await getDoc(postRef);
+        console.log(postDoc.data())
+        
+        setTitle(postDoc.data().title)
+        setCategory(postDoc.data().category)
+        setShortDescription(postDoc.data().shortDescription)
+        setSections(postDoc.data().sections)
+        setAuthor(postDoc.data().author)
+        setFetchingEdit(false)
+        setCreation(postDoc.data().creation)
+    }
+    
     
     // Render posts
     const renderPosts = () => {
+        console.log(posts)
         return posts.map((post) => (
-        <div key={post.blogId} className="flex justify-between items-center">
+        <div key={post.blogId} className="flex justify-between items-center mar">
             <div>{post.title}</div>
             <div>
                 {/* Edit Button : TO BE IMPLEMENTED */}
-                <button className="bg-blue-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">Edit</button>
+                <button onClick={() => getBlog(post.blogId)} className="bg-blue-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">Edit</button>
                 
                 {/* Star/Unstar Button */}
                 { /*
@@ -531,11 +564,168 @@ const AdminPage: React.FC = () => {
     const renderManageBlogsContent = () => {
         // Content for managing blogs: Stars, delete, edit
         return (
-            <div>
+            <div className="grid gap-2">
                 {renderPosts()}
             </div>
         );
     };
+
+    // Clear Blog attributes after Creating Blog or finishing Editing
+    const ClearBlogAttributes = async() =>{
+        setTitle('');
+        setShortDescription('');
+        setTemplateType('A');
+        setCategory('AI & Technology');
+        setSections([]);
+        setBlogId('');
+        setAuthor('')
+        setThumbnailId('');    
+    }
+    
+    // Blog Editing tab
+    const editBlog = () =>{
+
+        const cancel = () =>{
+            ClearBlogAttributes()
+            setActiveTab('manageBlogs')
+        }
+        // Save blog
+        const save = async () =>{
+            
+            const db = getFirestore();
+            const timestamp = new Date();
+
+            if(editID){
+                setFetchingEdit(true)
+                
+                const docRef = doc(db, `posts/${editID}`);
+                updateDoc(docRef, {
+                    creation: timestamp,
+                    title,
+                    category,
+                    shortDescription,
+                    templateType,
+                    sections,
+                    author: author,
+                    editied:true
+                }).then(()=>{
+                    setEditSuccess(true)
+                    setFetchingEdit(false)
+                    setActiveTab('manageBlogs')
+                    // reset alert
+                    setTimeout(()=>{
+                        setEditSuccess(false)
+                    },ALERTLENGTH-5)
+                    setFetchingEdit(false)
+
+                })
+            }
+            else{
+                alert('Saving Failed')
+            }
+        }
+
+        if(fetchingEdit){
+            return(
+                <div className="flex justify-center">
+                    <h4>Loading</h4>
+                </div>
+            )
+        }else{
+            return (
+                <div className="max-w-4xl mx-auto p-6 min-h-screen">
+                    <div className="w-fit flex items-center gap-2 mb-2">
+                        <h4>Last Modified:</h4>
+                        <p>{creation.toDate().toLocaleString()}</p>
+                    </div>
+                    <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} className={inputClass} />
+                    <textarea placeholder="Short Description" value={shortDescription} onChange={e => setShortDescription(e.target.value)} className={textareaClass} />
+                    <select value={templateType} onChange={e => setTemplateType(e.target.value)} className={inputClass}>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                    <input type="text" placeholder="Blog ID" value={editID} className={inputClass} disabled />
+                    <div className="flex w-fit items-center mb-3">
+                        <p className="font-semibold inline-block mr-1 h-fit"> Author: </p>
+                        <h4 className="flex w-fit align-bottom"> {author} </h4>
+                    </div>
+                    
+                    <p>The blog ID is the endpoint where users will access it. EX: my-new-blog is available at "/blog/my-new-blog"</p>
+                    
+                    <div className="flex items-center gap-2 my-3"> 
+                        <p className="font-semibold"> Category: </p>
+                        <select value={category} onChange={e => setCategory(e.target.value)} className={`${inputClass} mb-auto`}>
+                            <option value="AI & Technology">AI & Technology</option>
+                            <option value="Gen Z">Gen Z</option>
+                            <option value="Current Events">Current Events</option>
+                            <option value="Industry">Industry</option>
+                        </select>
+                    </div>
+                    {}
+                    <div className="flex flex-row items-center gap-2">
+                        <p className="font-semibold"> Thumbnail: </p>
+                        <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], -1)} className={`${fileInputClass} mb-0`} />
+                    </div>
+                    <p>HINT: Add stars to **Make Text Bold** and hashtags to ##Make Text Red##</p>
+                    <p>Example: Add stars to <strong>Make Text Bold</strong> and hashtags to <span className="text-red-500">Make Text Red</span></p>
+                    {sections.map((section, index) => (
+                        <div key={index} className="mb-4">
+                            <div className="flex flex-row justify-between my-4">
+                                <label className="block font-bold mb-2">Section {index + 1} - {section.type}</label>
+                                <button onClick={() => handleDeleteSection(index)} className={deleteButtonClass}>
+                                    X
+                                </button>
+                            </div>
+                            {section.type === 'paragraph' && (
+                                <textarea 
+                                    value={section.content as string} 
+                                    onChange={e => handleSectionContentChange(e.target.value, index)} 
+                                    className={textareaClass} 
+                                />
+                            )}
+                            {section.type === 'title' && (
+                                <input type="text" value={section.content as string} onChange={e => handleSectionContentChange(e.target.value, index)} className={inputClass} />
+                            )}
+                            {section.type === 'image' && (
+                                <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], index)} className={fileInputClass} />
+                            )}
+                            {section.type === 'paragraphWithImage' && (
+                                <>
+                                    {/* Textarea for text */}
+                                    <textarea 
+                                        value={(section.content as SectionContent).text || ''} 
+                                        onChange={e => handleSectionContentChange({ text: e.target.value }, index)} 
+                                        className={textareaClass} 
+                                    />
+                                    {/* File input for image */}
+                                    <img className="flex mb-5" src={(section.content as SectionContent).imageUrl} alt="" />
+                                    <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], index)} className={fileInputClass} />
+                                    {/* Layout selector */}
+                                    <select onChange={e => handleLayoutChange(e.target.value as 'left' | 'right', index)} className={inputClass}>
+                                    <option value="left">Image on Left</option>
+                                    <option value="right">Image on Right</option>
+                                    </select>
+                                </>
+                            )}
+                        </div>
+                    ))}
+    
+                    <div>
+                        <button onClick={() => handleAddSection('paragraph')} className={buttonClass}>Add Paragraph</button>
+                        <button onClick={() => handleAddSection('image')} className={buttonClass}>Add Image</button>
+                        <button onClick={() => handleAddSection('paragraphWithImage')} className={buttonClass}>Add Paragraph with Image</button>
+                        <button onClick={() => handleAddSection('title')} className={buttonClass}>Add Title</button>
+                    </div>
+                    <div className="flex gap-5">
+                        <button onClick={cancel} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">Cancel</button>
+                        <button onClick={save} className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"> Save </button>
+                        <button onClick={handlePreview} className="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-20"> Preview </button>
+                    </div>
+                </div>
+            );
+        }
+    }
 
     // Code for switching between tabs 
     const renderTabContent = () => {
@@ -544,6 +734,8 @@ const AdminPage: React.FC = () => {
                 return renderManageBlogsContent();
             case 'addBlog':
                 return renderAddBlogContent();
+            case 'editBlog':
+                return editBlog()
             default:
                 return null;
         }
@@ -551,6 +743,8 @@ const AdminPage: React.FC = () => {
 
     return (
         <div className="max-w-4xl mx-auto p-6 min-h-screen">
+            <Alert title='Blog Successfully saved' alert={editSuccess} hold={3600}/>
+
             {/* Tab Buttons */}
             <div className="flex justify-center mb-4 border-b border-gray-300">
                 <button
@@ -560,6 +754,7 @@ const AdminPage: React.FC = () => {
                             : 'text-gray-600 hover:text-gray-700 hover:border-gray-300 focus:outline-none'
                     }`}
                     onClick={() => setActiveTab('manageBlogs')}
+                    disabled={activeTab === 'editBlog' ? true:false}
                 >
                     Manage Blogs
                 </button>
@@ -570,6 +765,7 @@ const AdminPage: React.FC = () => {
                             : 'text-gray-600 hover:text-gray-700 hover:border-gray-300 focus:outline-none'
                     }`}
                     onClick={() => setActiveTab('addBlog')}
+                    disabled={activeTab === 'editBlog' ? true:false}
                 >
                     Add Blog
                 </button>
