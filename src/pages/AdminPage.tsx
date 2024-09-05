@@ -648,7 +648,7 @@ const AdminPage: React.FC = () => {
                     <input type="text" placeholder="Blog ID" value={editID} className={inputClass} disabled />
                     <div className="flex w-fit items-center mb-3">
                         <p className="font-semibold inline-block mr-1 h-fit"> Author: </p>
-                        <h4 className="flex w-fit align-bottom"> {author} </h4>
+                        <input type="text" placeholder="First Last" value={author} onChange={e => setAuthor(e.target.value)} className={inputClass} />
                     </div>
                     
                     <p>The blog ID is the endpoint where users will access it. EX: my-new-blog is available at "/blog/my-new-blog"</p>
