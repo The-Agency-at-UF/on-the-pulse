@@ -1,5 +1,5 @@
 import { motion, useAnimation } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { blob1, blob2, blob3, blob4, logo, LandingTextSVG, favblog1, favblog2, favblog3 } from '../assets/images/landing-page';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
@@ -17,6 +17,7 @@ function LandingPage() {
   // states for blog rendering
   const location = useLocation();
   const [starredPosts, setStarredPosts] = useState([]);
+  const sliderRef = useRef(null);
 
   // define animation for the blobs
   const blob1Controls = useAnimation();
@@ -182,6 +183,14 @@ function LandingPage() {
     console.log(hoveredIndex);
   }, [hoveredIndex])
 
+  const handlePrevClick = () => {
+    sliderRef.current.slickPrev(); // Go to the previous slide
+  };
+
+  const handleNextClick = () => {
+    sliderRef.current.slickNext(); // Go to the next slide
+  };
+
 
   return (
     <div>
@@ -271,35 +280,43 @@ function LandingPage() {
       </div>
       */}
 
-      <Slider {...settings}>
-        {starredPosts.map((blog, index) => (
-          <div onMouseEnter={()=> onHoverStart(index)} onMouseLeave={()=> onHoverEnd(index)} onClick={() => handleClick(`/blog/${blog.id}`)} key={index} className="starred-post mb-4 md:mb-0">
-            <div className="block relative rounded shadow-lg h-105 w-full m-auto">
-              {/* Image */}
-              <motion.img
-                src={blog.imageSrc}
-                alt="Carousel Blob"
-                className="inset-0 w-full h-full " // Changed from object-contain to object-cover for full coverage
-                animate={carouselBlobAnimation[index]}
-                onHoverStart={() => onHoverStart(carouselBlobAnimation[index])}
-                onHoverEnd={() => onHoverEnd(carouselBlobAnimation[index])}
-                draggable="true"
-              />
-              {/* Overlay Content */}
-              <div className={`absolute inset-0 flex flex-col justify-center items-center p-4 bg-black bg-opacity-10 text-white`}>
-                <h3 className="text-4xl font-bold text-center"> {hoveredIndex === index ? "Read Full Article" : ""} </h3> 
-                <h3 className="text-4xl font-bold text-center"> {hoveredIndex === index ? "" : blog.title}</h3>
-                <p className="text-2xl text-center">{hoveredIndex === index ? "" : blog.shortDescription}</p>
+        <div className='relative overflow-hidden'>
+          <button onClick={handlePrevClick} className='absolute left-0 top-0 h-full flex items-center bg-white opacity-20 bg-opacity-0 z-30 hover:bg-opacity-5 hover:opacity-100'>
+            <h1 className='font-bold text-4xl size-16'>{'<'}</h1>
+          </button>          
+        <Slider {...settings} ref={sliderRef}>
+            {starredPosts.map((blog, index) => (
+              <div onMouseEnter={()=> onHoverStart(index)} onMouseLeave={()=> onHoverEnd(index)} onClick={() => handleClick(`/blog/${blog.id}`)} key={index} className="starred-post mb-4 md:mb-0">
+                <div className="block relative rounded shadow-lg h-105 w-full m-auto">
+                  {/* Image */}
+                  <motion.img
+                    src={blog.imageSrc}
+                    alt="Carousel Blob"
+                    className="inset-0 w-full h-full " // Changed from object-contain to object-cover for full coverage
+                    animate={carouselBlobAnimation[index]}
+                    onHoverStart={() => onHoverStart(carouselBlobAnimation[index])}
+                    onHoverEnd={() => onHoverEnd(carouselBlobAnimation[index])}
+                    draggable="true"
+                  />
+                  {/* Overlay Content */}
+                  <div className={`absolute inset-0 flex flex-col justify-center items-center p-4 bg-black bg-opacity-10 text-white`}>
+                    <h3 className="text-4xl font-bold text-center"> {hoveredIndex === index ? "Read Full Article" : ""} </h3> 
+                    <h3 className="text-4xl font-bold text-center"> {hoveredIndex === index ? "" : blog.title}</h3>
+                    <p className="text-2xl text-center">{hoveredIndex === index ? "" : blog.shortDescription}</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        ))}
-      </Slider>
+            ))}
+          </Slider> 
+          <button onClick={handleNextClick} className='absolute right-0 top-0 h-full flex items-center bg-white opacity-20 bg-opacity-0 z-30 hover:bg-opacity-5 hover:opacity-100'>
+            <h1 className='font-bold text-4xl size-16'>{'>'}</h1>
+          </button>     
+        </div>
 
       <div className="text-center my-20">
         <h2 className="text-4xl font-semibold mb-4">Interested in more?</h2>
         <div className="w-24 h-0.5 bg-purple-800 mx-auto mb-6"></div>
-        <Link to="/gallery">
+        <Link to="/library">
         <button 
           className="px-6 py-3 text-white rounded-lg bg-purple-800 hover:bg-purple-900 transition duration-300"
         >
