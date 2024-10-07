@@ -160,6 +160,11 @@ const Blog = ({post}) => {
             <div className="w-full md:w-3/4">
                 <div className="flex flex-col justify-center text-center p-10 md:mb-[3rem]"> 
                     <h1 className="md:text-7xl w-full text-4xl font-bold font-magistral my-4 uppercase">{post.title}</h1>
+                    {post.author ? (<div className='flex flex-row justify-center'>
+                        <h3 className="md:text-2xl mr-2 w-auto text-2xl font-bold font-magistral my-4 uppercase">Author:</h3>
+                        <h3 className="md:text-2xl w-auto text-2xl font-bold font-magistral my-4">{post.author}</h3>
+                    </div>):
+                    null}
                     <p className="font-normal font-magistral md:text-5xl text-xl my-2">{post.shortDescription}</p>
                 </div>
                 <div className="post-content">
