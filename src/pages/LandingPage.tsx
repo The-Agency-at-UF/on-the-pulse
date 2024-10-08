@@ -281,7 +281,7 @@ function LandingPage() {
       */}
 
         <div className='relative overflow-hidden'>
-          <button onClick={handlePrevClick} className='absolute left-0 top-0 h-full flex items-center bg-white opacity-20 bg-opacity-0 z-30 hover:bg-opacity-5 hover:opacity-100'>
+          <button onClick={handlePrevClick} className='absolute left-0 top-0 h-full flex items-center bg-white opacity-20 bg-opacity-0 z-30 hover:bg-opacity-15 hover:opacity-100'>
             <h1 className='font-bold text-4xl size-16'>{'<'}</h1>
           </button>          
         <Slider {...settings} ref={sliderRef}>
@@ -308,7 +308,7 @@ function LandingPage() {
               </div>
             ))}
           </Slider> 
-          <button onClick={handleNextClick} className='absolute right-0 top-0 h-full flex items-center bg-white opacity-20 bg-opacity-0 z-30 hover:bg-opacity-5 hover:opacity-100'>
+          <button onClick={handleNextClick} className='absolute right-0 top-0 h-full flex items-center bg-white opacity-20 bg-opacity-0 z-30 hover:bg-opacity-15 hover:opacity-100'>
             <h1 className='font-bold text-4xl size-16'>{'>'}</h1>
           </button>     
         </div>
