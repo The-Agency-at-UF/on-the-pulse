@@ -26,7 +26,7 @@ const Header: React.FC = () => {
 
     <div className="navbar bg-black bg-opacity-80">
         <div className="flex items-center justify-center"> 
-        <div className="logo z-30"> <a className="z-30" href="https://theagency.jou.ufl.edu/"> <img width={'140vw'} src={logo} alt="" /></a> </div>
+        <h1 className="logo z-30"> <a className="z-30" href="https://theagency.jou.ufl.edu/"> The Agency </a> </h1>
         </div>
         <div className="right-navbar">
         <div className="standard-right">
