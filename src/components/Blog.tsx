@@ -111,6 +111,11 @@ const Blog = ({post}) => {
                         </div>
                     </div>
                 );
+            case 'poll':
+                return (
+                    <> <p className="my-4 font-gentona md:text-2xl text-xl"> Please take this related poll here: <a className="text-blue-300 hover:text-blue-300 visited:text-blue-300 active:text-blue-300" href={section.content}> {section.content} </a> </p> </>
+                )
+
             default:
                 return null;
         }
@@ -127,7 +132,7 @@ const Blog = ({post}) => {
 
     return (
         <div className="min-h-screen blog-post flex justify-center p-6 relative">
-            <div className='absolute overflow-hidden inset-0 blob-container top-[-1rem]'>
+            <div className='absolute overflow-hidden inset-0 blob-container top-[-1rem] z-10'>
                 {/* Blob Elements */}
                 <motion.img 
                     src={blob1}
@@ -157,7 +162,7 @@ const Blog = ({post}) => {
                     draggable="false"
                 />
             </div>
-            <div className="w-full md:w-3/4">
+            <div className="w-full md:w-3/4 z-30">
                 <div className="flex flex-col justify-center text-center p-10 md:mb-[3rem]"> 
                     <h1 className="md:text-7xl w-full text-4xl font-bold font-magistral my-4 uppercase">{post.title}</h1>
                     {post.author ? (<div className='flex flex-row justify-center'>

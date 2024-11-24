@@ -147,6 +147,9 @@ const AdminPage: React.FC = () => {
             case 'paragraphWithImage': // Handle paragraphWithImage and image
                 newSection = { type, content: { text: '', imageUrl: '', layout: 'left' } }; // default layout for 'paragraphWithImage'
                 break;
+            case 'poll':
+                newSection = {type, content: ''}
+                break;
             default:
                 newSection = { type, content: '' };
                 break;
@@ -376,6 +379,9 @@ const AdminPage: React.FC = () => {
                                 className={textareaClass} 
                             />
                         )}
+                        {section.type === 'poll' && (
+                           <div className=""> <p> Insert poll link here: </p> <input type="text" value={section.content as string} onChange={e => handleSectionContentChange(e.target.value, index)} className={inputClass} /> </div>
+                        )}
                         {section.type === 'title' && (
                             <input type="text" value={section.content as string} onChange={e => handleSectionContentChange(e.target.value, index)} className={inputClass} />
                         )}
@@ -407,6 +413,7 @@ const AdminPage: React.FC = () => {
                     <button onClick={() => handleAddSection('image')} className={buttonClass}>Add Image</button>
                     <button onClick={() => handleAddSection('paragraphWithImage')} className={buttonClass}>Add Paragraph with Image</button>
                     <button onClick={() => handleAddSection('title')} className={buttonClass}>Add Title</button>
+                    <button onClick={() => handleAddSection('poll')} className={buttonClass}>Add Polling Link </button>
                 </div>
                 <button onClick={handleSubmit} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-20">
                     Submit Post
