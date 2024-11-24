@@ -715,6 +715,9 @@ const AdminPage: React.FC = () => {
                                     </select>
                                 </>
                             )}
+                            {section.type === 'poll' && (
+                                <div className=""> <p> Insert poll link here: </p> <input type="text" value={section.content as string} onChange={e => handleSectionContentChange(e.target.value, index)} className={inputClass} /> </div>
+                            )}
                         </div>
                     ))}
     
@@ -723,6 +726,7 @@ const AdminPage: React.FC = () => {
                         <button onClick={() => handleAddSection('image')} className={buttonClass}>Add Image</button>
                         <button onClick={() => handleAddSection('paragraphWithImage')} className={buttonClass}>Add Paragraph with Image</button>
                         <button onClick={() => handleAddSection('title')} className={buttonClass}>Add Title</button>
+                        <button onClick={() => handleAddSection('poll')} className={buttonClass}>Add Polling Link </button>
                     </div>
                     <div className="flex gap-5">
                         <button onClick={cancel} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">Cancel</button>

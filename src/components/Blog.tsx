@@ -113,7 +113,7 @@ const Blog = ({post}) => {
                 );
             case 'poll':
                 return (
-                    <> <p className="my-4 font-gentona md:text-2xl text-xl"> Please take this related poll here: <a className="text-blue-300 hover:text-blue-300 visited:text-blue-300 active:text-blue-300" href={section.content}> {section.content} </a> </p> </>
+                    <> <p className="my-4 font-gentona md:text-2xl text-xl"> <span className="font-semibold"> Please take this related poll here: </span> <a className="text-blue-300 hover:text-blue-300 visited:text-blue-300 active:text-blue-300" href={section.content}> {section.content} </a> </p> </>
                 )
 
             default:
