@@ -9,8 +9,8 @@ const Library = () => {
     const [blogsLeft, setBlogsLeft] = useState<boolean>(true);
     const [blogs, setBlogs] = useState([]);
     const postsPerPage = 6;
-    const [checked, setChecked] = useState([false, false, false, false]);
-    const [categories, setCategories] = useState([]);
+    const [checked, setChecked] = useState([false, false, false, false]); //determines which of the 4 categories are selected
+    const [categories, setCategories] = useState([]); 
     const [lastDocument, setLastDocument] = useState(null);
 
     useEffect(() => {
@@ -48,6 +48,10 @@ const Library = () => {
         fetchData();
     }, [categories]);
 
+    useEffect(()=> {
+        window.scrollTo(0,0);
+     }, [location])
+
 
 
     const handleCheckboxChange = (index, category) => {
@@ -77,29 +81,14 @@ const Library = () => {
         }
 
         const additionalArticlesSnapshot = await getDocs(additionalArticles);
+
         setLastDocument(additionalArticlesSnapshot.docs[additionalArticlesSnapshot.docs.length-1]);
-        const newArticles = additionalArticlesSnapshot.docs.map(doc => doc.data());
+        const newArticles = additionalArticlesSnapshot.docs.map(doc => {
+            const id = doc.id; 
+            return {id, ...doc.data() as Record<string, any>};
+        });
         setBlogs(prevBlogs=> [...prevBlogs, ...newArticles]);
     };
-    
-    useEffect(() => {
-        const handleScroll = () => {
-           if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-            console.log("called");
-            fetchMoreBlogs();
-          }
-        };
-    
-        window.addEventListener("scroll", handleScroll);
-        return () => {
-          window.removeEventListener("scroll", handleScroll);
-        };
-      }, [fetchMoreBlogs]);
-
-
-    useEffect(()=> {
-        window.scrollTo(0,0);
-    }, [location])
 
     return (
         <>
@@ -128,7 +117,7 @@ const Library = () => {
                     <BlogPost post={blog}/>
                 ))}
             </div>
-            <div className="2xl:flex hidden justify-center md:mt-4 md:mb-7 mb-[5rem]">
+            <div className="2xl:flex flex justify-center md:mt-4 md:mb-7 mb-[5rem]">
             {blogsLeft ? <button className="bg-violet-500 font-medium rounded-md p-5 lg:text-2xl text-xl font-gentona" onClick={fetchMoreBlogs}> Load More Articles </button> : <></>}
             </div>
         </>

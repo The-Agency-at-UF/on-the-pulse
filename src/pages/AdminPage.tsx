@@ -39,6 +39,7 @@ const AdminPage: React.FC = () => {
 
     // Blog States
     const [creation, setCreation] = useState<Timestamp>();
+    const [modified, setModified] = useState<Date | undefined>();
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [shortDescription, setShortDescription] = useState('');
@@ -527,6 +528,7 @@ const AdminPage: React.FC = () => {
         setAuthor(postDoc.data().author)
         setFetchingEdit(false)
         setCreation(postDoc.data().creation)
+        setModified(postDoc.data()?.modified)
     }
     
     
@@ -607,7 +609,8 @@ const AdminPage: React.FC = () => {
                 
                 const docRef = doc(db, `posts/${editID}`);
                 updateDoc(docRef, {
-                    creation: timestamp,
+                    creation: creation,
+                    modified: timestamp,
                     title,
                     category,
                     shortDescription,
@@ -616,6 +619,7 @@ const AdminPage: React.FC = () => {
                     author: author,
                     editied:true
                 }).then(()=>{
+                    setModified(timestamp);
                     setEditSuccess(true)
                     setFetchingEdit(false)
                     setActiveTab('manageBlogs')
@@ -643,7 +647,7 @@ const AdminPage: React.FC = () => {
                 <div className="max-w-4xl mx-auto p-6 min-h-screen">
                     <div className="w-fit flex items-center gap-2 mb-2">
                         <h4>Last Modified:</h4>
-                        <p>{creation.toDate().toLocaleString()}</p>
+                        <p>{modified.toLocaleString()}</p>
                     </div>
                     <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} className={inputClass} />
                     <textarea placeholder="Short Description" value={shortDescription} onChange={e => setShortDescription(e.target.value)} className={textareaClass} />
