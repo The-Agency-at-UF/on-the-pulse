@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-
+import { useLocation } from 'react-router-dom';
 import Blog from '../components/Blog';
 
 
 // Template component to render the blog posts as needed.
 // TO DO: Add blobs for each page type. Make it responsive.
 const BlogPost = () => {
+    const location = useLocation();
     const { blogId } = useParams();
     const [post, setPost] = useState(null);
     const [postExists, setPostExists] = useState(true);
@@ -29,6 +30,10 @@ const BlogPost = () => {
 
         fetchPost();
     }, [blogId]);
+
+    useEffect(()=> {
+        window.scrollTo(0,0)
+    }, [location])
 
     if (!postExists) {
         return (
