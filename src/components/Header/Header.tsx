@@ -3,7 +3,7 @@ import Headroom from 'react-headroom'
 import Hamburger from './Hamburger'
 import {Link} from 'react-router-dom';
 import {useState} from 'react'
-import logo from "../../assets/images/Agency_Logo.png";
+import logo from "../../assets/images/agency_logo.svg";
 
 const Header: React.FC = () => {
 
@@ -26,7 +26,7 @@ const Header: React.FC = () => {
 
     <div className="navbar bg-black bg-opacity-80">
         <div className="flex items-center justify-center"> 
-        <h1 className="logo z-30"> <a className="z-30" href="https://theagency.jou.ufl.edu/"> The Agency </a> </h1>
+        <h1 className="logo z-30"> <a className="z-30" href="https://theagency.jou.ufl.edu/"> <img className="w-3/4" src={logo}/> </a> </h1>
         </div>
         <div className="right-navbar">
         <div className="standard-right">
