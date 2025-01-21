@@ -1,32 +1,41 @@
 import React from 'react';
-import { SlLocationPin } from "react-icons/sl";
-import { PiPhone } from "react-icons/pi";
-import { TfiEmail } from "react-icons/tfi";
 
-const Section: React.FC<{ icon: JSX.Element, title: string, children: React.ReactNode }> = ({ icon, title, children }) => (
-    <div className="section">
-        {icon}
-        <h3>{title}</h3>
-        {children}
-    </div>
-);
+import { TfiEmail } from "react-icons/tfi";
+import { FaXTwitter } from "react-icons/fa6";
+import { FaInstagram } from "react-icons/fa";
+import { FaLinkedin } from "react-icons/fa";
+
 
 export const AddressSection: React.FC = () => (
-    <Section icon={<SlLocationPin className="section-icon"/>} title="Address">
+    <div className="flex flex-col justify-center text-xl">
         <p>University of Florida</p>
         <p>1000 Weimer Hall</p>
         <p>Gainesville, FL 32611</p>
-    </Section>
+    </div>
 );
 
 export const PhoneSection: React.FC = () => (
-    <Section icon={<PiPhone className="section-icon"/>} title="Phone">
+    <div className="flex flex-col justify-center text-xl">
         <p>(352) 294-3848</p>
-    </Section>
+        <p className='underline underline-offset-1'>theagency@jou.ufl.edu</p>
+    </div>
 );
 
 export const EmailSection: React.FC = () => (
-    <Section icon={<TfiEmail className="section-icon"/>} title="Email">
-        <p>theagency@jou.ufl.edu</p>
-    </Section>
+    <div className="flex flex-col">
+        <div className="flex flex-row items-center justify-center "> 
+        <TfiEmail className="ml-2 mr-2" size="2em"/>  
+        <FaInstagram className="ml-2 mr-2" size="2em" />
+        <FaXTwitter className="ml-2 mr-2" size="2em" />
+        <FaLinkedin className="ml-2 mr-2" size="2em" />
+        </div>
+        <div className='mt-4'>
+        <div className="h-full w-[26em] text-center rounded-3xl bg-gradient-to-r from-[#FFB23E] via-[#FF4D56] to-[#AB9BFF] p-1">
+            <div className="h-full w-full bg-white rounded-3xl">
+                <button className="text-black font-bold text-4xl p-6 font-gentona"> <a className="text-black hover:text-black visited:text-black font-bold text-4xl p-6 font-gentona" href="https://theagency.jou.ufl.edu/seo"> UF CLIENTS </a> </button>
+            </div> 
+        </div>
+        </div>
+    </div>
 );
+ 
