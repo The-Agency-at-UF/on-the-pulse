@@ -6,8 +6,8 @@ import * as ablobs from '../assets/images/blog-posts/a';
 import * as bblobs from '../assets/images/blog-posts/b';
 import * as cblobs from '../assets/images/blog-posts/c';
 
-const formatArticleHtml = (text) => {
-    const html = marked.parseInline(text);
+const formatArticleHtml = (text: string): string => {
+    const html = marked.parseInline(text, { async: false }) as string;
     return html.replace(
         /<a href="([^"]*)"(?: title="([^"]*)")?>/g,
         (_, href, title) => {
