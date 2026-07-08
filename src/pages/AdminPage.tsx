@@ -684,7 +684,7 @@ const AdminPage: React.FC = () => {
                         <p className="font-semibold"> Thumbnail: </p>
                         <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], -1)} className={`${fileInputClass} mb-0`} />
                     </div>
-                    <p>HINT: Use `**text**` to make text bold, `##text##` to make text red, and `[link text](https://example.com)` to create a hyperlink.</p>
+                    <p>HINT: Add stars to **Make Text Bold**, hashtags to ##Make Text Red##, and `[link text](https://example.com)` to create a hyperlink.</p>
                     <p>Example: <strong>Bold text</strong>, <span className="text-red-500">red text</span>, and <a className="article-link" href="https://google.com" target="_blank" rel="noreferrer">Hyperlink</a>.</p>
                     {sections.map((section, index) => (
                         <div key={index} className="mb-4">
