@@ -28,6 +28,6 @@ jobs:
         CI: false
     - uses: w9jds/firebase-action@master
       with:
-        args: deploy --only hosting
+        args: deploy --only hosting:on-the-pulse-website
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
