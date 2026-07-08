@@ -26,6 +26,12 @@ interface Section {
     content: string | SectionContent;
 }
 
+const formatPostDate = (value: Date | Timestamp | undefined) => {
+    if (!value) return null;
+    const date = value instanceof Date ? value : value.toDate();
+    return date.toLocaleString();
+};
+
 const AdminPage: React.FC = () => {
     const navigate = useNavigate();
 
@@ -39,7 +45,7 @@ const AdminPage: React.FC = () => {
 
     // Blog States
     const [creation, setCreation] = useState<Timestamp>();
-    const [modified, setModified] = useState<Date | undefined>();
+    const [modified, setModified] = useState<Date | Timestamp | undefined>();
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [shortDescription, setShortDescription] = useState('');
@@ -363,8 +369,8 @@ const AdminPage: React.FC = () => {
                     <p className="font-semibold"> Thumbnail: </p>
                     <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], -1)} className={`${fileInputClass} mb-0`} />
                 </div>
-                <p>HINT: Add stars to **Make Text Bold** and hashtags to ##Make Text Red##</p>
-                <p>Example: Add stars to <strong>Make Text Bold</strong> and hashtags to <span className="text-red-500">Make Text Red</span></p>
+                <p>HINT: Add stars to **Make Text Bold**, hashtags to ##Make Text Red##, and `[link text](https://example.com)` to create a hyperlink.</p>
+                <p>Example: <strong>Bold text</strong>, <span className="text-red-500">red text</span>, and <a className="article-link" href="https://google.com" target="_blank" rel="noreferrer">Hyperlink</a>.</p>
                 {sections.map((section, index) => (
                     <div key={index} className="mb-4">
                         <div className="flex flex-row justify-between my-4">
@@ -647,7 +653,7 @@ const AdminPage: React.FC = () => {
                 <div className="max-w-4xl mx-auto p-6 min-h-screen">
                     <div className="w-fit flex items-center gap-2 mb-2">
                         <h4>Last Modified:</h4>
-                        <p>{modified.toLocaleString()}</p>
+                        <p>{formatPostDate(modified) ?? formatPostDate(creation) ?? 'Not available'}</p>
                     </div>
                     <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} className={inputClass} />
                     <textarea placeholder="Short Description" value={shortDescription} onChange={e => setShortDescription(e.target.value)} className={textareaClass} />
@@ -678,8 +684,8 @@ const AdminPage: React.FC = () => {
                         <p className="font-semibold"> Thumbnail: </p>
                         <input type="file" onChange={e => e.target.files && handleFileUpload(e.target.files[0], -1)} className={`${fileInputClass} mb-0`} />
                     </div>
-                    <p>HINT: Add stars to **Make Text Bold** and hashtags to ##Make Text Red##</p>
-                    <p>Example: Add stars to <strong>Make Text Bold</strong> and hashtags to <span className="text-red-500">Make Text Red</span></p>
+                    <p>HINT: Use `**text**` to make text bold, `##text##` to make text red, and `[link text](https://example.com)` to create a hyperlink.</p>
+                    <p>Example: <strong>Bold text</strong>, <span className="text-red-500">red text</span>, and <a className="article-link" href="https://google.com" target="_blank" rel="noreferrer">Google</a>.</p>
                     {sections.map((section, index) => (
                         <div key={index} className="mb-4">
                             <div className="flex flex-row justify-between my-4">

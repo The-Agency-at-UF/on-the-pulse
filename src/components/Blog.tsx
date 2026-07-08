@@ -6,6 +6,17 @@ import * as ablobs from '../assets/images/blog-posts/a';
 import * as bblobs from '../assets/images/blog-posts/b';
 import * as cblobs from '../assets/images/blog-posts/c';
 
+const formatArticleHtml = (text) => {
+    const html = marked.parseInline(text);
+    return html.replace(
+        /<a href="([^"]*)"(?: title="([^"]*)")?>/g,
+        (_, href, title) => {
+            const titleAttribute = title ? ` title="${title}"` : '';
+            return `<a href="${href}"${titleAttribute} target="_blank" rel="noreferrer" class="article-link">`;
+        }
+    );
+};
+
 const Blog = ({post}) => {
 
     const [blob1, setBlob1] = useState(ablobs.blob1a);
@@ -60,25 +71,10 @@ const Blog = ({post}) => {
         }
     }, [post]);
 
-    // Configure the marked renderer if you have custom markdown syntax
-    const renderer = new marked.Renderer();
-    renderer.paragraph = (text) => {
-        // Example: Customize how paragraphs are rendered
-        // You can also handle custom syntax here if needed
-        return `<p class="my-4 font-gentona md:text-2xl text-xl">${text}</p>`;
-    };
-
-    // Set options
-    marked.setOptions({
-        renderer: renderer,
-        // Add other options as needed
-    });
-
     const renderSection = (section, index) => {
         const processText = (text) => {
-            // Replace custom markers with Markdown or HTML syntax
-            let processedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold with Markdown
-            processedText = processedText.replace(/##(.*?)##/g, '<span style="color: red;">$1</span>'); // Red text with HTML
+            let processedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            processedText = processedText.replace(/##(.*?)##/g, '<span style="color: red;">$1</span>');
             return processedText;
         };
         
@@ -88,10 +84,10 @@ const Blog = ({post}) => {
             case 'title':
                 // Process text to replace custom syntax, then parse and render the Markdown content safely
                 const processedContent = processText(section.content);
-                const contentHTML = marked(processedContent);
+                const contentHTML = formatArticleHtml(processedContent);
                 const Component = section.type === 'paragraph' ? 'p' : 'h1';
                 return (
-                    <Component key={index} className="my-4 text-lg" dangerouslySetInnerHTML={{ __html: contentHTML }} />
+                    <Component key={index} className="my-4 font-gentona md:text-2xl text-xl" dangerouslySetInnerHTML={{ __html: contentHTML }} />
                 );
             case 'image':
                 return (
@@ -100,10 +96,10 @@ const Blog = ({post}) => {
             case 'paragraphWithImage':
                 // Process text part of the content as Markdown
                 const processedParagraphContent = processText(section.content.text);
-                const paragraphWithImageContentHTML = marked(processedParagraphContent);
+                const paragraphWithImageContentHTML = formatArticleHtml(processedParagraphContent);
                 return (
                     <div key={index} className={`flex ${section.content.layout === 'left' ? 'lg:flex-row flex-col' : 'lg:flex-row-reverse flex-col-reverse'} justify-around items-center md:gap-8 my-4`}>
-                        <div className="flex-1 text-lg" dangerouslySetInnerHTML={{ __html: paragraphWithImageContentHTML }} />
+                        <div className="flex-1 my-4 font-gentona md:text-2xl text-xl" dangerouslySetInnerHTML={{ __html: paragraphWithImageContentHTML }} />
                         <div className="flex-1 justify-center items-center md:max-w-lg">
                         <div className="flex-1 justify-center">
                         <img className="" src={section.content.imageUrl} alt={`Section ${index}`} />

@@ -62,6 +62,22 @@ textarea, input {
   overflow-x: hidden;
 }
 
+.article-link,
+.post-content a {
+  color: #93c5fd !important;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.article-link:hover,
+.article-link:visited,
+.article-link:active,
+.post-content a:hover,
+.post-content a:visited,
+.post-content a:active {
+  color: #93c5fd !important;
+}
+
 
 .checkbox-container {
   @apply flex items-start gap-2; /* Align items vertically start and add gap */
