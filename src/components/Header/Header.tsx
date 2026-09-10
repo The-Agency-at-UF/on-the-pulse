@@ -20,11 +20,11 @@ const Header: React.FC = () => {
     {/* headroom component makes navbar disappear and reappear on scroll */}
 
     <Headroom style={{
-      zIndex: '20',
+      zIndex: '40',
 
     }} pin={hamburgerState}>
 
-    <div className="navbar bg-black bg-opacity-80">
+    <div className="navbar bg-black">
         <div className="flex items-center justify-center"> 
         <h1 className="logo z-30"> <a className="z-30" href="https://theagency.jou.ufl.edu/"> <img className="w-3/4" src={logo}/> </a> </h1>
         </div>

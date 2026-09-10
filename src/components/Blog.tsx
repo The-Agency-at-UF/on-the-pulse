@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { getRandomAnimation, onHoverEnd, onHoverStart } from '../utils/animations';
 import { marked } from 'marked';
@@ -17,67 +17,52 @@ const formatArticleHtml = (text: string): string => {
     );
 };
 
+const getBlobPool = (templateType) => {
+    switch (templateType) {
+        case 'A':
+            return [ablobs.blob1a, ablobs.blob2a, ablobs.blob3a];
+        case 'B':
+            return [bblobs.blob1b, bblobs.blob2b, bblobs.blob3b];
+        case 'C':
+            return [cblobs.blob1c, cblobs.blob2c, cblobs.blob3c];
+        default:
+            return [ablobs.blob1a, ablobs.blob2a, ablobs.blob3a];
+    }
+};
+
+const ScatteredBlob = ({ src, side, top, widthDesktopRem }) => {
+    const controls = useAnimation();
+
+    useEffect(() => {
+        controls.start(getRandomAnimation());
+    }, [controls]);
+
+    return (
+        <motion.img 
+            src={src}
+            style={{
+                position: 'absolute',
+                top: top,
+                [side === 'left' ? 'left' : 'right']: side === 'left' ? '-10rem' : '-10rem',
+                width: `${widthDesktopRem}rem`,
+                zIndex: -10,
+            }}
+            className="blob max-w-none select-none pointer-events-auto"
+            animate={controls}
+            onHoverStart={() => onHoverStart(controls)}
+            onHoverEnd={() => onHoverEnd(controls)}
+            draggable="false"
+        />
+    );
+};
+
 const Blog = ({post}) => {
-
-    const [blob1, setBlob1] = useState(ablobs.blob1a);
-    const [blob2, setBlob2] = useState(ablobs.blob2a);
-    const [blob3, setBlob3] = useState(ablobs.blob3a);
-    const [blob1Style, setBlob1Style] = useState(ablobs.blob1aStyle);
-    const [blob2Style, setBlob2Style] = useState(ablobs.blob2aStyle);
-    const [blob3Style, setBlob3Style] = useState(ablobs.blob3aStyle);
-
-    // define animation for the blobs
-    const blob1Controls = useAnimation();
-    const blob2Controls = useAnimation();
-    const blob3Controls = useAnimation();
-
-    // initialize random animations on component mount
-    useEffect(() => {
-        blob1Controls.start(getRandomAnimation());
-        blob2Controls.start(getRandomAnimation());
-        blob3Controls.start(getRandomAnimation());
-    }, [blob1Controls, blob2Controls, blob3Controls]);
-
-    // setting the blobs
-    useEffect(() => {
-        switch(post.templateType){
-            case 'A':
-                setBlob1(ablobs.blob1a);
-                setBlob2(ablobs.blob2a);
-                setBlob3(ablobs.blob3a);
-                setBlob1Style(ablobs.blob1aStyle);
-                setBlob2Style(ablobs.blob2aStyle);
-                setBlob3Style(ablobs.blob3aStyle);
-                break;
-            case 'B':
-                setBlob1(bblobs.blob1b);
-                setBlob2(bblobs.blob2b);
-                setBlob3(bblobs.blob3b);
-                setBlob1Style(bblobs.blob1bStyle);
-                setBlob2Style(bblobs.blob2bStyle);
-                setBlob3Style(bblobs.blob3bStyle);
-                break;
-            case 'C':
-                setBlob1(cblobs.blob1c);
-                setBlob2(cblobs.blob2c);
-                setBlob3(cblobs.blob3c);
-                setBlob1Style(cblobs.blob1cStyle);
-                setBlob2Style(cblobs.blob2cStyle);
-                setBlob3Style(cblobs.blob3cStyle);
-                break;
-            default:
-                break;
-
-        }
-    }, [post]);
-
     const renderSection = (section, index) => {
         const processText = (text) => {
             let processedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             processedText = processedText.replace(/##(.*?)##/g, '<span style="color: red;">$1</span>');
             return processedText;
         };
-        
 
         switch (section.type) {
             case 'paragraph':
@@ -126,37 +111,30 @@ const Blog = ({post}) => {
         );
     }
 
+    const blobPool = getBlobPool(post.templateType);
+    const numSections = post.sections.length;
+    const totalBlobs = Math.max(8, numSections * 2 + 4);
+
     return (
         <div className="min-h-screen blog-post flex justify-center p-6 relative">
-            <div className='absolute overflow-hidden inset-0 blob-container top-[-1rem] z-10'>
-                {/* Blob Elements */}
-                <motion.img 
-                    src={blob1}
-                    alt="Blob Top Left"
-                    className={blob1Style}
-                    animate={blob1Controls}
-                    onHoverStart={() => onHoverStart(blob1Controls)}
-                    onHoverEnd={() => onHoverEnd(blob1Controls)}
-                    draggable="false"
-                />
-                <motion.img 
-                    src={blob2}
-                    alt="Blob Top Right"
-                    className={blob2Style}
-                    animate={blob2Controls}
-                    onHoverStart={() => onHoverStart(blob2Controls)}
-                    onHoverEnd={() => onHoverEnd(blob2Controls)}
-                    draggable="false"
-                />
-                <motion.img 
-                    src={blob3}
-                    alt="Blob Lower Right"
-                    className={blob3Style}
-                    animate={blob3Controls}
-                    onHoverStart={() => onHoverStart(blob3Controls)}
-                    onHoverEnd={() => onHoverEnd(blob3Controls)}
-                    draggable="false"
-                />
+            <div className='hidden xl:block absolute overflow-hidden inset-0 blob-container top-[-1rem] z-10 pointer-events-none'>
+                {Array.from({ length: totalBlobs }).map((_, i) => {
+                    const side = i % 2 === 0 ? 'left' : 'right';
+                    const offset = (i * 5) % 7;
+                    const top = `${3 + i * 18 + offset}rem`;
+                    const widthDesktopRem = 20 + ((i * 3) % 7);
+                    const src = blobPool[i % blobPool.length];
+
+                    return (
+                        <ScatteredBlob 
+                            key={i}
+                            src={src}
+                            side={side}
+                            top={top}
+                            widthDesktopRem={widthDesktopRem}
+                        />
+                    );
+                })}
             </div>
             <div className="w-full md:w-3/4 z-30">
                 <div className="flex flex-col justify-center text-center p-10 md:mb-[3rem]"> 

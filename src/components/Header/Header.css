@@ -11,10 +11,11 @@
     src: local('Perandory'), url('../fonts/PERANDORY/Perandory-Regular.otf');
 }
 
-a:link, a:visited, a:hover, a:focus {
+/* .navbar a:link, .navbar a:visited, .navbar a:hover, .navbar a:focus {
     text-decoration: none;
     color: white;
-}
+} */
+ 
 /* navbar and navbar items */
 .navbar{
     display: flex;
