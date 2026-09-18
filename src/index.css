@@ -27,6 +27,18 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.red {
+  border: 1px solid red;
+}
+
+.blue {
+  border: 1px solid blue;
+}
+
+.green {
+  border: 1px solid limegreen;
+}
+
 html, body {
   overflow-x: hidden;
   margin: 0;

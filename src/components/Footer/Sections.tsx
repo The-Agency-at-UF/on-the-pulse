@@ -30,9 +30,16 @@ export const EmailSection: React.FC = () => (
         <FaLinkedin className="ml-2 mr-2" size="2em" />
         </div>
         <div className='mt-4'>
-        <div className="h-full w-[26em] text-center rounded-3xl bg-gradient-to-r from-[#FFB23E] via-[#FF4D56] to-[#AB9BFF] p-1">
+        <div className="h-full w-[14em] text-center rounded-3xl bg-gradient-to-r from-[#FFB23E] via-[#FF4D56] to-[#AB9BFF] p-1">
             <div className="h-full w-full bg-white rounded-3xl">
-                <button className="text-black font-bold text-4xl p-6 font-gentona"> <a className="text-black hover:text-black visited:text-black font-bold text-4xl p-6 font-gentona" href="https://theagency.jou.ufl.edu/seo"> UF CLIENTS </a> </button>
+                <button>
+                    <a 
+                        className="w-full h-full flex items-center justify-center p-4 text-black font-bold text-3xl font-gentona rounded-3xl"
+                        href="https://theagency.jou.ufl.edu/seo"
+                    >
+                        UF CLIENTS
+                    </a>    
+                </button>
             </div> 
         </div>
         </div>

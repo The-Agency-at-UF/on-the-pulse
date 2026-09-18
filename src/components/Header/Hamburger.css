@@ -8,9 +8,12 @@
 }
 
 .hamburger-icon {
-   display: flex; 
+    display: flex; 
     justify-content: center;
-    text-align: center;
+    align-items: center;
+    height: 2.25rem;
+    width: auto;
+    cursor: pointer;
 }
 
 .hamburger-links {

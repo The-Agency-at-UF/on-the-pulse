@@ -79,7 +79,7 @@ function LandingPage() {
     slidesToShow: 3, // Show three items
     slidesToScroll: 1, // Scroll three items at a time
     autoplay: true,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 3000,
     pauseOnHover: true,
     responsive: [
       {
@@ -193,8 +193,8 @@ function LandingPage() {
 
 
   return (
-    <div>
-      <div className="relative h-screen flex justify-center items-center">
+    <div className='flex flex-col gap-10'>
+      <div className=" relative h-screen flex justify-center items-center">
         {/* Blobs in corners */}
         <motion.img 
             src={blob1}
@@ -259,7 +259,7 @@ function LandingPage() {
       </div>
       <div id="about-us" className="flex text-center justify-center p-8">
         <div className="w-3/4 font-magistral font-bold">
-        <p className="text-2xl md:text-5xl lg:text-7xl"> As thought leaders of modern-day media, Generation Z at The Agency sparks innovation and cutting-edge insights across the industry. </p>
+        <p className="text-3xl md:text-5xl lg:text-6xl"> As thought leaders of modern-day media, Generation Z at The Agency sparks innovation and cutting-edge insights across the industry. </p>
         </div>
       </div>
 
@@ -280,14 +280,20 @@ function LandingPage() {
       </div>
       */}
 
-        <div className='relative overflow-hidden'>
-          <button onClick={handlePrevClick} className='absolute left-0 top-0 h-full flex items-center bg-white opacity-20 bg-opacity-0 z-30 hover:bg-opacity-15 hover:opacity-100'>
+        <p className="pt-8 w-fit mx-auto border-b border-purple-800 text-center mt-6 pb-1 text-lg md:text-2xl font-magistral font-bold">
+          Browse our recent articles:
+        </p>
+
+        <div className='flex flex-col relative overflow-hidden'>
+
+          <button onClick={handlePrevClick} className='absolute left-0 top-0 h-full flex items-center bg-white bg-opacity-0 z-30 hover:bg-opacity-15 hover:opacity-100'>
             <h1 className='font-bold text-4xl size-16'>{'<'}</h1>
-          </button>          
-        <Slider {...settings} ref={sliderRef}>
+          </button>
+
+          <Slider {...settings} ref={sliderRef}>
             {starredPosts.map((blog, index) => (
               <div onMouseEnter={()=> onHoverStart(index)} onMouseLeave={()=> onHoverEnd(index)} onClick={() => handleClick(`/blog/${blog.id}`)} key={index} className="starred-post mb-4 md:mb-0">
-                <div className="block relative rounded shadow-lg h-105 w-full m-auto">
+                <div className="hover:cursor-pointer block relative rounded shadow-lg h-full w-full m-auto">
                   {/* Image */}
                   <motion.img
                     src={blog.imageSrc}
@@ -300,22 +306,23 @@ function LandingPage() {
                   />
                   {/* Overlay Content */}
                   <div className={`absolute inset-0 flex flex-col justify-center items-center p-4 bg-black bg-opacity-10 text-white`}>
-                    <h3 className="text-4xl font-bold text-center"> {hoveredIndex === index ? "Read Full Article" : ""} </h3> 
-                    <h3 className="text-4xl font-bold text-center"> {hoveredIndex === index ? "" : blog.title}</h3>
+                    <h3 className="text-3xl font-bold text-center"> {hoveredIndex === index ? "Read Full Article" : ""} </h3> 
+                    <h3 className="max-w-80 text-2xl font-bold text-center"> {hoveredIndex === index ? "" : blog.title}</h3>
                     <p className="text-2xl text-center">{hoveredIndex === index ? "" : blog.shortDescription}</p>
                   </div>
                 </div>
               </div>
             ))}
           </Slider> 
-          <button onClick={handleNextClick} className='absolute right-0 top-0 h-full flex items-center bg-white opacity-20 bg-opacity-0 z-30 hover:bg-opacity-15 hover:opacity-100'>
-            <h1 className='font-bold text-4xl size-16'>{'>'}</h1>
+
+          <button onClick={handleNextClick} className='absolute right-0 top-0 h-full flex items-center bg-white bg-opacity-0 z-30 hover:bg-opacity-15 hover:opacity-100'>
+            <h1 className='text-white font-bold text-4xl size-16'>{'>'}</h1>
           </button>     
         </div>
 
       <div className="text-center my-20">
-        <h2 className="text-4xl font-semibold mb-4">Interested in more?</h2>
-        <div className="w-24 h-0.5 bg-purple-800 mx-auto mb-6"></div>
+        <h2 className="mx-auto w-fit pb-1 border-b border-purple-800 text-4xl font-semibold mb-8">Interested in more?</h2>
+        {/* <div className="w-24 h-0.5 bg-purple-800 mx-auto mb-6"></div> */}
         <Link to="/library">
         <button 
           className="px-6 py-3 text-white rounded-lg bg-purple-800 hover:bg-purple-900 transition duration-300"
