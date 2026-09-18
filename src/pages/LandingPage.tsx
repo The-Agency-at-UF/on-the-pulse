@@ -286,14 +286,14 @@ function LandingPage() {
 
         <div className='flex flex-col relative overflow-hidden'>
 
-          <button onClick={handlePrevClick} className='absolute left-0 top-0 h-full flex items-center bg-white opacity-20 bg-opacity-0 z-30 hover:bg-opacity-15 hover:opacity-100'>
+          <button onClick={handlePrevClick} className='absolute left-0 top-0 h-full flex items-center bg-white bg-opacity-0 z-30 hover:bg-opacity-15 hover:opacity-100'>
             <h1 className='font-bold text-4xl size-16'>{'<'}</h1>
           </button>
 
           <Slider {...settings} ref={sliderRef}>
             {starredPosts.map((blog, index) => (
               <div onMouseEnter={()=> onHoverStart(index)} onMouseLeave={()=> onHoverEnd(index)} onClick={() => handleClick(`/blog/${blog.id}`)} key={index} className="starred-post mb-4 md:mb-0">
-                <div className="hover:cursor-pointer block relative rounded shadow-lg h-105 w-full m-auto">
+                <div className="hover:cursor-pointer block relative rounded shadow-lg h-full w-full m-auto">
                   {/* Image */}
                   <motion.img
                     src={blog.imageSrc}
@@ -315,13 +315,13 @@ function LandingPage() {
             ))}
           </Slider> 
 
-          <button onClick={handleNextClick} className='absolute right-0 top-0 h-full flex items-center bg-white opacity-20 bg-opacity-0 z-30 hover:bg-opacity-15 hover:opacity-100'>
+          <button onClick={handleNextClick} className='absolute right-0 top-0 h-full flex items-center bg-white bg-opacity-0 z-30 hover:bg-opacity-15 hover:opacity-100'>
             <h1 className='text-white font-bold text-4xl size-16'>{'>'}</h1>
           </button>     
         </div>
 
       <div className="text-center my-20">
-        <h2 className="mx-auto w-fit pb-1 border-b border-purple-800 text-4xl font-semibold mb-4">Interested in more?</h2>
+        <h2 className="mx-auto w-fit pb-1 border-b border-purple-800 text-4xl font-semibold mb-8">Interested in more?</h2>
         {/* <div className="w-24 h-0.5 bg-purple-800 mx-auto mb-6"></div> */}
         <Link to="/library">
         <button 
